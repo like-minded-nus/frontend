@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --foreground-rgb: 0, 0, 0;
+        --background-start-rgb: 214, 219, 220;
+        --background-end-rgb: 255, 255, 255;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --foreground-rgb: 255, 255, 255;
+            --background-start-rgb: 0, 0, 0;
+            --background-end-rgb: 0, 0, 0;
+        }
+    }
+
+    body {
+        @apply bg-gray-200 p-4;
+    }
+}
+
+@layer components {
+    /** [start] menu **/
+    .default-width {
+        @apply w-menu;
+    }
+
+    .menu-item-width {
+        @apply w-[calc(theme('width.menu')-0.5rem)];
+    }
+
+    .menu.maximized {
+        @apply fixed top-0 left-0 h-screen z-[1] default-width m-0
+            flex flex-col bg-gray-800
+            text-white text-sm shadow-lg
+            transition-all duration-200 ease-linear;
+    }
+
+    .menu-item {
+        @apply relative grid grid-cols-12 gap-4
+            items-center justify-center
+            h-10 menu-item-width mt-1 mb-1 mx-auto
+            text-white hover:bg-gray-600
+            rounded-sm transition-all duration-100
+            ease-linear cursor-pointer;
+    }
+
+    .menu-item.last-item {
+        @apply absolute bottom-0 m-1 mb-2;
+    }
+
+    .menu-item.active {
+        @apply bg-gray-600;
+    }
+
+    .menu-item-highlight {
+        @apply flex col-span-1;
+    }
+
+    .menu-item.active > .menu-item-highlight {
+        @apply h-[1.15rem] w-[0.22rem] bg-pink-400 rounded-3xl;
+    }
+
+    .menu-item-icon {
+        @apply flex col-span-2 items-start justify-center;
+    }
+
+    .menu-item-label {
+        @apply flex col-span-6 items-center;
+    }
+
+    .menu-item-count {
+        @apply flex col-span-2 items-center justify-center text-[11px] bg-gray-600 rounded-full;
+    }
+
+    .menu-break {
+        @apply relative flex items-center justify-center
+            menu-item-width mt-1 mb-1 mx-auto border-gray-600;
+    }
+    /** [end] menu **/
+
+    /** [start] main container **/
+    .main-container {
+        @apply flex ml-[theme('width.menu')] justify-center items-center;
+    }
+    /** [end] main container **/
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
