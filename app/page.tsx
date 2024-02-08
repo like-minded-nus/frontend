@@ -1,3 +1,4 @@
+import Demo from './components/demo';
 import Menu from './components/menu';
 
 const Home = () => {
@@ -5,7 +6,7 @@ const Home = () => {
         <>
             <Menu />
             <div className='main-container'>
-                <h1>Hello World</h1>
+                <Demo />
             </div>
         </>
     );

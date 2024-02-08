@@ -23,6 +23,60 @@
 }
 
 @layer components {
+    /** [start] form components **/
+    .input-group {
+        @apply flex h-10 justify-center items-center;
+    }
+
+    .input-group.top-label {
+        @apply grid grid-cols-1 h-[4.4rem];
+    }
+
+    .input-group > input {
+        @apply relative shadow appearance-none border border-gray-400 rounded-3xl w-full h-full py-2 px-3 text-gray-700 leading-tight
+                focus:rounded-xl focus:outline-none focus:shadow-md focus:border-pink-400
+                transition-all duration-200 ease-linear;
+    }
+
+    .input-group > label {
+        @apply block text-gray-700 text-sm font-bold mr-2;
+    }
+
+    .input-group.top-label > label {
+        @apply mr-0 mb-2;
+    }
+
+    .btn {
+        @apply border border-gray-700 bg-white text-gray-700 text-sm font-semibold mx-1 px-8 py-2 rounded-3xl
+                hover:bg-gray-200 hover:rounded-md
+                transition-all duration-200 ease-linear;
+    }
+
+    .btn.btn-primary {
+        @apply border border-gray-700 bg-white text-gray-700
+                hover:bg-gray-700 hover:text-white hover:rounded-md
+                transition-all duration-200 ease-linear;
+    }
+
+    .btn.btn-primary.btn-solid {
+        @apply border border-gray-700 bg-gray-700 text-white
+                hover:rounded-md
+                transition-all duration-200 ease-linear;
+    }
+
+    .btn.btn-secondary {
+        @apply border border-pink-400 bg-white text-pink-400
+                hover:bg-pink-400 hover:text-white hover:rounded-md
+                transition-all duration-200 ease-linear;
+    }
+
+    .btn.btn-secondary.btn-solid {
+        @apply border border-pink-400 bg-pink-400 text-white
+                hover:rounded-md
+                transition-all duration-200 ease-linear;
+    }
+    /** [end] form components **/
+
     /** [start] menu **/
     .default-width {
         @apply w-menu;
@@ -84,9 +138,19 @@
 
     /** [start] main container **/
     .main-container {
-        @apply flex ml-[theme('width.menu')] justify-center items-center;
+        @apply relative ml-[theme('width.menu')] justify-center items-center;
     }
     /** [end] main container **/
+
+    /** [start] demo container **/
+    .demo-container {
+        @apply grid grid-cols-4 gap-4 w-full;
+    }
+
+    .demo-container > div {
+        @apply flex justify-center items-center;
+    }
+    /** [end] demo container **/
 }
 
 @layer utilities {
