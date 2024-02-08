@@ -2,8 +2,6 @@
 
 import { IconType } from 'react-icons';
 import { setActiveItem } from '@/redux/features/menuSlice';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 interface MenuItemProps {
