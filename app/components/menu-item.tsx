@@ -1,4 +1,10 @@
+'use client';
+
 import { IconType } from 'react-icons';
+import { setActiveItem } from '@/redux/features/menuSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 interface MenuItemProps {
     iconType: IconType;
@@ -19,13 +25,21 @@ const MenuItem: React.FC<MenuItemProps> = ({
     first,
     last,
 }: MenuItemProps) => {
-    const activeItem = 0;
+    const dispatch = useAppDispatch();
+
+    // Redux store
+    const activeItem = useAppSelector((state) => state.menuReducer.activeItem);
+
+    const handleClick = () => {
+        dispatch(setActiveItem(id));
+    };
 
     return (
         <div
             className={`menu-item width ${last ? 'last-item' : ''} ${
                 first ? 'mt-2' : ''
             } ${activeItem === id ? 'active' : ''}`}
+            onClick={handleClick}
         >
             <div className='menu-item-highlight'></div>
             <div className='menu-item-icon'>

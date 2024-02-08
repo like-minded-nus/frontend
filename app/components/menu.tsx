@@ -1,3 +1,5 @@
+'use client';
+
 import { GoHome } from 'react-icons/go';
 import { FaRegHeart } from 'react-icons/fa';
 import { TbColumns3 } from 'react-icons/tb';

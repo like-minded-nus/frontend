@@ -1,7 +1,6 @@
-import Image from 'next/image';
 import Menu from './components/menu';
 
-export default function Home() {
+const Home = () => {
     return (
         <>
             <Menu />
@@ -10,4 +9,6 @@ export default function Home() {
             </div>
         </>
     );
-}
+};
+
+export default Home;
