@@ -10,12 +10,22 @@ import { FaCog } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 
 import MenuItem from './menu-item';
+import { useAppSelector } from '@/redux/hooks';
 
 const Menu = () => {
+    // Redux store
+    const menuExpanded: boolean = useAppSelector(
+        (state) => state.menuReducer.menuExpanded
+    );
+
     return (
         <>
             <div className='flex align-middle'>
-                <div className='menu maximized'>
+                <div
+                    className={`menu ${
+                        menuExpanded ? 'maximized' : 'minimized'
+                    }`}
+                >
                     <MenuItem
                         iconType={GoHome}
                         iconSize={20}

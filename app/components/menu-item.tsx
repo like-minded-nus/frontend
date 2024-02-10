@@ -26,7 +26,9 @@ const MenuItem: React.FC<MenuItemProps> = ({
     const dispatch = useAppDispatch();
 
     // Redux store
-    const activeItem = useAppSelector((state) => state.menuReducer.activeItem);
+    const activeItem: number = useAppSelector(
+        (state) => state.menuReducer.activeItem
+    );
 
     const handleClick = () => {
         dispatch(setActiveItem(id));
