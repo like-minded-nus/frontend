@@ -34,7 +34,7 @@
 
     .input-group > input {
         @apply relative shadow appearance-none border border-gray-400 rounded-3xl w-full h-full py-2 px-3 text-gray-700 leading-tight
-                focus:rounded-xl focus:outline-none focus:shadow-md focus:border-pink-400
+                focus:rounded-xl focus:outline-none focus:shadow-md focus:border-secondary
                 transition-all duration-200 ease-linear;
     }
 
@@ -65,13 +65,13 @@
     }
 
     .btn.btn-secondary {
-        @apply border border-pink-400 bg-white text-pink-400
-                hover:bg-pink-400 hover:text-white hover:rounded-md
+        @apply border border-secondary bg-white text-secondary
+                hover:bg-secondary hover:text-white hover:rounded-md
                 transition-all duration-200 ease-linear;
     }
 
     .btn.btn-secondary.btn-solid {
-        @apply border border-pink-400 bg-pink-400 text-white
+        @apply border border-secondary bg-secondary text-white
                 hover:rounded-md
                 transition-all duration-200 ease-linear;
     }
@@ -136,7 +136,7 @@
     }
 
     .menu-item.active > .menu-item-highlight {
-        @apply h-[1.15rem] w-[0.22rem] bg-pink-400 rounded-3xl;
+        @apply h-[1.15rem] w-[0.22rem] bg-secondary rounded-3xl;
     }
 
     .menu-item-icon {
@@ -166,7 +166,7 @@
     }
 
     .menu-control-btn > .icon-type {
-        @apply cursor-pointer text-black hover:text-pink-400 stroke-0 hover:stroke-1
+        @apply cursor-pointer text-black hover:text-secondary stroke-0 hover:stroke-1
             transition-all duration-100 ease-linear;
     }
     /** [end] menu **/
