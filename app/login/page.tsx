@@ -14,7 +14,7 @@ const Login = () => {
     }, [])
  
     return (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center items-center w-full h-full">
             <LoginCard />
         </div>
     )
