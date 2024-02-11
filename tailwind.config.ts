@@ -40,6 +40,7 @@ const config: Config = {
       animation: {
         tilt__left: 'tilt__left 1s',
         tilt__right: 'tilt__right 1s',
+        pulse__fast: 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       }
     }
   },

@@ -183,7 +183,7 @@
 
     /** [start] match card **/
     .match-card {
-        @apply relative flex flex-col w-[24rem] h-[32rem] bg-white rounded-xl shadow-2xl
+        @apply relative flex flex-col w-[24rem] h-[32rem] bg-white rounded-xl
             transition-all duration-200 ease-linear;
     }
 
@@ -228,8 +228,7 @@
 
     .match-card__container__controls__button {
         @apply relative flex justify-center items-center w-12 h-12 rounded-full
-            shadow-md cursor-pointer
-            hover:scale-110
+            cursor-pointer hover:scale-110
             transition-all duration-200 ease-linear;
     }
 
@@ -245,6 +244,29 @@
         @apply stroke-2;
     }
     /** [end] match card **/
+
+    /** [start] loading match card **/
+    .match-card__loading {
+        @apply absolute flex flex-col w-[24rem] h-[32rem] bg-white rounded-xl shadow-2xl
+                transition-all duration-100 ease-linear;
+    }
+
+    .match-card__loading .match-card__container__info {
+        @apply animate-pulse__fast;
+    }
+
+    .match-card__loading .match-card__container__info__particulars__name {
+        @apply h-6 w-36 bg-slate-200 opacity-50 rounded-3xl mr-4;
+    }
+
+    .match-card__loading .match-card__container__info__particulars__age {
+        @apply h-6 w-10 bg-slate-200 opacity-50 rounded-3xl;
+    }
+
+    .match-card__loading .match-card__container__info__intro {
+        @apply flex h-4 bg-slate-200 opacity-50 rounded-3xl mt-2;
+    }
+    /** [end] loading match card **/
 
     /** [start] demo container **/
     .demo-container {
