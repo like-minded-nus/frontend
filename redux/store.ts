@@ -3,9 +3,9 @@ import menuReducer from './features/menuSlice';
 import userReducer from './features/userSlice';
 
 export const store = configureStore({
-    reducer: {
-        menuReducer
-    }
+  reducer: {
+    menuReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

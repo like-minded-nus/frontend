@@ -6,20 +6,20 @@ import { ReduxProvider } from '../redux/provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'LikeMinded',
-    description: 'A dating app based on common hobbies and interests',
+  title: 'LikeMinded',
+  description: 'A dating app based on common hobbies and interests',
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang='en'>
-            <body className={inter.className}>
-                <ReduxProvider>{children}</ReduxProvider>
-            </body>
-        </html>
-    );
+  return (
+    <html lang='en'>
+      <body className={inter.className}>
+        <ReduxProvider>{children}</ReduxProvider>
+      </body>
+    </html>
+  );
 }

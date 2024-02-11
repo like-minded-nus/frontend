@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const LikeMindedApp = () => {
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        if (sessionStorage.getItem("userId") === null) {
-            router.push("/login");
-        } else {
-            router.push("/home");
-        }
-    }, []);
-}
+  useEffect(() => {
+    if (sessionStorage.getItem('userId') === null) {
+      router.push('/login');
+    } else {
+      router.push('/home');
+    }
+  }, []);
+};
 
 export default LikeMindedApp;

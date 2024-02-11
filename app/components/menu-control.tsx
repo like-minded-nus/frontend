@@ -6,32 +6,28 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { RxCross1 } from 'react-icons/rx';
 
 const MenuControl = () => {
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-    // Redux store
-    const menuExpanded: boolean = useAppSelector(
-        (state) => state.menuReducer.menuExpanded
-    );
+  // Redux store
+  const menuExpanded: boolean = useAppSelector(
+    (state) => state.menuReducer.menuExpanded
+  );
 
-    const handleClick = () => {
-        dispatch(setMenuExpand(!menuExpanded));
-    };
+  const handleClick = () => {
+    dispatch(setMenuExpand(!menuExpanded));
+  };
 
-    return (
-        <>
-            <div
-                className={`menu-control-btn ${
-                    menuExpanded ? '' : 'minimized'
-                }`}
-                onClick={handleClick}
-            >
-                {menuExpanded && <RxCross1 size={20} className='icon-type' />}
-                {!menuExpanded && (
-                    <RxHamburgerMenu size={20} className='icon-type' />
-                )}
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div
+        className={`menu-control-btn ${menuExpanded ? '' : 'minimized'}`}
+        onClick={handleClick}
+      >
+        {menuExpanded && <RxCross1 size={20} className='icon-type' />}
+        {!menuExpanded && <RxHamburgerMenu size={20} className='icon-type' />}
+      </div>
+    </>
+  );
 };
 
 export default MenuControl;
