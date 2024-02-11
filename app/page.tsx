@@ -1,17 +1,18 @@
-import Demo from './components/demo';
-import Menu from './components/menu';
-import MenuControl from './components/menu-control';
+'use client'
 
-const Home = () => {
-    return (
-        <>
-            <Menu />
-            <MenuControl />
-            <div className='main-container'>
-                <Demo />
-            </div>
-        </>
-    );
-};
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default Home;
+const LikeMindedApp = () => {
+    const router = useRouter();
+
+    useEffect(() => {
+        if (sessionStorage.getItem("userId") === null) {
+            router.push("/login");
+        } else {
+            router.push("/home");
+        }
+    }, []);
+}
+
+export default LikeMindedApp;
