@@ -177,7 +177,7 @@
     }
 
     .main-container > .browse {
-        @apply flex h-[90vh] justify-center items-center overflow-x-hidden;
+        @apply flex h-[90vh] justify-center items-center overflow-hidden;
     }
     /** [end] main container **/
 
