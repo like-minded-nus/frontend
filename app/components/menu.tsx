@@ -32,6 +32,7 @@ const Menu = () => {
                         id={0}
                         label={'Home'}
                         count={0}
+                        link={'/'}
                         first={true}
                     />
                     <MenuItem
@@ -40,6 +41,7 @@ const Menu = () => {
                         id={1}
                         label={'Browse & Like'}
                         count={0}
+                        link={'/browse'}
                         first={false}
                     />
                     <MenuItem
@@ -48,6 +50,7 @@ const Menu = () => {
                         id={2}
                         label={'Matches'}
                         count={6969}
+                        link={'/'}
                         first={false}
                     />
                     <MenuItem
@@ -56,6 +59,7 @@ const Menu = () => {
                         id={3}
                         label={'My Profile'}
                         count={0}
+                        link={'/'}
                         first={false}
                     />
                     <MenuItem
@@ -64,6 +68,7 @@ const Menu = () => {
                         id={4}
                         label={'Premium'}
                         count={0}
+                        link={'/'}
                         first={false}
                     />
 
@@ -75,6 +80,7 @@ const Menu = () => {
                         id={5}
                         label={'FAQ'}
                         count={7}
+                        link={'/'}
                         first={false}
                     />
                     <MenuItem
@@ -83,6 +89,7 @@ const Menu = () => {
                         id={6}
                         label={'Settings'}
                         count={5}
+                        link={'/'}
                         first={false}
                     />
 
@@ -92,6 +99,7 @@ const Menu = () => {
                         id={7}
                         label={'Log Out'}
                         count={0}
+                        link={'/'}
                         first={false}
                         last={true}
                     />
