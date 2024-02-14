@@ -102,9 +102,7 @@ const MatchCard = () => {
             </div>
             <div className='match-card__container__controls'>
               <div
-                className={`match-card__container__controls__button skip ${
-                  clickedSkip ? 'animate-ping' : ''
-                }`}
+                className={`match-card__container__controls__button skip ${clickedSkip ? 'animate-ping' : ''}`}
                 onClick={handleClickSkip}
               >
                 <RxCross1
@@ -113,9 +111,7 @@ const MatchCard = () => {
                 />
               </div>
               <div
-                className={`match-card__container__controls__button like ${
-                  clickedLike ? 'animate-ping' : ''
-                }`}
+                className={`match-card__container__controls__button like ${clickedLike ? 'animate-ping' : ''}`}
                 onClick={handleClickLike}
               >
                 <FaHeart
