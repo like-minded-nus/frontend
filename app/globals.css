@@ -177,6 +177,20 @@
   }
   /** [end] menu **/
 
+  /** [start] breadcrumb **/
+  .breadcrumb {
+    @apply flex pt-1 text-sm;
+  }
+
+  .breadcrumb__list {
+    @apply mx-2 justify-center align-middle hover:underline;
+  }
+
+  .breadcrumb__list.breadcrumb__active {
+    @apply font-semibold text-secondary;
+  }
+  /** [end] breadcrumb **/
+
   /** [start] main container **/
   .main-container {
     @apply relative mx-10 w-screen items-center justify-center;

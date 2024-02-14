@@ -1,9 +1,9 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import Demo from '../components/demo';
-import Menu from '../components/menu';
+
 import { useEffect } from 'react';
-import MenuControl from '../components/menu-control';
+import { useRouter } from 'next/navigation';
+import Base from '../components/base';
+import Demo from '../components/demo';
 
 const Home = () => {
   const router = useRouter();
@@ -12,17 +12,11 @@ const Home = () => {
     if (sessionStorage.getItem('userId') === null) {
       router.push('/login');
     }
-  }, []);
+  });
 
-  return (
-    <>
-      <Menu />
-      <MenuControl />
-      <div className='main-container'>
-        <Demo />
-      </div>
-    </>
-  );
+  const component = <Demo />;
+
+  return <Base content={component} />;
 };
 
 export default Home;
