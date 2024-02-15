@@ -4,8 +4,7 @@ import { useRouter } from 'next/navigation';
 import DatePicker from '../components/date-picker';
 import { IoMdAdd } from 'react-icons/io';
 import PassionModal from './passion-modal';
-import { Passion } from '../common-inteface';
-
+import { Passion } from '../models/passion';
 
 const ProfileForm = () => {
   const router = useRouter();
@@ -22,7 +21,7 @@ const ProfileForm = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = (passionNameList : string[]) => {
+  const closeModal = (passionNameList: string[]) => {
     setPassionsName(passionNameList);
     setIsModalOpen(false);
   };
@@ -31,7 +30,7 @@ const ProfileForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const newProfile = { displayName, birthday, gender, passionsId};
+    const newProfile = { displayName, birthday, gender, passionsId };
     const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
     const res = await fetch(`${endpoint}/profile/2`, {
       method: 'GET',
@@ -43,18 +42,27 @@ const ProfileForm = () => {
 
   const validateInput = () => {};
 
-  const togglePassion = (passionId : number) => {
+  const togglePassion = (passionId: number) => {
     if (passionsId.includes(passionId)) {
-        setPassionsId(passionsId.filter((n) => n !== passionId));
+      setPassionsId(passionsId.filter((n) => n !== passionId));
     } else {
-        setPassionsId([...passionsId, passionId]);
+      setPassionsId([...passionsId, passionId]);
     }
   };
 
   return (
     <>
-      <PassionModal isOpen={isModalOpen} onClose={closeModal} selectedPassion={passionsId} togglePassion={togglePassion} passionNames={passionsName}  />
-      <form onSubmit={handleSubmit} className='mt-10 flex h-full w-full flex-row'>
+      <PassionModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        selectedPassion={passionsId}
+        togglePassion={togglePassion}
+        passionNames={passionsName}
+      />
+      <form
+        onSubmit={handleSubmit}
+        className='mt-10 flex h-full w-full flex-row'
+      >
         <div className='w-1/2'>
           <div className='input-group top-label w-2/3 min-w-[300px]'>
             <label htmlFor='displayName' className='min-w'>
@@ -80,13 +88,16 @@ const ProfileForm = () => {
           <div className='input-group top-label'>
             <label>Passion</label>
             <div className='flex gap-x-1'>
-            {passionsName.length > 0 && 
-               passionsName.map((passionName : string) => (
-                   <div className='mx-1 rounded-3xl border border-gray-700 bg-white px-8 py-2 text-sm font-semibold text-gray-700
-                   transition-all duration-200'>
-                    {passionName}</div>
-                   ))
-                }
+              {passionsName.length > 0 &&
+                passionsName.map((passionName: string, idx: number) => (
+                  <div
+                    key={idx}
+                    className='mx-1 rounded-3xl border border-gray-700 bg-white px-8 py-2 text-sm font-semibold text-gray-700
+                   transition-all duration-200'
+                  >
+                    {passionName}
+                  </div>
+                ))}
             </div>
             <button
               className='btn btn-primary flex w-[200px] flex-row items-center justify-center'
