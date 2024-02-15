@@ -8,9 +8,11 @@ const LikeMindedApp = () => {
 
   useEffect(() => {
     if (sessionStorage.getItem('userId') === null) {
-      router.push('/login');
+      // router.push('/login');
+      window.location.href = '/login';
     } else {
-      router.push('/home');
+      // router.push('/home');
+      window.location.href = '/home';
     }
   }, []);
 };

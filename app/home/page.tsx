@@ -10,7 +10,8 @@ const Home = () => {
 
   useEffect(() => {
     if (sessionStorage.getItem('userId') === null) {
-      router.push('/login');
+      // router.push('/login');
+      window.location.href = '/login';
     }
   });
 

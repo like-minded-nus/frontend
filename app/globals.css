@@ -297,6 +297,83 @@
     @apply flex items-center justify-center;
   }
   /** [end] demo container **/
+
+  /* [start] login & register card */
+  .login-register-page-div {
+    @apply flex h-full w-full items-center justify-center;
+  }
+  .login-register-main-card {
+    @apply w-96 overflow-hidden rounded-[20px] bg-pink-200 shadow-lg;
+  }
+
+  .login-register-main-card-padding {
+    @apply px-6 py-4;
+  }
+
+  .login-register-image-logo-container {
+    @apply flex w-full justify-center p-2;
+  }
+  
+  .login-register-image-logo {
+    @apply max-h-40 rounded-full;
+  }
+
+  .login-register-label-field {
+    @apply py-2 font-bold;
+  }
+
+  .login-register-input-field-container {
+    @apply w-full;
+  }
+
+  .login-register-input-field {
+    @apply w-full rounded-md p-2;
+  }
+
+  .login-register-error-container {
+    @apply flex w-full justify-start pb-1 pt-1;
+  }
+  
+  .login-register-font-size-color {
+    @apply text-red-500;
+  }
+
+  .login-register-button-container {
+    @apply w-full pb-1 pt-5;
+  }
+
+  .login-register-button {
+    @apply h-10 w-full rounded-md bg-black text-white hover:bg-gray-800;
+  }
+
+  .login-register-register-container {
+   @apply flex w-full justify-end pb-1 pt-3; 
+  }
+
+  .login-register-register {
+    @apply hover:underline;
+  }
+
+  .register-success-top-section {
+    @apply flex justify-center bg-green-500 h-52 px-6 py-4;
+  }
+
+  .register-success-bottom-section {
+    @apply flex justify-center bg-white h-52 px-6 py-4;
+  }
+
+  .register-success-top-inner {
+    @apply flex flex-col
+  }
+
+  .register-success-bot-inner {
+    @apply flex flex-col justify-center;
+  }
+
+  .register-success-message {
+    @apply text-center pb-7;
+  }
+  /* [end] login & register card */
 }
 
 @layer utilities {
