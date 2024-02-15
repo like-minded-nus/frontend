@@ -297,6 +297,32 @@
     @apply flex items-center justify-center;
   }
   /** [end] demo container **/
+
+  /** [start] image uploader card container **/
+  .image-uploader-card-container {
+    @apply flex flex-row justify-center items-center h-[100%] rounded-xl border border-gray-700 bg-white hover:border-secondary transition-all duration-200 ease-linear;
+  }
+
+  .image-uploader-icon {
+    @apply text-[45px];
+  }
+
+  .image-uploader-card-container:hover > .image-uploader-icon {
+    @apply text-[60px] text-secondary transition-all duration-200 ease-linear
+  }
+
+  .image-uploader-card{
+    @apply flex flex-row gap-4 h-[275px] w-full
+  }
+
+  .image-remover{
+    @apply absolute w-[25px] h-[25px] text-white bg-secondary rounded-full bottom-[-5px] right-[-8px] flex flex-row justify-center items-center cursor-pointer hover:w-[28px] hover:h-[28px] transition-all duration-100 ease-linear
+  }
+
+  .image-remover:hover > .image-remover-icon{
+    @apply text-[18px] transition-all duration-200 ease-linear
+  }
+    /** [end] image uploader card container **/
 }
 
 @layer utilities {
