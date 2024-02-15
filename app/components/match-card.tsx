@@ -3,11 +3,38 @@
 import { RxCross1 } from 'react-icons/rx';
 import { FaHeart } from 'react-icons/fa';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { ProfilePassionMatchList } from '../models/profile-passion-match-list';
+import {
+  browseReset,
+  getProfilePassionMatchList,
+} from '@/redux/features/browseSlice';
 
 type ButtonType = 'like' | 'skip';
 
 const MatchCard = () => {
+  const dispatch = useAppDispatch();
+  const controller = new AbortController();
+
+  // Redux store
+  const profilePassionMatchList: ProfilePassionMatchList = useAppSelector(
+    (state) => state.browseSlice.profilePassionMatchList
+  );
+
+  useEffect(() => {
+    dispatch(getProfilePassionMatchList({ controller, profileId: 4 }));
+
+    return () => {
+      controller.abort();
+      dispatch(browseReset());
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(profilePassionMatchList);
+  }, [profilePassionMatchList]);
+
   const [clickedSkip, setClickedSkip] = useState<boolean>(false);
   const [clickedLike, setClickedLike] = useState<boolean>(false);
 
