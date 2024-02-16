@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -38,8 +37,6 @@ const LoginCard = () => {
           // router.push('/home', { shallow: true });
           window.location.href = '/home';
         }
-
-
       } catch (error) {
         console.error(error);
       }
@@ -81,10 +78,7 @@ const LoginCard = () => {
             <span className='login-register-font-size-color'>{error}</span>
           </div>
           <div className='login-register-button-container'>
-            <button
-              className='login-register-button'
-              onClick={handleLogin}
-            >
+            <button className='login-register-button' onClick={handleLogin}>
               Login
             </button>
           </div>

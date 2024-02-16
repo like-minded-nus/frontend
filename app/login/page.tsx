@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useRouter } from 'next/navigation';
 import LoginCard from '../components/login-card';
 import React, { useEffect } from 'react';
