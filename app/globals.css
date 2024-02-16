@@ -300,7 +300,7 @@
 
   /** [start] image uploader card container **/
   .image-uploader-card-container {
-    @apply flex flex-row justify-center items-center h-[100%] rounded-xl border border-gray-700 bg-white hover:border-secondary transition-all duration-200 ease-linear;
+    @apply flex h-[100%] flex-row items-center justify-center rounded-xl border border-gray-700 bg-white transition-all duration-200 ease-linear hover:border-secondary;
   }
 
   .image-uploader-icon {
@@ -308,21 +308,98 @@
   }
 
   .image-uploader-card-container:hover > .image-uploader-icon {
-    @apply text-[60px] text-secondary transition-all duration-200 ease-linear
+    @apply text-[60px] text-secondary transition-all duration-200 ease-linear;
   }
 
-  .image-uploader-card{
-    @apply flex flex-row gap-4 h-[275px] w-full
+  .image-uploader-card {
+    @apply flex h-[275px] w-full flex-row gap-4;
   }
 
-  .image-remover{
-    @apply absolute w-[25px] h-[25px] text-white bg-secondary rounded-full bottom-[-5px] right-[-8px] flex flex-row justify-center items-center cursor-pointer hover:w-[28px] hover:h-[28px] transition-all duration-100 ease-linear
+  .image-remover {
+    @apply absolute bottom-[-5px] right-[-8px] flex h-[25px] w-[25px] cursor-pointer flex-row items-center justify-center rounded-full bg-secondary text-white transition-all duration-100 ease-linear hover:h-[28px] hover:w-[28px];
   }
 
-  .image-remover:hover > .image-remover-icon{
-    @apply text-[18px] transition-all duration-200 ease-linear
+  .image-remover:hover > .image-remover-icon {
+    @apply text-[18px] transition-all duration-200 ease-linear;
   }
-    /** [end] image uploader card container **/
+  /** [end] image uploader card container **/
+
+  /* [start] login & register card */
+  .login-register-page-div {
+    @apply flex h-full w-full items-center justify-center;
+  }
+  .login-register-main-card {
+    @apply w-96 overflow-hidden rounded-[20px] bg-pink-200 shadow-lg;
+  }
+
+  .login-register-main-card-padding {
+    @apply px-6 py-4;
+  }
+
+  .login-register-image-logo-container {
+    @apply flex w-full justify-center p-2;
+  }
+
+  .login-register-image-logo {
+    @apply max-h-40 rounded-full;
+  }
+
+  .login-register-label-field {
+    @apply py-2 font-bold;
+  }
+
+  .login-register-input-field-container {
+    @apply w-full;
+  }
+
+  .login-register-input-field {
+    @apply w-full rounded-md p-2;
+  }
+
+  .login-register-error-container {
+    @apply flex w-full justify-start pb-1 pt-1;
+  }
+
+  .login-register-font-size-color {
+    @apply text-red-500;
+  }
+
+  .login-register-button-container {
+    @apply w-full pb-1 pt-5;
+  }
+
+  .login-register-button {
+    @apply h-10 w-full rounded-md bg-black text-white hover:bg-gray-800;
+  }
+
+  .login-register-register-container {
+    @apply flex w-full justify-end pb-1 pt-3;
+  }
+
+  .login-register-register {
+    @apply hover:underline;
+  }
+
+  .register-success-top-section {
+    @apply flex h-52 justify-center bg-green-500 px-6 py-4;
+  }
+
+  .register-success-bottom-section {
+    @apply flex h-52 justify-center bg-white px-6 py-4;
+  }
+
+  .register-success-top-inner {
+    @apply flex flex-col;
+  }
+
+  .register-success-bot-inner {
+    @apply flex flex-col justify-center;
+  }
+
+  .register-success-message {
+    @apply pb-7 text-center;
+  }
+  /* [end] login & register card */
 }
 
 @layer utilities {
