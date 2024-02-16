@@ -30,7 +30,7 @@ const options = {
     next: () => <GrLinkNext />,
   },
   datepickerClassNames: 'top-12',
-  defaultDate: new Date('2022-01-01'),
+  defaultDate: new Date(),
   language: 'en',
   disabledDates: [],
   weekDays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
@@ -49,7 +49,7 @@ const DatePicker: React.FC<DateProps> = ({setDate}) => {
     console.log(selectedDate);
     setDate(selectedDate);
   };
-  
+
   const handleClose = (state: boolean) => {
     setShow(state);
   };

@@ -17,12 +17,12 @@ const ProfileForm = () => {
   const [passionsName, setPassionsName] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [image1, setImage1] = useState<File | null>();
-  const [image2, setImage2] = useState<File | null>();
-  const [image3, setImage3] = useState<File | null>();
-  const [image4, setImage4] = useState<File | null>();
-  const [image5, setImage5] = useState<File | null>();
-  const [image6, setImage6] = useState<File | null>();
+  const [image1, setImage1] = useState<string | null>();
+  const [image2, setImage2] = useState<string | null>();
+  const [image3, setImage3] = useState<string | null>();
+  const [image4, setImage4] = useState<string | null>();
+  const [image5, setImage5] = useState<string | null>();
+  const [image6, setImage6] = useState<string | null>();
 
 
   const openModal = () => {
@@ -38,28 +38,61 @@ const ProfileForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    if(!validateInput()){
+        setIsLoading(false);
+    }
+
     const newProfile = { 
+    // to be replaced with real userId
+    userId: 3,
     displayName, 
-    birthday, 
+    birthdate : birthday, 
     gender, 
-    passionsId, 
-    image1: new Blob([image1 as BlobPart],{type: image1?.type}),
-    image2: new Blob([image2 as BlobPart],{type: image2?.type}),
-    image3: new Blob([image3 as BlobPart],{type: image3?.type}),
-    image4: new Blob([image4 as BlobPart],{type: image4?.type}),
-    image5: new Blob([image5 as BlobPart],{type: image5?.type}),
-    image6: new Blob([image6 as BlobPart],{type: image6?.type})
+    profilePassionList: passionsId, 
+    image1 : image1 ?? "",
+    image2 : image2 ?? "",
+    image3 : image3 ?? "",
+    image4 : image4 ?? "",
+    image5 : image5 ?? "",
+    image6 : image6 ?? ""
     };
+
     const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
-    const res = await fetch(`${endpoint}/profile/2`, {
-      method: 'GET',
+    const res = await fetch(`${endpoint}/profile`, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newProfile)
     });
 
-    const data = await res.json();
+    const resJson = await res.json()
+
+    if(resJson.status != 200){
+        console.error(resJson.status + " " + resJson.message)
+    }else{
+        console.log(resJson.message)
+        setIsLoading(false);
+    }
+
   };
 
-  const validateInput = () => {};
+  const validateInput = () => {
+    if (displayName.trim() === '') {
+        alert('Please enter a valid name.');
+        return false;
+      }
+      
+      if (passionsId.length === 0) {
+        alert('Please select at least one passion.');
+        return false;
+      }
+
+      if(!image1 && !image2 && !image3 && !image4 && !image5 && !image6){
+        alert('Please upload at least one photo.');
+        return false;
+      }
+      
+      return true;
+  };
 
   const togglePassion = (passionId : number) => {
     console.log(displayName , gender, birthday)
@@ -103,7 +136,7 @@ const ProfileForm = () => {
           </div>
           <div className='input-group top-label mt-4'>
             <label>Passion</label>
-            <div className='flex gap-x-1'>
+            <div className='flex gap-x-1 gap-y-2 flex-wrap'>
             {passionsName.length > 0 && 
                passionsName.map((passionName : string) => (
                    <div key={passionName} className='mx-1 rounded-3xl border border-gray-700 bg-white px-8 py-2 text-sm font-semibold text-gray-700
@@ -142,7 +175,7 @@ const ProfileForm = () => {
         </div>
       
 
-        <button type='submit' className='btn btn-primary btn-solid mt-4' disabled={isLoading}>
+        <button type='submit' className='btn btn-primary btn-solid mt-4' disabled={false}>
           Create Profile
         </button>
       </form>
