@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Datepicker from 'tailwind-datepicker-react';
-import { GrLinkNext , GrLinkPrevious } from "react-icons/gr";
+import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr';
 
-interface DateProps{
-  setDate : (date : Date) => void;
+interface DateProps {
+  setDate: (date: Date) => void;
 }
 const options = {
   title: '',
@@ -42,7 +42,7 @@ const options = {
   },
 };
 
-const DatePicker: React.FC<DateProps> = ({setDate}) => {
+const DatePicker: React.FC<DateProps> = ({ setDate }) => {
   const [show, setShow] = useState(false);
 
   const handleChange = (selectedDate: Date) => {

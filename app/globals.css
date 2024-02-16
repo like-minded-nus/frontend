@@ -38,6 +38,10 @@
     @apply grid h-[4.4rem] grid-cols-1;
   }
 
+  .input-group.top-label-textarea {
+    @apply grid h-[8.4rem] grid-cols-1;
+  }
+
   .input-group > input {
     @apply relative h-full w-full appearance-none rounded-3xl border border-gray-400 px-3 py-2 leading-tight text-gray-700 shadow
                 transition-all duration-200 ease-linear focus:rounded-xl
@@ -46,6 +50,12 @@
 
   .input-group > label {
     @apply mr-2 block text-sm font-bold text-gray-700;
+  }
+
+  .input-group > textarea {
+    @apply relative w-full appearance-none rounded-3xl border border-gray-400 px-3 py-2 leading-tight text-gray-700 shadow
+    transition-all duration-200 ease-linear focus:rounded-xl
+    focus:border-secondary focus:shadow-md focus:outline-none;
   }
 
   .input-group.top-label > label {

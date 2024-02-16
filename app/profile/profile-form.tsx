@@ -12,6 +12,7 @@ const ProfileForm = () => {
   const [displayName, setDisplayName] = useState('');
   const [birthday, setBirthday] = useState<Date>(new Date());
   const [gender, setGender] = useState<string>('male');
+  const [bio, setBio] = useState<string>('');
   const [passionsId, setPassionsId] = useState<number[]>([]);
   const [passionsName, setPassionsName] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +48,7 @@ const ProfileForm = () => {
       birthdate: birthday,
       gender,
       profilePassionList: passionsId,
+      bio,
       image1: image1 ?? '',
       image2: image2 ?? '',
       image3: image3 ?? '',
@@ -75,6 +77,11 @@ const ProfileForm = () => {
   const validateInput = () => {
     if (displayName.trim() === '') {
       alert('Please enter a valid name.');
+      return false;
+    }
+
+    if (bio.trim() === '') {
+      alert('Please enter a valid biography.');
       return false;
     }
 
@@ -114,7 +121,7 @@ const ProfileForm = () => {
       >
         <div className='flex h-full flex-col md:flex-row'>
           {/* Basic Info Section */}
-          <div className='w-1/2'>
+          <div className='flex w-1/2 flex-col'>
             <div className='input-group top-label w-2/3 min-w-[300px]'>
               <label htmlFor='displayName' className='min-w'>
                 Display Name
@@ -130,6 +137,16 @@ const ProfileForm = () => {
               <div className='w-2/3 min-w-[300px]'>
                 <DatePicker setDate={setBirthday} />
               </div>
+            </div>
+            <div className='input-group top-label-textarea mt-4 w-2/3 min-w-[300px]'>
+              <label>Biography</label>
+              <textarea
+                id='biography'
+                rows={4}
+                cols={50}
+                onChange={(e) => setBio(e.target.value)}
+                value={bio}
+              />
             </div>
             <div className='input-group top-label mt-4'>
               <label>Gender</label>

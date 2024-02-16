@@ -16,7 +16,7 @@ interface MenuItemProps {
   last?: boolean;
 }
 
-const MenuItem:  React.FC<MenuItemProps>= ({
+const MenuItem: React.FC<MenuItemProps> = ({
   iconType: Icon,
   iconSize,
   id,
