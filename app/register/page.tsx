@@ -1,19 +1,15 @@
-'use client';
-import { useEffect } from 'react';
+import { getServerSession } from 'next-auth';
 import RegisterCard from '../components/register-card';
+import { redirect } from 'next/navigation';
 
-const Register = () => {
-  useEffect(() => {
-    if (sessionStorage.getItem('userId') !== null) {
-      window.location.href = '/home';
-    }
-  }, []);
-
+export default async function RegisterPage() {
+  const session = await getServerSession();
+  if (session) {
+    redirect('/home');
+  }
   return (
     <div className='login-register-page-div'>
       <RegisterCard />
     </div>
   );
-};
-
-export default Register;
+}

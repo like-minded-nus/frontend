@@ -1,13 +1,15 @@
+'use client';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const LoginCard = () => {
-  const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const LOGIN_API_URL = 'http://localhost:8080/api/v1/user/login';
+  const router = useRouter();
+  // const LOGIN_API_URL = 'http://localhost:8080/api/v1/user/login';
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,29 +18,20 @@ const LoginCard = () => {
       setError('Please enter both username and password.');
     } else {
       setError('');
-      try {
-        const response = await fetch(LOGIN_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username,
-            password,
-          }),
-        });
+      // try {
+      const nextResponse = await signIn('credentials', {
+        username: username,
+        password: password,
+        redirect: false,
+      });
 
-        const res = await response.json();
-        if (res.status !== 200) {
-          setError(res.message);
-        } else {
-          sessionStorage.setItem('userId', res.userId);
-          console.log(sessionStorage.getItem('userId'));
-          // router.push('/home', { shallow: true });
-          window.location.href = '/home';
-        }
-      } catch (error) {
-        console.error(error);
+      // const response = await nextResponse?.json()
+      console.log({ nextResponse });
+      if (nextResponse?.error !== null) {
+        setError('Login unsuccessful. Please try again.');
+      } else {
+        router.push('/home');
+        router.refresh();
       }
     }
   };

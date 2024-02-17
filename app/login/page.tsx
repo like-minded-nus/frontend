@@ -1,23 +1,15 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 import LoginCard from '../components/login-card';
-import React, { useEffect } from 'react';
+import { redirect } from 'next/navigation';
 
-const Login = () => {
-  const router = useRouter();
-  useEffect(() => {
-    if (sessionStorage.getItem('userId') !== null) {
-      // router.push('/home');
-      window.location.href = '/home';
-    }
-  }, []);
-
+export default async function LoginPage() {
+  const session = await getServerSession();
+  if (session) {
+    redirect('/home');
+  }
   return (
     <div className='login-register-page-div'>
       <LoginCard />
     </div>
   );
-};
-
-export default Login;
+}

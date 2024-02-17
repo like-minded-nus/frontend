@@ -12,31 +12,28 @@ const RegisterCard = () => {
   const [error, setError] = useState('');
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
-  const REGISTER_API_URL = 'http://localhost:8080/api/v1/user/register';
-
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch(REGISTER_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-          confirmPassword,
-        }),
-      });
 
-      const res = await response.json();
-      if (res.status !== 200) {
-        setError(res.message);
-      } else {
-        setRegisterSuccess(true);
-      }
-    } catch (error) {}
+    const nextResponse = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        confirmPassword,
+      }),
+    });
+    const { status, message } = await nextResponse.json();
+
+    if (status !== 200) {
+      setError(message);
+    } else {
+      setRegisterSuccess(true);
+    }
   };
   return (
     <>

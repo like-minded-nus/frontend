@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 
 const RegisterSuccess = () => {
-  useEffect(() => {});
-
   return (
     <div className='login-register-main-card'>
       <div className='register-success-top-section'>

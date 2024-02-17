@@ -11,6 +11,7 @@ import { RiLogoutBoxLine } from 'react-icons/ri';
 
 import MenuItem from './menu-item';
 import { useAppSelector } from '@/redux/hooks';
+import MenuLogoutItem from './menu-logout-item';
 
 const Menu = () => {
   // Redux store
@@ -89,16 +90,7 @@ const Menu = () => {
             first={false}
           />
 
-          <MenuItem
-            iconType={RiLogoutBoxLine}
-            iconSize={20}
-            id={7}
-            label={'Log Out'}
-            count={0}
-            link={'/'}
-            first={false}
-            last={true}
-          />
+          <MenuLogoutItem />
         </div>
       </div>
     </>
