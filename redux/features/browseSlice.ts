@@ -1,10 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import {
-  createAsyncThunk,
-  createSlice,
-  isPending,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, isPending } from '@reduxjs/toolkit';
 import { ProfilePassionMatchList } from '@/app/models/profile-passion-match-list';
 
 // Define the State Type
@@ -18,7 +13,7 @@ interface BrowseState {
 const initialState: BrowseState = {
   loading: false as boolean,
   errorMessage: '' as string,
-  profilePassionMatchList: { profileId: -1, matchList: [] },
+  profilePassionMatchList: {} as ProfilePassionMatchList,
 };
 
 // Argument type
@@ -51,7 +46,7 @@ export const getProfilePassionMatchList = createAsyncThunk(
     }
 
     if (response?.data?.status === 200) {
-      return response?.data?.profilePassionMatchList;
+      return response?.data?.payload;
     } else {
       return null;
     }
