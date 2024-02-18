@@ -1,20 +1,13 @@
-'use client';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-const LikeMindedApp = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (sessionStorage.getItem('userId') === null) {
-      // router.push('/login');
-      window.location.href = '/login';
-    } else {
-      // router.push('/home');
-      window.location.href = '/home';
-    }
-  }, []);
+const LikeMindedApp = async () => {
+  const session = await getServerSession();
+  if (session) {
+    redirect('/home');
+  } else {
+    redirect('/login');
+  }
 };
 
 export default LikeMindedApp;
