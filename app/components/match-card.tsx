@@ -14,10 +14,17 @@ import {
 import { Profile } from '@/models/profile';
 import { getProfile, profileReset } from '@/redux/features/profileSlice';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
 
 type ButtonType = 'like' | 'skip';
 
 const MatchCard = () => {
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    console.log(session);
+  }, [session]);
+
   // Temp (until userSession can be retrieved)
   const profileId = 4;
 
