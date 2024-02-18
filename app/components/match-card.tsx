@@ -12,7 +12,12 @@ import {
   createMatchRecord,
 } from '@/redux/features/matchSlice';
 import { Profile } from '@/models/profile';
-import { getProfile, profileReset } from '@/redux/features/profileSlice';
+import {
+  getProfile,
+  getProfileByUserId,
+  profileReset,
+  sessionProfileReset,
+} from '@/redux/features/profileSlice';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
 
@@ -20,13 +25,6 @@ type ButtonType = 'like' | 'skip';
 
 const MatchCard = () => {
   const { data: session } = useSession();
-
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
-
-  // Temp (until userSession can be retrieved)
-  const profileId = 4;
 
   const dispatch = useAppDispatch();
   const controller = new AbortController();
@@ -36,19 +34,45 @@ const MatchCard = () => {
   const profilePassionMatchList: ProfilePassionMatchList = useAppSelector(
     (state) => state.matchReducer.profilePassionMatchList
   );
+  const sessionProfile: Profile = useAppSelector(
+    (state) => state.profileReducer.sessionProfile
+  );
   const profile: Profile = useAppSelector(
     (state) => state.profileReducer.profile
   );
 
+  // Step 1: Fetch the logged in user's profile
   useEffect(() => {
-    dispatch(getProfilePassionMatchList({ controller, profileId: profileId }));
+    if (session) {
+      dispatch(
+        getProfileByUserId({ controller, userId: Number(session.user.id) })
+      );
+    }
+
+    return () => {
+      controller.abort();
+      dispatch(sessionProfileReset());
+    };
+  }, [session]);
+
+  // Step 2: Fetch the potential match list
+  useEffect(() => {
+    if (sessionProfile?.profileId) {
+      dispatch(
+        getProfilePassionMatchList({
+          controller,
+          profileId: sessionProfile.profileId,
+        })
+      );
+    }
 
     return () => {
       controller.abort();
       dispatch(matchReset());
     };
-  }, []);
+  }, [sessionProfile]);
 
+  // Step 3: Fetch the first match's profile
   useEffect(() => {
     if (
       profilePassionMatchList?.matchList?.length > 0 &&
@@ -68,6 +92,7 @@ const MatchCard = () => {
     }
   }, [profilePassionMatchList, counter]);
 
+  // Step 4: Check if match's profile is fetched
   useEffect(() => {
     console.log(profile);
   }, [profile]);
@@ -96,7 +121,7 @@ const MatchCard = () => {
       createMatchRecord({
         controller,
         matchRequestBody: {
-          userProfileId: profileId,
+          userProfileId: sessionProfile.profileId,
           targetProfileId: profile.profileId,
           like: false,
         },
@@ -111,7 +136,7 @@ const MatchCard = () => {
       createMatchRecord({
         controller,
         matchRequestBody: {
-          userProfileId: profileId,
+          userProfileId: sessionProfile.profileId,
           targetProfileId: profile.profileId,
           like: true,
         },
