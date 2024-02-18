@@ -5,12 +5,12 @@ import { FaHeart } from 'react-icons/fa';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { ProfilePassionMatchList } from '../models/profile-passion-match-list';
+import { ProfilePassionMatchList } from '@/models/profile-passion-match-list';
 import {
   browseReset,
   getProfilePassionMatchList,
 } from '@/redux/features/browseSlice';
-import { Profile } from '../models/profile';
+import { Profile } from '@/models/profile';
 import { getProfile, profileReset } from '@/redux/features/profileSlice';
 import moment from 'moment';
 

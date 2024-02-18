@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { createAsyncThunk, createSlice, isPending } from '@reduxjs/toolkit';
-import { ProfilePassionMatchList } from '@/app/models/profile-passion-match-list';
+import { ProfilePassionMatchList } from '@/models/profile-passion-match-list';
 
 // Define the State Type
 interface BrowseState {

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { createAsyncThunk, createSlice, isPending } from '@reduxjs/toolkit';
-import { Profile } from '@/app/models/profile';
+import { Profile } from '@/models/profile';
 
 // Define the State Type
 interface ProfileState {
