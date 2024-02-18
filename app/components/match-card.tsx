@@ -7,9 +7,10 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ProfilePassionMatchList } from '@/models/profile-passion-match-list';
 import {
-  browseReset,
+  matchReset,
   getProfilePassionMatchList,
-} from '@/redux/features/browseSlice';
+  createMatchRecord,
+} from '@/redux/features/matchSlice';
 import { Profile } from '@/models/profile';
 import { getProfile, profileReset } from '@/redux/features/profileSlice';
 import moment from 'moment';
@@ -17,29 +18,35 @@ import moment from 'moment';
 type ButtonType = 'like' | 'skip';
 
 const MatchCard = () => {
+  // Temp (until userSession can be retrieved)
+  const profileId = 4;
+
   const dispatch = useAppDispatch();
   const controller = new AbortController();
   const [counter, setCounter] = useState<number>(0);
 
   // Redux store
   const profilePassionMatchList: ProfilePassionMatchList = useAppSelector(
-    (state) => state.browseSlice.profilePassionMatchList
+    (state) => state.matchReducer.profilePassionMatchList
   );
   const profile: Profile = useAppSelector(
-    (state) => state.profileSlice.profile
+    (state) => state.profileReducer.profile
   );
 
   useEffect(() => {
-    dispatch(getProfilePassionMatchList({ controller, profileId: 4 }));
+    dispatch(getProfilePassionMatchList({ controller, profileId: profileId }));
 
     return () => {
       controller.abort();
-      dispatch(browseReset());
+      dispatch(matchReset());
     };
   }, []);
 
   useEffect(() => {
-    if (profilePassionMatchList?.matchList?.length > 0) {
+    if (
+      profilePassionMatchList?.matchList?.length > 0 &&
+      profilePassionMatchList?.matchList?.length > counter
+    ) {
       dispatch(
         getProfile({
           controller,
@@ -52,7 +59,7 @@ const MatchCard = () => {
         dispatch(profileReset());
       };
     }
-  }, [profilePassionMatchList]);
+  }, [profilePassionMatchList, counter]);
 
   useEffect(() => {
     console.log(profile);
@@ -66,20 +73,44 @@ const MatchCard = () => {
       setClickedLike(true);
       setTimeout(() => {
         setClickedLike(false);
+        setCounter((counter) => counter + 1);
       }, 1000);
     } else if (type === 'skip') {
       setClickedSkip(true);
       setTimeout(() => {
         setClickedSkip(false);
+        setCounter((counter) => counter + 1);
       }, 1000);
     }
   };
 
   const handleClickSkip = () => {
+    dispatch(
+      createMatchRecord({
+        controller,
+        matchRequestBody: {
+          userProfileId: profileId,
+          targetProfileId: profile.profileId,
+          like: false,
+        },
+      })
+    );
+
     handleClickAnimation('skip');
   };
 
   const handleClickLike = () => {
+    dispatch(
+      createMatchRecord({
+        controller,
+        matchRequestBody: {
+          userProfileId: profileId,
+          targetProfileId: profile.profileId,
+          like: true,
+        },
+      })
+    );
+
     handleClickAnimation('like');
   };
 
