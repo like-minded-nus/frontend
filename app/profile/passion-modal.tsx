@@ -33,7 +33,7 @@ const PassionModal: React.FC<ModalProps> = ({
     })
       .then((res) => res.json())
       .then((data) => {
-        setPassionOptions(data.passionList);
+        setPassionOptions(data.payload.passionList);
         setLoading(false);
       });
   }, [endpoint, passionNames]);
