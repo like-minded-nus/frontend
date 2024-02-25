@@ -48,7 +48,7 @@ export const getProfile = createAsyncThunk(
     }
 
     if (response?.data?.status === 200) {
-      return response?.data;
+      return response?.data?.payload;
     } else {
       return null;
     }
