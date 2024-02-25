@@ -51,7 +51,7 @@ const MatchCard = () => {
 
     return () => {
       controller.abort();
-      dispatch(sessionProfileReset());
+      // dispatch(sessionProfileReset());
     };
   }, [session]);
 
@@ -68,7 +68,7 @@ const MatchCard = () => {
 
     return () => {
       controller.abort();
-      dispatch(matchReset());
+      // dispatch(matchReset());
     };
   }, [sessionProfile]);
 
@@ -87,7 +87,7 @@ const MatchCard = () => {
 
       return () => {
         controller.abort();
-        dispatch(profileReset());
+        // dispatch(profileReset());
       };
     }
   }, [profilePassionMatchList, counter]);
