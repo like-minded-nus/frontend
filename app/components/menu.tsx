@@ -55,7 +55,7 @@ const Menu = () => {
             id={3}
             label={'My Profile'}
             count={0}
-            link={'/'}
+            link={'/profile'}
             first={false}
           />
           <MenuItem
