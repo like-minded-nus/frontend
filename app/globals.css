@@ -18,13 +18,17 @@
   }
 
   body {
-    @apply flex bg-gray-200 p-4;
+    @apply flex bg-sakura bg-cover p-4;
     min-height: 100vh;
     height: 100%;
   }
 
   html {
     height: 100%;
+  }
+
+  body > div.body-blur {
+    @apply fixed left-0 top-0 z-[-1] h-full w-full bg-white/30 backdrop-blur-2xl;
   }
 }
 
@@ -334,7 +338,7 @@
   }
   /** [end] image uploader card container **/
 
-  /* [start] login & register card */
+  /** [start] login & register card **/
   .login-register-page-div {
     @apply flex h-full w-full items-center justify-center;
   }
@@ -409,7 +413,7 @@
   .register-success-message {
     @apply pb-7 text-center;
   }
-  /* [end] login & register card */
+  /** [end] login & register card **/
 }
 
 @layer utilities {

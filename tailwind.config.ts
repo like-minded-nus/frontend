@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        sakura: "url('/img/background.png')",
+      },
       width: {
         menu: '18rem',
       },
