@@ -62,11 +62,11 @@ const MatchList = () => {
   }, [matches]);
 
   return (
-    <>
+    <div className='match-list'>
       {matches.map((match: Match) => (
         <MatchItem key={match.matchId} match={match} />
       ))}
-    </>
+    </div>
   );
 };
 
