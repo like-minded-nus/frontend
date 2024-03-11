@@ -11,7 +11,7 @@ interface MenuItemProps {
   id: number;
   label: string;
   count: number;
-  link: string;
+  link?: string;
   first: boolean;
   last?: boolean;
 }
