@@ -10,6 +10,7 @@ interface BaseProp {
 const Base = (props: BaseProp) => {
   return (
     <>
+      <div className='body-blur'></div>
       <Menu />
       <MenuControl />
       <div className='main-container'>

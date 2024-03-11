@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        sakura: "url('/img/background.png')",
+      },
       width: {
         menu: '18rem',
       },
@@ -45,6 +48,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')({
+      nocompatible: true,
+    }),
+  ],
 };
 export default config;

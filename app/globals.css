@@ -18,13 +18,17 @@
   }
 
   body {
-    @apply flex bg-gray-200 p-4;
+    @apply flex bg-sakura bg-cover p-4;
     min-height: 100vh;
     height: 100%;
   }
 
   html {
     height: 100%;
+  }
+
+  body > div.body-blur {
+    @apply fixed left-0 top-0 z-[-1] h-full w-full bg-white/30 backdrop-blur-2xl;
   }
 }
 
@@ -277,8 +281,8 @@
 
   /** [start] loading match card **/
   .match-card__loading {
-    @apply absolute flex h-[32rem] w-[24rem] flex-col rounded-xl bg-white shadow-2xl
-                transition-all duration-100 ease-linear;
+    @apply absolute flex h-[32rem] w-[24rem] flex-col rounded-xl bg-white shadow-2xl shadow-gray-800
+              transition-all duration-100 ease-linear;
   }
 
   .match-card__loading .match-card__container__info {
@@ -297,6 +301,69 @@
     @apply mt-2 flex h-4 rounded-3xl bg-slate-200 opacity-50;
   }
   /** [end] loading match card **/
+
+  /** [start] match list **/
+  .match-list {
+    @apply my-4 flex h-[92%] w-[77.5dvw]
+            flex-wrap justify-center overflow-y-auto rounded-xl bg-gray-200 p-4 ring-1
+            ring-black/5 scrollbar scrollbar-thumb-secondary scrollbar-track-rounded-full scrollbar-thumb-rounded-full;
+  }
+
+  .match-list__item {
+    @apply relative flex h-min w-full cursor-pointer select-none flex-row
+            gap-4 rounded-md bg-white p-4 ring-1 ring-black/5
+            transition-all duration-100 ease-linear
+            hover:ring-secondary;
+  }
+
+  .match-list__item__image {
+    @apply relative flex w-auto rounded-full;
+  }
+
+  .match-list__item__image__container {
+    @apply relative h-16 w-16 rounded-full bg-gray-300
+            object-center;
+  }
+
+  .match-list__item__info {
+    @apply flex w-9/12 flex-col;
+  }
+
+  .match-list__item__info__person {
+    @apply flex;
+  }
+
+  .match-list__item__info__person__name {
+    @apply font-semibold;
+  }
+
+  .match-list__item__info__person__age {
+    @apply ml-4 text-gray-500;
+  }
+
+  .match-list__item__info__msg {
+    @apply mt-4 flex;
+  }
+
+  .match-list__item__info__msg__preview {
+    @apply overflow-hidden overflow-ellipsis whitespace-nowrap text-nowrap
+            text-sm text-gray-500;
+  }
+
+  .match-list__item__info__msg__timestamp {
+    @apply ml-4 text-sm text-gray-500;
+  }
+
+  .match-list__item__control {
+    @apply ml-auto flex text-gray-400
+            transition-all duration-100 ease-linear
+            group-hover:text-secondary;
+  }
+
+  .match-list__item__control__button {
+    @apply relative flex items-center justify-items-end;
+  }
+  /** [end] match card list **/
 
   /** [start] demo container **/
   .demo-container {
@@ -334,7 +401,7 @@
   }
   /** [end] image uploader card container **/
 
-  /* [start] login & register card */
+  /** [start] login & register card **/
   .login-register-page-div {
     @apply flex h-full w-full items-center justify-center;
   }
@@ -409,7 +476,7 @@
   .register-success-message {
     @apply pb-7 text-center;
   }
-  /* [end] login & register card */
+  /** [end] login & register card **/
 }
 
 @layer utilities {

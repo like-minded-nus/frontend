@@ -8,8 +8,11 @@ export default async function LoginPage() {
     redirect('/home');
   }
   return (
-    <div className='login-register-page-div'>
-      <LoginCard />
-    </div>
+    <>
+      <div className='body-blur'></div>
+      <div className='login-register-page-div'>
+        <LoginCard />
+      </div>
+    </>
   );
 }

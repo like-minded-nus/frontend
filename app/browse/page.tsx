@@ -1,5 +1,5 @@
 import Base from '../components/base';
-import MatchCard from '../components/match-card';
+import MatchCard from './match-card';
 
 const Browse = () => {
   const component = <MatchCard />;

@@ -7,7 +7,6 @@ import { FaRegUser } from 'react-icons/fa6';
 import { FaCrown } from 'react-icons/fa';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { FaCog } from 'react-icons/fa';
-import { RiLogoutBoxLine } from 'react-icons/ri';
 
 import MenuItem from './menu-item';
 import { useAppSelector } from '@/redux/hooks';
@@ -47,7 +46,7 @@ const Menu = () => {
             id={2}
             label={'Matches'}
             count={6969}
-            link={'/'}
+            link={'/matches'}
             first={false}
           />
           <MenuItem
@@ -56,7 +55,7 @@ const Menu = () => {
             id={3}
             label={'My Profile'}
             count={0}
-            link={'/'}
+            link={'/profile'}
             first={false}
           />
           <MenuItem

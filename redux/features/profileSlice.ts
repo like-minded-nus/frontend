@@ -44,11 +44,11 @@ export const getProfile = createAsyncThunk(
     );
 
     if (response?.data?.status !== 200) {
-      return thunkAPI.rejectWithValue('Failed to get profile.');
+      return thunkAPI.rejectWithValue('Failed to get profile by profileId.');
     }
 
     if (response?.data?.status === 200) {
-      return response?.data;
+      return response?.data?.payload;
     } else {
       return null;
     }
@@ -99,7 +99,7 @@ export const profileSlice = createSlice({
       })
       .addCase(getProfile.rejected, (state, action) => {
         state.loading = false;
-        state.errorMessage = 'Failed to get profile.';
+        state.errorMessage = 'Failed to get profile by profileId.';
       })
       .addCase(getProfileByUserId.fulfilled, (state, action) => {
         state.loading = false;

@@ -9,6 +9,7 @@ interface MatchState {
   errorMessage: string;
   profilePassionMatchList: ProfilePassionMatchList;
   match: Match;
+  matches: Match[];
 }
 
 // Define the initial state
@@ -17,6 +18,7 @@ const initialState: MatchState = {
   errorMessage: '' as string,
   profilePassionMatchList: {} as ProfilePassionMatchList,
   match: {} as Match,
+  matches: [] as Match[],
 };
 
 // Argument type
@@ -29,6 +31,8 @@ export type CreateMatchRecordArgs = {
   controller: AbortController;
   matchRequestBody: MatchRequestBody;
 };
+
+export type GetAllMatchesArgs = GetProfilePassionMatchListArgs;
 
 // Create actions
 export const getProfilePassionMatchList = createAsyncThunk(
@@ -92,6 +96,33 @@ export const createMatchRecord = createAsyncThunk(
   }
 );
 
+export const getAllMatches = createAsyncThunk(
+  'match/getAllMatches',
+  async ({ controller, profileId }: GetAllMatchesArgs, thunkAPI: any) => {
+    const response: AxiosResponse<any> = await axios.get<any>(
+      `http://localhost:8080/api/v1/match/${profileId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal,
+      }
+    );
+
+    if (response?.data?.status !== 200) {
+      return thunkAPI.rejectWithValue(
+        'Failed to get profile passion match list.'
+      );
+    }
+
+    if (response?.data?.status === 200) {
+      return response?.data?.payload;
+    } else {
+      return null;
+    }
+  }
+);
+
 export const matchSlice = createSlice({
   name: 'match',
   initialState,
@@ -115,6 +146,14 @@ export const matchSlice = createSlice({
         state.match = action?.payload;
       })
       .addCase(createMatchRecord.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = 'Failed to get create/update match record.';
+      })
+      .addCase(getAllMatches.fulfilled, (state, action) => {
+        state.loading = false;
+        state.matches = action?.payload;
+      })
+      .addCase(getAllMatches.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = 'Failed to get create/update match record.';
       })
