@@ -41,6 +41,8 @@ const MatchCard = () => {
     (state) => state.profileReducer.profile
   );
 
+  console.log(profile);
+
   // Step 1: Fetch the logged in user's profile
   useEffect(() => {
     if (session) {

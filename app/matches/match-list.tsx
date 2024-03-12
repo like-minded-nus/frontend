@@ -42,6 +42,7 @@ const MatchList = () => {
 
   // Step 2: Fetch user's matches
   useEffect(() => {
+    console.log(sessionProfile);
     if (sessionProfile?.profileId) {
       dispatch(
         getAllMatches({
