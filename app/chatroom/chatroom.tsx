@@ -9,17 +9,22 @@ import { RiEmojiStickerLine } from 'react-icons/ri';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { over, Client } from 'stompjs';
 import SockJS from 'sockjs-client';
+import { useSearchParams } from 'next/navigation';
 
 const Chatroom = () => {
   // Redux store
   const sessionProfile: Profile = useAppSelector(
     (state) => state.profileReducer.sessionProfile
   );
+  const searchParams = useSearchParams();
+
+  const receiverProfileId = searchParams.get('receiverProfileId');
 
   const [stompClient, setStompClient] = useState<Client>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [receiverProfile, setReceiverProfile] = useState<Profile>();
   const [privateChats, setPrivateChats] = useState(new Map());
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -33,6 +38,28 @@ const Chatroom = () => {
       behavior: 'smooth',
     });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${endpoint}/profile/${receiverProfileId}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        // Process the response here
+        if (res.ok) {
+          const userProfileData = await res.json();
+          setReceiverProfile(userProfileData.payload);
+        } else {
+          throw new Error('Failed to fetch receiver profile');
+        }
+      } catch (error) {
+        console.error('Error fetching receiver profile:', error);
+      }
+    };
+
+    fetchData(); // Call the async function
+  }, []); // Empty dependency array means this effect runs only once on mount
 
   useEffect(() => {
     scrollToBottom();
@@ -72,7 +99,6 @@ const Chatroom = () => {
       console.log('Connected!');
       client?.subscribe('/chatroom/public', onMessageReceived);
       setStompClient(client);
-      console.log('stomp client : ', stompClient);
     };
 
     const onError = (err: any) => {
@@ -118,7 +144,7 @@ const Chatroom = () => {
       {/* User info section */}
       <div className='flex w-full items-center rounded-t-xl border-b bg-white p-4'>
         <div className='h-10 w-10 rounded-full bg-gray-300'></div>
-        <span className='ml-2 font-bold'>{sessionProfile?.displayName}</span>
+        <span className='ml-2 font-bold'>{receiverProfile?.displayName}</span>
       </div>
 
       {/* Chat messages section */}
