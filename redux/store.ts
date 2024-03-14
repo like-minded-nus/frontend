@@ -10,7 +10,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['menuReducer', 'userReducer', 'matchReducer', 'profileReducer'],
+  blacklist: ['menuReducer', 'userReducer', 'matchReducer'],
   // whitelist: ['profileReducer'],
 };
 

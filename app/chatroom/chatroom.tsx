@@ -18,14 +18,13 @@ const Chatroom = () => {
   );
   const searchParams = useSearchParams();
 
-  const receiverProfileId = searchParams.get('receiverProfileId');
+  const receiverProfileId = searchParams.get('receiverProfileId') ?? '0';
 
   const [stompClient, setStompClient] = useState<Client>();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Map<string, Message[]>>(new Map());
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [receiverProfile, setReceiverProfile] = useState<Profile>();
-  const [privateChats, setPrivateChats] = useState(new Map());
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
@@ -65,39 +64,45 @@ const Chatroom = () => {
     scrollToBottom();
   }, [messages]);
 
-  const onMessageReceived = (payload: any) => {
-    const payloadData = JSON.parse(payload.body);
+  const onPrivateMessage = (payload: any) => {
+    console.log(payload);
+    var payloadData = JSON.parse(payload.body);
 
-    switch (payloadData.status) {
-      case 'JOIN':
-        if (!privateChats.get(payloadData.senderName)) {
-          privateChats.set(payloadData.senderName, []);
-          setPrivateChats(new Map(privateChats));
+    const messagePayload: Message = {
+      messageId: 1,
+      senderProfileId: payloadData.senderProfileId,
+      receiverProfileId: payloadData.receiverProfileId,
+      text: payloadData.text,
+      sentDatetime: '',
+      isRead: false,
+    };
+
+    //   setMessages((prevMessages) => [...prevMessages, messagePayload]);
+    if (+receiverProfileId === +messagePayload.senderProfileId) {
+      console.log('A');
+      if (!messages.has(receiverProfileId)) {
+        console.log('B');
+        messages.set(receiverProfileId, [messagePayload]);
+        setMessages(new Map(messages));
+      } else {
+        const existingMessages = messages.get(receiverProfileId);
+        if (existingMessages) {
+          existingMessages.push(messagePayload);
+          messages.set(receiverProfileId, existingMessages);
+          setMessages(new Map(messages));
         }
-        break;
-      case 'MESSAGE':
-        const messagePayload: Message = {
-          messageId: 1,
-          senderProfileId: payloadData.senderProfileId,
-          receiverProfileId: payloadData.receiverProfileId,
-          text: payloadData.text,
-          sentDatetime: '',
-          isRead: false,
-        };
-        // messages.push(messagePayload);
-        console.log(messages);
-        setMessages((prevMessages) => [...prevMessages, messagePayload]);
-        console.log(messages);
-        break;
+      }
     }
   };
 
   useEffect(() => {
     let client: Client;
-    console.log('session profile ', sessionProfile);
     const onConnected = () => {
       console.log('Connected!');
-      client?.subscribe('/chatroom/public', onMessageReceived);
+      client?.subscribe(
+        '/user/' + sessionProfile.profileId + '/private',
+        onPrivateMessage
+      );
       setStompClient(client);
     };
 
@@ -124,14 +129,34 @@ const Chatroom = () => {
     // Add the message to the messages array
     // setMessages([...messages, { text: inputValue, profileId: 1 }]);
     if (stompClient) {
-      const chatMessage = {
+      const messagePayload: Message = {
+        messageId: 1,
         senderProfileId: +sessionProfile.profileId,
-        receiverProfileId: 2,
+        receiverProfileId: +receiverProfileId,
         text: inputValue,
-        status: 'MESSAGE',
+        sentDatetime: '',
+        isRead: false,
       };
-      stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
+
+      if (!messages.has(receiverProfileId)) {
+        messages.set(receiverProfileId, [messagePayload]);
+        setMessages(new Map(messages));
+      } else {
+        const existingMessages = messages.get(receiverProfileId);
+        if (existingMessages) {
+          existingMessages.push(messagePayload);
+          messages.set(receiverProfileId, existingMessages);
+          setMessages(new Map(messages));
+        }
+      }
+
+      stompClient.send(
+        '/app/private-message',
+        {},
+        JSON.stringify(messagePayload)
+      );
       setInputValue('');
+      setShowEmojiPicker(false);
     } else {
       console.log('Stomp Client is null');
     }
@@ -149,8 +174,8 @@ const Chatroom = () => {
 
       {/* Chat messages section */}
       <div className='w-full  flex-1 overflow-y-auto bg-white p-4'>
-        {messages.map((message: Message, index) => {
-          const nextMessage = messages[index + 1];
+        {messages.get(receiverProfileId)?.map((message: Message, index) => {
+          const nextMessage = messages.get(receiverProfileId)?.[index + 1];
           const hasSameProfileId =
             nextMessage &&
             +nextMessage.senderProfileId === +message.senderProfileId;
@@ -176,7 +201,6 @@ const Chatroom = () => {
             </div>
           );
         })}
-        {/* Dummy div for scrolling to bottom */}
         <div ref={messagesEndRef}></div>
       </div>
 
