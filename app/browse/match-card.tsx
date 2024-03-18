@@ -43,23 +43,25 @@ const MatchCard = () => {
 
   console.log(profile);
 
+  // ** NOW FETCHED FROM HOME PAGE
   // Step 1: Fetch the logged in user's profile
-  useEffect(() => {
-    if (session) {
-      dispatch(
-        getProfileByUserId({ controller, userId: Number(session.user.id) })
-      );
-    }
+  // useEffect(() => {
+  //   if (session) {
+  //     dispatch(
+  //       getProfileByUserId({ controller, userId: Number(session.user.id) })
+  //     );
+  //   }
 
-    return () => {
-      controller.abort();
-      // dispatch(sessionProfileReset());
-    };
-  }, [session]);
+  //   return () => {
+  //     controller.abort();
+  //     // dispatch(sessionProfileReset());
+  //   };
+  // }, [session]);
 
   // Step 2: Fetch the potential match list
   useEffect(() => {
     if (sessionProfile?.profileId) {
+      console.log('has session profile in redux store');
       dispatch(
         getProfilePassionMatchList({
           controller,
