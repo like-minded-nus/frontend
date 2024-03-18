@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminMenu from '@/app/components/admin-menu';
 import Link from 'next/link';
+import VoucherList from '@/app/components/voucher-list';
 
 interface Vendor {
   vendorId: number;
@@ -47,47 +48,34 @@ const VendorProfilePage = () => {
   }
 
   return (
-    <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 p-8 text-center'>
-      <h1 className='mb-8 text-3xl text-gray-700'>{vendorData.vendorName}</h1>
+    <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
+      <h1 className='mb-8 text-3xl text-gray-200'>{vendorData.vendorName}</h1>
       <div className='vendor-info'>
         <div className='info-item'>
-          <label htmlFor='activity' className='mb-2 mr-4 text-gray-700'>
+          <label htmlFor='activity' className='mb-2 mr-4 text-gray-200'>
             Activity:
           </label>
           <span>{vendorData.activityName}</span>
         </div>
         <div className='info-item'>
-          <label htmlFor='address' className='mb-2 mr-4 text-gray-700'>
+          <label htmlFor='address' className='mb-2 mr-4 text-gray-200'>
             Address:
           </label>
           <span>{vendorData.address}</span>
         </div>
         <div className='info-item'>
-          <label htmlFor='phoneNumber' className='mb-2 mr-4 text-gray-700'>
+          <label htmlFor='phoneNumber' className='mb-2 mr-4 text-gray-200'>
             Phone Number:
           </label>
           <span>{vendorData.phoneNumber}</span>
         </div>
         <div className='info-item'>
-          <label htmlFor='website' className='mb-2 mr-4 text-gray-700'>
+          <label htmlFor='website' className='mb-2 mr-4 text-gray-200'>
             Website:
           </label>
           <span>{vendorData.website}</span>
         </div>
-        <table className='justify-center'>
-          <tr>
-            <th>Vouchers</th>
-          </tr>
-          <tr>
-            <td>voucher 1</td>
-          </tr>
-          <tr>
-            <td>voucher 2</td>
-          </tr>
-          <tr>
-            <td>voucher 3</td>
-          </tr>
-        </table>
+        <VoucherList vendorId={id} />
         <Link href={`/admin/vendors/${id}/create_voucher`}>
           <button
             type='submit'

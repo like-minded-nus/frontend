@@ -1,13 +1,10 @@
+import Base from '@/app/components/base';
 import CreateVoucherForm from './create-voucher-form';
 
 const CreateVoucher = () => {
-  return (
-    <>
-      <div className='mx-40 my-10 flex w-screen flex-col items-center justify-start '>
-        <CreateVoucherForm />
-      </div>
-    </>
-  );
+  const component = <CreateVoucherForm />;
+
+  return <Base content={component} />;
 };
 
 export default CreateVoucher;

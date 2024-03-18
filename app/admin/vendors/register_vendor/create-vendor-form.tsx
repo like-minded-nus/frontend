@@ -72,7 +72,7 @@ const CreateVendorForm = () => {
 
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center'>
+      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
         {/* <AdminMenu /> */}
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
