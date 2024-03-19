@@ -43,20 +43,8 @@ const MatchCard = () => {
 
   console.log(profile);
 
-  // ** NOW FETCHED FROM HOME PAGE
   // Step 1: Fetch the logged in user's profile
-  // useEffect(() => {
-  //   if (session) {
-  //     dispatch(
-  //       getProfileByUserId({ controller, userId: Number(session.user.id) })
-  //     );
-  //   }
-
-  //   return () => {
-  //     controller.abort();
-  //     // dispatch(sessionProfileReset());
-  //   };
-  // }, [session]);
+  // ** NOW FETCHED FROM HOME PAGE
 
   // Step 2: Fetch the potential match list
   useEffect(() => {

@@ -36,7 +36,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
   const handleClick = () => {
     dispatch(setActiveItem(id));
-    push(link);
+    if (link) push(link);
   };
 
   return (
