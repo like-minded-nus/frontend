@@ -11,7 +11,7 @@ interface MenuItemProps {
   id: number;
   label: string;
   count: number;
-  link: string;
+  link?: string;
   first: boolean;
   last?: boolean;
 }
@@ -36,7 +36,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
   const handleClick = () => {
     dispatch(setActiveItem(id));
-    push(link);
+    if (link) push(link);
   };
 
   return (

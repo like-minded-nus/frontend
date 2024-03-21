@@ -27,22 +27,10 @@ const MatchList = () => {
   );
 
   // Step 1: Fetch the logged in user's profile
-  useEffect(() => {
-    if (session) {
-      dispatch(
-        getProfileByUserId({ controller, userId: Number(session.user.id) })
-      );
-    }
-
-    return () => {
-      controller.abort();
-      // dispatch(sessionProfileReset());
-    };
-  }, [session]);
+  // ** NOW FETCHED FROM HOME PAGE
 
   // Step 2: Fetch user's matches
   useEffect(() => {
-    console.log(sessionProfile);
     if (sessionProfile?.profileId) {
       dispatch(
         getAllMatches({

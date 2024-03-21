@@ -26,7 +26,7 @@
     "moment": "^2.30.1",
     "net": "^1.0.2",
     "next": "14.1.0",
-    "next-auth": "^4.24.6",
+    "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
@@ -40,7 +40,8 @@
     "stompjs": "^2.3.3",
     "streamsearch": "^1.1.0",
     "tailwind-datepicker-react": "^1.4.3",
-    "tailwind-scrollbar": "^3.1.0"
+    "tailwind-scrollbar": "^3.1.0",
+    "to-regex-range": "^5.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",
