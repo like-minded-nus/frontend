@@ -1,10 +1,10 @@
-import Base from '@/app/components/base';
 import VendorProfilePage from './vendor-profile-page';
+import AdminBase from '@/app/components/admin-base';
 
 const VendorProfile = () => {
   const component = <VendorProfilePage />;
 
-  return <Base content={component} />;
+  return <AdminBase content={component} />;
 };
 
 export default VendorProfile;

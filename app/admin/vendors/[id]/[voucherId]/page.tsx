@@ -1,10 +1,10 @@
-import Base from '@/app/components/base';
 import VoucherViewPage from './view-voucher-page';
+import AdminBase from '@/app/components/admin-base';
 
 const VoucherPage = () => {
   const component = <VoucherViewPage />;
 
-  return <Base content={component} />;
+  return <AdminBase content={component} />;
 };
 
 export default VoucherPage;

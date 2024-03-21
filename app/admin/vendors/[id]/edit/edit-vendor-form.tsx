@@ -1,15 +1,45 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-const CreateVendorForm = () => {
+const EditVendorForm = () => {
   const router = useRouter();
   const [vendorName, setVendorName] = useState('');
   const [activity, setActivity] = useState('');
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [website, setWebsite] = useState('');
+
+  const getVendorIdFromUrl = () => {
+    const url = window.location.href;
+    const urlParts = url.split('/');
+    const idIndex = urlParts.indexOf('vendors') + 1;
+    return urlParts[idIndex];
+  };
+  const vendorId = getVendorIdFromUrl();
+
+  const fetchVendorDetails = async (id: any) => {
+    try {
+      const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+      const response = await axios.get(`${endpoint}/vendors/${id}`);
+      const vendorData = response.data;
+      setVendorName(vendorData.vendorName);
+      setActivity(vendorData.activityName);
+      setAddress(vendorData.address);
+      setPhoneNumber(vendorData.phoneNumber);
+      setWebsite(vendorData.website);
+      console.log('Vendor data:', vendorData);
+    } catch (error) {
+      console.error('Error fetching vendor details:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (vendorId) {
+      fetchVendorDetails(vendorId);
+    }
+  }, [vendorId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,19 +82,19 @@ const CreateVendorForm = () => {
       if (!endpoint) {
         throw new Error('API endpoint is not defined.');
       }
-      const response = await axios.post(`${endpoint}/vendors/create_vendor`, {
+      const response = await axios.put(`${endpoint}/vendors/${vendorId}`, {
         vendorName,
         activityName: activity,
         address,
         phoneNumber,
         website,
       });
-      console.log('Vendor registration successful:', response.data);
-      alert('Vendor created successfully!');
-      router.push(`/admin/vendors`);
+      console.log('Vendor details updated successfully:', response.data);
+      alert('Vendor details updated successfully!');
+      router.push(`/admin/vendors/${vendorId}`);
     } catch (error) {
-      console.error('Error registering vendor:', error);
-      alert('Failed to create vendor. Please try again.');
+      console.error('Error updating vendor details:', error);
+      alert('Failed to update vendor details. Please try again.');
     }
 
     setVendorName('');
@@ -79,7 +109,7 @@ const CreateVendorForm = () => {
       <div className='mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
-            <h1 className='mb-8 text-3xl text-gray-200'>Register Vendor</h1>
+            <h1 className='mb-8 text-3xl text-gray-200'>Edit Vendor</h1>
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
 
@@ -160,7 +190,7 @@ const CreateVendorForm = () => {
                 type='submit'
                 className='btn btn-secondary btn-solid mt-4 w-full py-2'
               >
-                Add Vendor
+                Save Changes
               </button>
             </form>
           </div>
@@ -170,4 +200,4 @@ const CreateVendorForm = () => {
   );
 };
 
-export default CreateVendorForm;
+export default EditVendorForm;

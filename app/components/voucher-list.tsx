@@ -10,9 +10,13 @@ interface Voucher {
 
 interface VoucherListProps {
   vendorId: string | null;
+  handleOpenModal: (voucher: Voucher) => void;
 }
 
-const VoucherList: React.FC<VoucherListProps> = ({ vendorId }) => {
+const VoucherList: React.FC<VoucherListProps> = ({
+  vendorId,
+  handleOpenModal,
+}) => {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
 
@@ -34,15 +38,20 @@ const VoucherList: React.FC<VoucherListProps> = ({ vendorId }) => {
   return (
     <div className='mb-5 mt-5 w-full table-auto'>
       <h3 className='px-4 py-2 text-gray-200'>Vouchers</h3>
-      {vouchers.map((voucher) => (
-        <ul key={voucher.voucherId}>
-          <Link href={`/admin/vendors/${vendorId}/${voucher.voucherId}`}>
-            <button className='btn btn-secondary mb-2'>
+      {vouchers.length === 0 ? (
+        <p>No active vouchers currently</p>
+      ) : (
+        vouchers.map((voucher) => (
+          <ul key={voucher.voucherId}>
+            <button
+              className='btn btn-secondary mb-2'
+              onClick={() => handleOpenModal(voucher)}
+            >
               {voucher.voucherName}
             </button>
-          </Link>
-        </ul>
-      ))}
+          </ul>
+        ))
+      )}
     </div>
   );
 };

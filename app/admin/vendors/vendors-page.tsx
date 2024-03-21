@@ -32,44 +32,27 @@ const VendorsPage = () => {
 
   return (
     <div className='rounded-lg border-gray-500 p-8 text-center'>
-      {/* <AdminMenu /> */}
-      <div className='mx-auto mt-24 w-full rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
+      <div className='mx-auto w-full rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
         <h2 className='mb-8 text-3xl text-gray-200'>List of Vendors</h2>
-        <table className='w-full table-auto'>
-          <thead>
-            <tr>
-              <th className='px-4 py-2 text-gray-200'>Vendor Name</th>
-              <th className='px-4 py-2 text-gray-200'>Activity</th>
-              <th className='px-4 py-2 text-gray-200'>Address</th>
-              <th className='px-4 py-2 text-gray-200'>Phone Number</th>
-              <th className='px-4 py-2 text-gray-200'>Website</th>
-            </tr>
-          </thead>
-          <tbody>
+        {vendors.length === 0 ? (
+          <p className='text-gray-200'>No active vendors currently</p>
+        ) : (
+          <div className='-mx-2 flex flex-wrap'>
             {vendors.map((vendor) => (
-              <tr key={vendor.vendorId}>
-                <td className='border px-4 py-2 text-gray-200'>
-                  {vendor.vendorName}
-                </td>
-                <td className='border px-4 py-2 text-gray-200'>
-                  {vendor.activityName}
-                </td>
-                <td className='border px-4 py-2 text-gray-200'>
-                  {vendor.address}
-                </td>
-                <td className='border px-4 py-2 text-gray-200'>
-                  {vendor.phoneNumber}
-                </td>
-                <td className='border px-4 py-2 text-gray-200'>
-                  {vendor.website}
-                </td>
-                <Link href={`/admin/vendors/${vendor.vendorId}`}>
-                  <button className='btn btn-secondary btn-solid'>View</button>
-                </Link>
-              </tr>
+              <div key={vendor.vendorId} className='w-1/4 p-2'>
+                <div className='h-full rounded-lg border border-gray-700 bg-gray-600 p-4 text-gray-200'>
+                  <h3 className='m-3 font-semibold'>{vendor.vendorName}</h3>
+                  <p className='m-3 font-thin'>{vendor.activityName}</p>
+                  <Link href={`/admin/vendors/${vendor.vendorId}`}>
+                    <button className='btn btn-secondary btn-solid mt-4'>
+                      View
+                    </button>
+                  </Link>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        )}
         <Link href='/admin/vendors/register_vendor'>
           <button
             type='submit'

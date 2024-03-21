@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import axios from 'axios';
 import VoucherDatepicker from '@/app/components/voucher-datepicker';
+import { useRouter } from 'next/navigation';
 
 const CreateVoucherForm = () => {
+  const router = useRouter();
   const [voucherName, setVoucherName] = useState('');
   const [voucherEndDate, setVoucherEndDate] = useState('');
   const [voucherDescription, setVoucherDescription] = useState('');
@@ -48,8 +50,11 @@ const CreateVoucherForm = () => {
         vendorId,
       });
       console.log('Voucher creation successful:', response.data);
+      alert('Voucher created successfully!');
+      router.push(`/admin/vendors/${vendorId}`);
     } catch (error) {
       console.error('Error creating voucher:', error);
+      alert('Failed to create voucher. Please try again.');
     }
 
     setVoucherName('');
