@@ -3,8 +3,8 @@ export interface Message {
   senderProfileId: number;
   receiverProfileId: number;
   text: String;
-  sentDatetime: String;
-  isRead: boolean;
+  sentDateTime: Date;
+  isRead: String;
 }
 
 export interface Payload {
