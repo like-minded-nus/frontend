@@ -2,13 +2,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Message, Payload } from '../../models/message';
 import { Profile } from '@/models/profile';
-import { BiSend } from 'react-icons/bi';
+import { BiSend, BiCheckDouble } from 'react-icons/bi';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { useAppSelector } from '@/redux/hooks';
 import { RiEmojiStickerLine } from 'react-icons/ri';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { over, Client } from 'stompjs';
 import SockJS from 'sockjs-client';
+import { format } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 
 const Chatroom = () => {
@@ -39,7 +40,7 @@ const Chatroom = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProfileData = async () => {
       try {
         const res = await fetch(`${endpoint}/profile/${receiverProfileId}`, {
           method: 'GET',
@@ -57,7 +58,30 @@ const Chatroom = () => {
       }
     };
 
-    fetchData(); // Call the async function
+    const fetchMessageData = async () => {
+      try {
+        const res = await fetch(
+          `${endpoint}/message/${sessionProfile.profileId}/${receiverProfileId}`,
+          {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+        // Process the response here
+        if (res.ok) {
+          const messageData = await res.json();
+          messages.set(receiverProfileId, messageData.payload);
+          setMessages(new Map(messages));
+        } else {
+          throw new Error('Failed to fetch messages');
+        }
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchProfileData();
+    fetchMessageData();
   }, []); // Empty dependency array means this effect runs only once on mount
 
   useEffect(() => {
@@ -69,19 +93,16 @@ const Chatroom = () => {
     var payloadData = JSON.parse(payload.body);
 
     const messagePayload: Message = {
-      messageId: 1,
+      messageId: payloadData.messageId,
       senderProfileId: payloadData.senderProfileId,
       receiverProfileId: payloadData.receiverProfileId,
       text: payloadData.text,
-      sentDatetime: '',
-      isRead: false,
+      sentDateTime: new Date(),
+      isRead: 'N',
     };
 
-    //   setMessages((prevMessages) => [...prevMessages, messagePayload]);
     if (+receiverProfileId === +messagePayload.senderProfileId) {
-      console.log('A');
       if (!messages.has(receiverProfileId)) {
-        console.log('B');
         messages.set(receiverProfileId, [messagePayload]);
         setMessages(new Map(messages));
       } else {
@@ -96,6 +117,69 @@ const Chatroom = () => {
   };
 
   useEffect(() => {
+    const sendMarkAsRead = (messageId: number, senderProfileId: number) => {
+      const Sock = new SockJS(`${wsEndpoint}/ws`);
+      let client = over(Sock);
+
+      const messagePayload = {
+        messageId,
+        senderProfileId,
+      };
+
+      const onConnected = () => {
+        console.log('Sending Yo!');
+        client.send('/app/message-read', {}, JSON.stringify(messagePayload));
+      };
+
+      const onError = (err: any) => {
+        console.log(err);
+      };
+
+      client.connect({}, onConnected, onError);
+    };
+
+    // Initialize IntersectionObserver when messages are loaded
+    const initIntersectionObserver = () => {
+      console.log('reinit');
+      const options = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5, // Change this threshold as needed
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const messageId = entry.target.getAttribute('data-message-id');
+            const senderProfileId =
+              entry.target.getAttribute('sender-profile-id');
+
+            console.log('After reinit apa ');
+            console.log('message id ', messageId);
+            console.log('sewnderProfile id ', senderProfileId);
+
+            if (messageId && senderProfileId === receiverProfileId) {
+              sendMarkAsRead(parseInt(messageId), parseInt(senderProfileId));
+            }
+          }
+        });
+      }, options);
+
+      // Observe each message element
+      document.querySelectorAll('.message').forEach((message) => {
+        observer.observe(message);
+      });
+
+      // Clean up function to disconnect the observer when component unmounts
+      return () => {
+        observer.disconnect();
+      };
+    };
+
+    initIntersectionObserver();
+  }, [messages]);
+
+  useEffect(() => {
     let client: Client;
     const onConnected = () => {
       console.log('Connected!');
@@ -103,6 +187,12 @@ const Chatroom = () => {
         '/user/' + sessionProfile.profileId + '/private',
         onPrivateMessage
       );
+
+      client?.subscribe(
+        '/user/' + sessionProfile.profileId + '/private/read',
+        handleMarkAsRead
+      );
+
       setStompClient(client);
     };
 
@@ -123,20 +213,61 @@ const Chatroom = () => {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleMarkAsRead = (payload: any) => {
+    console.log('Message with ID ', payload.body, ' is read yo');
+    var payloadData = payload.body;
+    const curMessages = messages.get(receiverProfileId);
+    console.log('curMessages: ', curMessages);
+    const messageIdIndex = curMessages?.findIndex((message) => {
+      console.log('final 1', message.messageId);
+      console.log('final 2', payloadData);
+      return +message.messageId == +payloadData;
+    });
+
+    if (curMessages && messageIdIndex !== undefined && messageIdIndex >= 0) {
+      console.log(messageIdIndex);
+      console.log(curMessages[messageIdIndex], 'apa jay chou');
+      curMessages[messageIdIndex].isRead = 'Y';
+      messages.set(receiverProfileId, [...curMessages]);
+      setMessages(new Map(messages));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('stompClient : ', stompClient);
     // Add the message to the messages array
-    // setMessages([...messages, { text: inputValue, profileId: 1 }]);
     if (stompClient) {
+      const fetchNextMessageId = async () => {
+        try {
+          const res = await fetch(`${endpoint}/message/sequence`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          // Process the response here
+          if (res.ok) {
+            const messageData = await res.json();
+            return messageData.payload;
+          } else {
+            throw new Error('Failed to fetch next message id');
+          }
+        } catch (error) {
+          console.error('Error fetching next message id:', error);
+        }
+      };
+
+      const nextMessageId = await fetchNextMessageId();
+
       const messagePayload: Message = {
-        messageId: 1,
+        messageId: nextMessageId,
         senderProfileId: +sessionProfile.profileId,
         receiverProfileId: +receiverProfileId,
         text: inputValue,
-        sentDatetime: '',
-        isRead: false,
+        sentDateTime: new Date(),
+        isRead: 'N',
       };
+
+      console.log('aaa : ', messagePayload);
 
       if (!messages.has(receiverProfileId)) {
         messages.set(receiverProfileId, [messagePayload]);
@@ -173,7 +304,7 @@ const Chatroom = () => {
       </div>
 
       {/* Chat messages section */}
-      <div className='w-full  flex-1 overflow-y-auto bg-white p-4'>
+      <div className='w-full flex-1 overflow-y-auto bg-white p-4'>
         {messages.get(receiverProfileId)?.map((message: Message, index) => {
           const nextMessage = messages.get(receiverProfileId)?.[index + 1];
           const hasSameProfileId =
@@ -182,21 +313,45 @@ const Chatroom = () => {
 
           return (
             <div
+              className='message'
               key={index}
-              className={`${hasSameProfileId ? 'mb-0.5' : 'mb-3'}  flex ${
-                +message.senderProfileId === +sessionProfile.profileId
-                  ? 'justify-end'
-                  : 'justify-start'
-              }`}
+              data-message-id={message.messageId}
+              sender-profile-id={message.senderProfileId}
             >
               <div
-                className={`${
+                className={`text-gray text-xs ${
                   +message.senderProfileId === +sessionProfile.profileId
-                    ? 'rounded-l-3xl rounded-r-lg  bg-primary text-white'
-                    : 'rounded-l-lg rounded-r-3xl  bg-secondary text-black'
-                } max-w-lg break-words px-4 py-2`}
+                    ? 'text-right'
+                    : 'text-left'
+                }`}
               >
-                {message.text}
+                <div>{format(message.sentDateTime, 'MM-dd HH:mm')}</div>
+              </div>
+              <div
+                className={`${hasSameProfileId ? 'mb-0.5' : 'mb-3'}  flex ${
+                  +message.senderProfileId === +sessionProfile.profileId
+                    ? 'justify-end'
+                    : 'justify-start'
+                }`}
+              >
+                <div
+                  className={`${
+                    +message.senderProfileId === +sessionProfile.profileId
+                      ? 'rounded-l-3xl rounded-r-lg  bg-primary text-white'
+                      : 'rounded-l-lg rounded-r-3xl  bg-secondary text-black'
+                  } flex max-w-lg break-words px-4 py-2`}
+                >
+                  <div>{message.text}</div>
+                  <div className='mt-4 self-end'>
+                    {+message.senderProfileId === +sessionProfile.profileId && (
+                      <div className='flex justify-end'>
+                        <BiCheckDouble
+                          className={`${message.isRead === 'Y' ? 'text-secondary' : 'text-white'}`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           );
