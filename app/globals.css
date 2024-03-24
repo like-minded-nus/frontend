@@ -304,8 +304,8 @@
 
   /** [start] match list **/
   .match-list {
-    @apply my-4 flex h-[92%] w-[77.5dvw]
-            flex-wrap justify-center overflow-y-auto rounded-xl bg-gray-200 p-4 ring-1
+    @apply my-4 flex h-[92%] w-[77.5dvw] flex-col flex-wrap justify-start
+            space-y-2 overflow-y-auto rounded-xl bg-gray-200 p-4 ring-1
             ring-black/5 scrollbar scrollbar-thumb-secondary scrollbar-track-rounded-full scrollbar-thumb-rounded-full;
   }
 
