@@ -5,6 +5,7 @@ import AdminMenu from '@/app/components/admin-menu';
 import Link from 'next/link';
 import VoucherList from '@/app/components/voucher-list';
 import VoucherModal from '@/app/components/voucher-modal';
+import { FaEdit } from 'react-icons/fa';
 
 interface Vendor {
   vendorId: number;
@@ -57,9 +58,9 @@ const VendorProfilePage = () => {
 
   return (
     <div className='relative mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
-      <Link href={`/admin/vendors/${id}/edit`}>
-        <button className='btn btn-secondary absolute right-0 top-2 mr-2 mt-2'>
-          Edit
+      <Link href={`/admin/vendors/${id}/edit_vendor`}>
+        <button className='btn-square btn-secondary absolute right-0 top-2 mr-2 mt-2'>
+          <FaEdit />
         </button>
       </Link>
       <h1 className='mb-8 text-3xl text-gray-200'>{vendorData.vendorName}</h1>

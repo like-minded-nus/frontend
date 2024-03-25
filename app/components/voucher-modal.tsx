@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { FaEdit } from 'react-icons/fa';
+import Link from 'next/link';
 
 interface ModalProps {
   isOpen: boolean;
@@ -43,12 +45,19 @@ const VoucherModal: React.FC<ModalProps> = ({
           &#8203;
         </span>
         <div
-          className='inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle'
+          className='inline-block transform overflow-hidden rounded-lg border-gray-700 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle'
           role='dialog'
           aria-modal='true'
           aria-labelledby='modal-headline'
         >
-          <div className='sm:pb-4items-center justify-center bg-white px-4 py-3 sm:p-6'>
+          <Link
+            href={`/admin/vendors/2/edit_voucher?selectedVoucher=${JSON.stringify(selectedVoucher)}`}
+          >
+            <button className='btn-square btn-secondary absolute right-0 top-2 mr-2 '>
+              <FaEdit />
+            </button>
+          </Link>
+          <div className='sm:pb-4items-center justify-center border-gray-700 bg-gray-600 px-4 py-3 sm:p-6'>
             {isLoading ? (
               <Skeleton height={40} count={5} />
             ) : (
@@ -56,16 +65,19 @@ const VoucherModal: React.FC<ModalProps> = ({
                 <div className='justify-center sm:flex'>
                   <div className='m-4 text-center'>
                     <h3
-                      className='mb-4 text-3xl font-bold leading-6 text-gray-600'
+                      className='mb-4 text-3xl font-bold leading-6 text-gray-200'
                       id='modal-headline'
                     >
                       {selectedVoucher.voucherName}
                     </h3>
                     <div className='mt-6'>
-                      <p className='my-2 text-sm text-gray-500'>
+                      <p className='my-2 text-sm text-gray-200'>
+                        Id: {selectedVoucher.voucherId}
+                      </p>
+                      <p className='my-2 text-sm text-gray-200'>
                         End Date: {selectedVoucher.voucherEndDate}
                       </p>
-                      <p className='text-sm text-gray-500'>
+                      <p className='text-sm text-gray-200'>
                         Description: {selectedVoucher.voucherDescription}
                       </p>
                     </div>
@@ -74,7 +86,7 @@ const VoucherModal: React.FC<ModalProps> = ({
               </>
             )}
           </div>
-          <div className='px-4 py-3 sm:flex sm:flex-row-reverse sm:px-3'>
+          <div className='bg-gray-600 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-3'>
             <button
               onClick={onClose}
               type='button'

@@ -95,6 +95,18 @@
                 transition-all
                 duration-200 ease-linear hover:rounded-md;
   }
+
+  .btn-square {
+    @apply mx-1 rounded-md border border-gray-700 bg-white px-3 py-2 text-sm font-semibold text-gray-700
+                transition-all duration-200
+                ease-linear hover:bg-gray-200;
+  }
+
+  .btn-square.btn-secondary {
+    @apply border border-secondary bg-white text-secondary
+                transition-all duration-200 ease-linear
+                hover:rounded-md hover:bg-secondary hover:text-white;
+  }
   /** [end] form components **/
 
   /** [start] menu **/

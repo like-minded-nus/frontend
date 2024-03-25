@@ -1,16 +1,29 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import VoucherDatepicker from '@/app/components/voucher-datepicker';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-const CreateVoucherForm = () => {
+const EditVoucherForm = () => {
   const router = useRouter();
   const [voucherName, setVoucherName] = useState('');
   const [voucherEndDate, setVoucherEndDate] = useState('');
   const [voucherDescription, setVoucherDescription] = useState('');
   const [redeemStatus, setRedeemStatus] = useState(0);
   const [vendorId, setVendorId] = useState('');
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const voucherParams = searchParams.get('selectedVoucher');
+    console.log(voucherParams);
+    if (voucherParams) {
+      const selectedVoucher = JSON.parse(voucherParams);
+      console.log(selectedVoucher);
+      setVoucherName(selectedVoucher.voucherName);
+      setVoucherEndDate(selectedVoucher.voucherEndDate);
+      setVoucherDescription(selectedVoucher.voucherDescription);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,13 +55,13 @@ const CreateVoucherForm = () => {
       if (!endpoint) {
         throw new Error('API endpoint is not defined.');
       }
-      const response = await axios.post(`${endpoint}/vouchers/create_voucher`, {
-        voucherName,
-        voucherEndDate,
-        voucherDescription,
-        redeemStatus,
-        vendorId,
-      });
+      // const response = await axios.post(`${endpoint}/vouchers/create_voucher`, {
+      //   voucherName,
+      //   voucherEndDate,
+      //   voucherDescription,
+      //   redeemStatus,
+      //   vendorId,
+      // });
       console.log('Voucher creation successful:', response.data);
       alert('Voucher created successfully!');
       router.push(`/admin/vendors/${vendorId}`);
@@ -92,9 +105,7 @@ const CreateVoucherForm = () => {
       <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center'>
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
-            <h1 className='mb-8 text-3xl text-gray-200'>
-              Create A New Voucher
-            </h1>
+            <h1 className='mb-8 text-3xl text-gray-200'>Edit Voucher</h1>
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
 
@@ -145,7 +156,7 @@ const CreateVoucherForm = () => {
                 type='submit'
                 className='btn btn-secondary btn-solid mt-4 w-full py-2'
               >
-                Create Voucher
+                Save Changes
               </button>
             </form>
           </div>
@@ -155,4 +166,4 @@ const CreateVoucherForm = () => {
   );
 };
 
-export default CreateVoucherForm;
+export default EditVoucherForm;
