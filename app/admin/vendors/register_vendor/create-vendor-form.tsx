@@ -10,6 +10,11 @@ const CreateVendorForm = () => {
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [website, setWebsite] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
+  const [activityError, setActivityError] = useState('');
+  const [vendorNameError, setVendorNameError] = useState('');
+  const [addressError, setAddressError] = useState('');
+  const [websiteError, setWebsiteError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,9 +102,28 @@ const CreateVendorForm = () => {
                   id='vendorName'
                   value={vendorName}
                   onChange={(e) => setVendorName(e.target.value)}
-                  className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                  onBlur={() => {
+                    if (vendorName.trim() === '') {
+                      setVendorNameError('Vendor name cannot be empty.');
+                    } else if (vendorName.length > 50) {
+                      setVendorNameError(
+                        'Vendor name cannot exceed 50 characters.'
+                      );
+                    } else {
+                      setVendorNameError('');
+                    }
+                    console.log('Vendor name error:', vendorNameError);
+                  }}
+                  className={`w-full rounded-md border bg-gray-700 ${
+                    vendorNameError ? 'border-red-500' : 'border-gray-200'
+                  } px-4 py-2 text-gray-200`}
                   required
                 />
+                {vendorNameError && (
+                  <div className='mt-1 text-xs text-red-500'>
+                    {vendorNameError}
+                  </div>
+                )}
               </div>
               <div className='mb-4 flex flex-col'>
                 <label htmlFor='activity' className='mb-2 block text-gray-200'>

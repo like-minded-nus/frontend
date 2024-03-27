@@ -11,23 +11,13 @@ const CreateVoucherForm = () => {
   const [voucherDescription, setVoucherDescription] = useState('');
   const [redeemStatus, setRedeemStatus] = useState(0);
   const [vendorId, setVendorId] = useState('');
+  const [voucherNameError, setVoucherNameError] = useState('');
+  const [voucherDescriptionError, setVoucherDescriptionError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (voucherName.trim() === '') {
-      alert('Voucher name cannot be empty.');
-      return;
-    }
-    if (voucherName.length > 50) {
-      alert('Voucher name cannot exceed 50 characters.');
-      return;
-    }
     if (voucherEndDate.trim() === '') {
       alert('Voucher end date cannot be empty.');
-      return;
-    }
-    if (voucherDescription.trim() === '') {
-      alert('Voucher description cannot be empty.');
       return;
     }
     const selectedEndDate = new Date(voucherEndDate);
@@ -112,9 +102,27 @@ const CreateVoucherForm = () => {
                   id='voucherName'
                   value={voucherName}
                   onChange={(e) => setVoucherName(e.target.value)}
-                  className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                  onBlur={() => {
+                    if (voucherName.trim() === '') {
+                      setVoucherNameError('Voucher name cannot be empty.');
+                    } else if (voucherName.length > 50) {
+                      setVoucherNameError(
+                        'Voucher name cannot exceed 50 characters.'
+                      );
+                    } else {
+                      setVoucherNameError('');
+                    }
+                  }}
+                  className={`w-full rounded-md border bg-gray-700 ${
+                    voucherNameError ? 'border-red-500' : 'border-gray-200'
+                  } px-4 py-2 text-gray-200`}
                   required
                 />
+                {voucherNameError && (
+                  <div className='mt-1 text-xs text-red-500'>
+                    {voucherNameError}
+                  </div>
+                )}
               </div>
               <div className='mb-4 flex flex-col'>
                 <label
@@ -137,9 +145,27 @@ const CreateVoucherForm = () => {
                   id='voucherDescription'
                   value={voucherDescription}
                   onChange={(e) => setVoucherDescription(e.target.value)}
-                  className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                  onBlur={() => {
+                    if (voucherDescription.trim() === '') {
+                      setVoucherDescriptionError(
+                        'Voucher description cannot be empty.'
+                      );
+                    } else {
+                      setVoucherDescriptionError('');
+                    }
+                  }}
+                  className={`w-full rounded-md border bg-gray-700 ${
+                    voucherDescriptionError
+                      ? 'border-red-500'
+                      : 'border-gray-200'
+                  } px-4 py-2 text-gray-200`}
                   required
                 />
+                {voucherDescriptionError && (
+                  <div className='mt-1 text-xs text-red-500'>
+                    {voucherDescriptionError}
+                  </div>
+                )}
               </div>
               <button
                 type='submit'

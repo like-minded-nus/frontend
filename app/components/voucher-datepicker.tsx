@@ -15,7 +15,7 @@ const options = {
     clearBtn: '',
     icons: '',
     text: '',
-    disabledText: '',
+    disabledText: 'text-gray-200',
     input: '',
     inputIcon: '',
     selected: '',
