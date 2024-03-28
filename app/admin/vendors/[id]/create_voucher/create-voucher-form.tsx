@@ -79,10 +79,10 @@ const CreateVoucherForm = () => {
 
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center'>
+      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 '>
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
-            <h1 className='mb-8 text-3xl text-gray-200'>
+            <h1 className='mb-8 text-center text-3xl text-gray-200'>
               Create A New Voucher
             </h1>
           </div>

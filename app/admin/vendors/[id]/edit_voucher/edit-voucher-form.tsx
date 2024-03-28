@@ -4,6 +4,8 @@ import axios from 'axios';
 import VoucherDatepicker from '@/app/components/voucher-datepicker';
 import { useRouter, useSearchParams } from 'next/navigation';
 import DeleteModal from '@/app/components/delete-modal';
+import { FaArrowLeft } from 'react-icons/fa';
+import Link from 'next/link';
 
 const EditVoucherForm = () => {
   const router = useRouter();
@@ -121,7 +123,12 @@ const EditVoucherForm = () => {
 
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 px-3 pb-3 pt-8'>
+      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 px-2 pb-3 pl-3 pt-3'>
+        {/* <Link href={`/admin/vendors/${vendorId}`}>
+          <button className='btn-square btn-secondary left-0 top-2 ml-2.5'>
+            <FaArrowLeft />
+          </button>
+        </Link> */}
         <div className='mx-6 flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
             <h1 className='mb-8 text-center text-3xl text-gray-300'>
@@ -208,7 +215,6 @@ const EditVoucherForm = () => {
                   </div>
                 )}
               </div>
-
               <button
                 type='submit'
                 className='btn btn-secondary btn-solid mt-4 w-full py-2'
@@ -223,7 +229,7 @@ const EditVoucherForm = () => {
           onClick={handleOpenModal}
           className='btn-square btn-delete bottom-2 left-2 mr-2'
         >
-          Delete?
+          Delete
         </button>
       </div>
       <DeleteModal

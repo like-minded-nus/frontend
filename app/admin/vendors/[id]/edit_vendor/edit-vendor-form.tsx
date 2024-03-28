@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { FaArrowLeft } from 'react-icons/fa';
+import Link from 'next/link';
 
 const EditVendorForm = () => {
   const router = useRouter();
@@ -106,14 +108,16 @@ const EditVendorForm = () => {
 
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
+      <div className='mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8  shadow-lg'>
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
-            <h1 className='mb-8 text-3xl text-gray-300'>Edit Vendor</h1>
+            <h1 className='mb-8 text-center text-3xl text-gray-300'>
+              Edit Vendor
+            </h1>
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
 
-          <div className='w-1/2 pl-8'>
+          <div className='w-1/2 pl-8 '>
             <form onSubmit={handleSubmit}>
               <div className='mb-4 flex flex-col'>
                 <label
