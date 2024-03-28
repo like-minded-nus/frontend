@@ -109,7 +109,7 @@ const EditVendorForm = () => {
       <div className='mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
-            <h1 className='mb-8 text-3xl text-gray-200'>Edit Vendor</h1>
+            <h1 className='mb-8 text-3xl text-gray-300'>Edit Vendor</h1>
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
 
@@ -118,7 +118,7 @@ const EditVendorForm = () => {
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='vendorName'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Vendor Name:
                 </label>
@@ -132,7 +132,7 @@ const EditVendorForm = () => {
                 />
               </div>
               <div className='mb-4 flex flex-col'>
-                <label htmlFor='activity' className='mb-2 block text-gray-200'>
+                <label htmlFor='activity' className='mb-2 block text-gray-300'>
                   Activity:
                 </label>
                 <input
@@ -145,7 +145,7 @@ const EditVendorForm = () => {
                 />
               </div>
               <div className='mb-4 flex flex-col'>
-                <label htmlFor='address' className='mb-2 block text-gray-200'>
+                <label htmlFor='address' className='mb-2 block text-gray-300'>
                   Address:
                 </label>
                 <input
@@ -160,7 +160,7 @@ const EditVendorForm = () => {
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='phoneNumber'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Phone Number:
                 </label>
@@ -174,7 +174,7 @@ const EditVendorForm = () => {
                 />
               </div>
               <div className='mb-4 flex flex-col'>
-                <label htmlFor='website' className='mb-2 block text-gray-200'>
+                <label htmlFor='website' className='mb-2 block text-gray-300'>
                   Website:
                 </label>
                 <input

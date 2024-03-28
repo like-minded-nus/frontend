@@ -33,16 +33,20 @@ const VendorsPage = () => {
   return (
     <div className='rounded-lg border-gray-500 p-8 text-center'>
       <div className='mx-auto w-full rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
-        <h2 className='mb-8 text-3xl text-gray-200'>List of Vendors</h2>
+        <h2 className='mb-8 text-3xl text-gray-300'>List of Vendors</h2>
         {vendors.length === 0 ? (
           <p className='text-gray-200'>No active vendors currently</p>
         ) : (
           <div className='-mx-2 flex flex-wrap'>
             {vendors.map((vendor) => (
               <div key={vendor.vendorId} className='w-1/4 p-2'>
-                <div className='h-full rounded-lg border border-gray-700 bg-gray-600 p-4 text-gray-200'>
-                  <h3 className='m-3 font-semibold'>{vendor.vendorName}</h3>
-                  <p className='m-3 font-thin'>{vendor.activityName}</p>
+                <div className='h-full rounded-lg border border-gray-700 bg-gray-600 p-4 shadow-md'>
+                  <h3 className='m-3 font-semibold text-gray-300'>
+                    {vendor.vendorName}
+                  </h3>
+                  <p className='m-3 font-thin text-gray-200'>
+                    {vendor.activityName}
+                  </p>
                   <Link href={`/admin/vendors/${vendor.vendorId}`}>
                     <button className='btn btn-secondary btn-solid mt-4'>
                       View

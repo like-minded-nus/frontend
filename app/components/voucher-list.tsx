@@ -37,9 +37,9 @@ const VoucherList: React.FC<VoucherListProps> = ({
 
   return (
     <div className='mb-5 mt-5 w-full table-auto'>
-      <h3 className='px-4 py-2 text-gray-200'>Vouchers</h3>
+      <h3 className='px-4 py-2 text-gray-300'>Vouchers</h3>
       {vouchers.length === 0 ? (
-        <p>No active vouchers currently</p>
+        <p className='font-thin text-gray-200'>No active vouchers currently</p>
       ) : (
         vouchers.map((voucher) => (
           <ul key={voucher.voucherId}>

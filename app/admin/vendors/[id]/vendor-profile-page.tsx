@@ -63,31 +63,35 @@ const VendorProfilePage = () => {
           <FaEdit />
         </button>
       </Link>
-      <h1 className='mb-8 text-3xl text-gray-200'>{vendorData.vendorName}</h1>
+      <h1 className='mb-8 text-3xl text-gray-300'>{vendorData.vendorName}</h1>
       <div className='vendor-info'>
         <div className='info-item'>
-          <label htmlFor='activity' className='mb-2 mr-4 text-gray-200'>
+          <label htmlFor='activity' className='mb-2 mr-4 text-gray-300'>
             Activity:
           </label>
-          <span>{vendorData.activityName}</span>
+          <span className='font-thin text-gray-200'>
+            {vendorData.activityName}
+          </span>
         </div>
         <div className='info-item'>
-          <label htmlFor='address' className='mb-2 mr-4 text-gray-200'>
+          <label htmlFor='address' className='mb-2 mr-4 text-gray-300'>
             Address:
           </label>
-          <span>{vendorData.address}</span>
+          <span className='font-thin text-gray-200'>{vendorData.address}</span>
         </div>
         <div className='info-item'>
-          <label htmlFor='phoneNumber' className='mb-2 mr-4 text-gray-200'>
+          <label htmlFor='phoneNumber' className='mb-2 mr-4 text-gray-300'>
             Phone Number:
           </label>
-          <span>{vendorData.phoneNumber}</span>
+          <span className='font-thin text-gray-200'>
+            {vendorData.phoneNumber}
+          </span>
         </div>
         <div className='info-item'>
-          <label htmlFor='website' className='mb-2 mr-4 text-gray-200'>
+          <label htmlFor='website' className='mb-2 mr-4 text-gray-300'>
             Website:
           </label>
-          <span>{vendorData.website}</span>
+          <span className='font-thin text-gray-200'>{vendorData.website}</span>
         </div>
         <VoucherList vendorId={id} handleOpenModal={handleOpenModal} />
         <Link href={`/admin/vendors/${id}/create_voucher`}>

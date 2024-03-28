@@ -65,7 +65,7 @@ const VoucherModal: React.FC<ModalProps> = ({
                 <div className='justify-center sm:flex'>
                   <div className='m-4 text-center'>
                     <h3
-                      className='mb-4 text-3xl font-bold leading-6 text-gray-200'
+                      className='mb-4 text-3xl font-semibold leading-6 text-gray-300'
                       id='modal-headline'
                     >
                       {selectedVoucher.voucherName}

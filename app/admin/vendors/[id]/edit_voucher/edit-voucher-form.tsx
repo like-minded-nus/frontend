@@ -121,10 +121,12 @@ const EditVoucherForm = () => {
 
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 text-center'>
-        <div className='flex items-center justify-center'>
+      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 px-3 pb-3 pt-8'>
+        <div className='mx-6 flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
-            <h1 className='mb-8 text-3xl text-gray-200'>Edit Voucher</h1>
+            <h1 className='mb-8 text-center text-3xl text-gray-300'>
+              Edit Voucher
+            </h1>
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
           <div className='w-1/2 pl-8'>
@@ -132,7 +134,7 @@ const EditVoucherForm = () => {
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='voucherName'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Voucher Name:
                 </label>
@@ -166,7 +168,7 @@ const EditVoucherForm = () => {
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='voucherEndDate'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Expiry Date:
                 </label>
@@ -175,7 +177,7 @@ const EditVoucherForm = () => {
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='voucherDescription'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Description:
                 </label>
@@ -219,7 +221,7 @@ const EditVoucherForm = () => {
         <button
           type='button'
           onClick={handleOpenModal}
-          className='btn-square btn-delete absolute bottom-52 left-48 mr-2'
+          className='btn-square btn-delete bottom-2 left-2 mr-2'
         >
           Delete?
         </button>
