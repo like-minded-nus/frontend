@@ -52,7 +52,9 @@ const DeleteModal: React.FC<ModalProps> = ({
           router.push(`/admin/vendors/${vendorId}`);
           break;
         case 'vendor':
-          // Add logic to delete vendor
+          await axios.delete(`${endpoint}/vendors/${selectedId}`);
+          alert('Vendor deleted successfully!');
+          router.push(`/admin/vendors`);
           break;
         default:
           throw new Error('Invalid itemType.');

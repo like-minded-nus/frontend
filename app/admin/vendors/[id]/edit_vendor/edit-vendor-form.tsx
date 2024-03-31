@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
+import DeleteModal from '@/app/components/delete-modal';
 
 const EditVendorForm = () => {
   const router = useRouter();
@@ -12,6 +13,8 @@ const EditVendorForm = () => {
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [website, setWebsite] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState('');
 
   const getVendorIdFromUrl = () => {
     const url = window.location.href;
@@ -106,9 +109,14 @@ const EditVendorForm = () => {
     setWebsite('');
   };
 
+  const handleOpenModal = (vendorId: any) => {
+    setSelectedItem(vendorId);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8  shadow-lg'>
+      <div className='mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 pb-3 pl-3 pr-4 pt-3 shadow-lg'>
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
             <h1 className='mb-8 text-center text-3xl text-gray-300'>
@@ -199,7 +207,22 @@ const EditVendorForm = () => {
             </form>
           </div>
         </div>
+        <button
+          type='button'
+          onClick={handleOpenModal}
+          className='btn-square btn-delete bottom-2 left-2 mr-2'
+        >
+          Delete
+        </button>
       </div>
+      <DeleteModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedId={vendorId}
+        confirmationText={`${vendorName}`}
+        itemType='vendor'
+        vendorId={vendorId}
+      />
     </div>
   );
 };

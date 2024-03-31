@@ -49,7 +49,7 @@ const CreateVendorForm = () => {
     const websiteRegex = /^(ftp|http|https):\/\/(www\.)?[^ "]+$/;
     if (!websiteRegex.test(website)) {
       alert(
-        'Please enter a valid website URL. (starting with http://, https://, ftp://'
+        'Please enter a valid website URL. (starting with http://, https://, ftp://)'
       );
       return;
     }
