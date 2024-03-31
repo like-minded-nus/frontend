@@ -1,8 +1,8 @@
-import CreateVendorForm from './create-vendor-form';
 import AdminBase from '@/app/components/admin-base';
+import EditVendorForm from './edit-vendor-form';
 
-const CreateVendor = () => {
-  const component = <CreateVendorForm />;
+const EditVendor = () => {
+  const component = <EditVendorForm />;
   return <AdminBase content={component} />;
   //   return (
   //     <>
@@ -14,4 +14,4 @@ const CreateVendor = () => {
   //   );
 };
 
-export default CreateVendor;
+export default EditVendor;

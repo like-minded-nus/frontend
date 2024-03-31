@@ -7,40 +7,48 @@ import { FaRegUser } from 'react-icons/fa6';
 import { FaCrown } from 'react-icons/fa';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { FaCog } from 'react-icons/fa';
-import { RiLogoutBoxLine } from 'react-icons/ri';
 
 import MenuItem from './menu-item';
-import Link from 'next/link';
+import { useAppSelector } from '@/redux/hooks';
+import MenuLogoutItem from './menu-logout-item';
 
 const AdminMenu = () => {
+  // Redux store
+  const menuExpanded: boolean = useAppSelector(
+    (state) => state.menuReducer.menuExpanded
+  );
+
   return (
     <>
       <div className='flex align-middle'>
-        <div className='menu maximized'>
+        <div className={`menu ${menuExpanded ? 'maximized' : 'minimized'}`}>
           <MenuItem
             iconType={GoHome}
             iconSize={20}
             id={0}
             label={'Home'}
             count={0}
+            link={'/admin'}
             first={true}
           />
-          <Link href='/admin/vendors'>
-            <MenuItem
-              iconType={TbColumns3}
-              iconSize={20}
-              id={2}
-              label={'Vendors'}
-              count={6969}
-              first={false}
-            />
-          </Link>
+
+          <MenuItem
+            iconType={TbColumns3}
+            iconSize={20}
+            id={1}
+            label={'Vendors'}
+            count={0}
+            link={'/admin/vendors'}
+            first={false}
+          />
+
           <MenuItem
             iconType={FaRegUser}
             iconSize={20}
-            id={3}
+            id={2}
             label={'User Management'}
             count={0}
+            link={'/admin'}
             first={false}
           />
 
@@ -49,37 +57,23 @@ const AdminMenu = () => {
           <MenuItem
             iconType={RxHamburgerMenu}
             iconSize={20}
-            id={5}
+            id={3}
             label={'Customer Support'}
-            count={7}
-            first={false}
-          />
-          <MenuItem
-            iconType={RxHamburgerMenu}
-            iconSize={20}
-            id={5}
-            label={'FAQ'}
-            count={7}
+            count={0}
+            link={'/admin'}
             first={false}
           />
           <MenuItem
             iconType={FaCog}
             iconSize={20}
-            id={6}
+            id={4}
             label={'Settings'}
-            count={5}
+            count={0}
+            link={'/admin'}
             first={false}
           />
 
-          <MenuItem
-            iconType={RiLogoutBoxLine}
-            iconSize={20}
-            id={7}
-            label={'Log Out'}
-            count={0}
-            first={false}
-            last={true}
-          />
+          <MenuLogoutItem />
         </div>
       </div>
     </>

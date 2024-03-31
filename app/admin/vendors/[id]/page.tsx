@@ -1,13 +1,10 @@
 import VendorProfilePage from './vendor-profile-page';
+import AdminBase from '@/app/components/admin-base';
 
 const VendorProfile = () => {
-  return (
-    <>
-      <div className='mx-40 my-10 flex w-screen flex-col items-center justify-start '>
-        <VendorProfilePage />
-      </div>
-    </>
-  );
+  const component = <VendorProfilePage />;
+
+  return <AdminBase content={component} />;
 };
 
 export default VendorProfile;

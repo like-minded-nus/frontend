@@ -1,18 +1,40 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import VoucherDatepicker from '@/app/components/voucher-datepicker';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import DeleteModal from '@/app/components/delete-modal';
+import { FaArrowLeft } from 'react-icons/fa';
+import Link from 'next/link';
 
-const CreateVoucherForm = () => {
+const EditVoucherForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [voucherName, setVoucherName] = useState('');
   const [voucherEndDate, setVoucherEndDate] = useState('');
   const [voucherDescription, setVoucherDescription] = useState('');
-  const [redeemStatus, setRedeemStatus] = useState(0);
+  const [redeemStatus, setRedeemStatus] = useState('');
   const [vendorId, setVendorId] = useState('');
+  const [voucherId, setVoucherId] = useState('');
   const [voucherNameError, setVoucherNameError] = useState('');
   const [voucherDescriptionError, setVoucherDescriptionError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState('');
+
+  useEffect(() => {
+    const voucherParams = searchParams.get('selectedVoucher');
+    console.log(voucherParams);
+    if (voucherParams) {
+      const selectedVoucher = JSON.parse(voucherParams);
+      console.log(selectedVoucher);
+      setVoucherName(selectedVoucher.voucherName);
+      setVoucherEndDate(selectedVoucher.voucherEndDate);
+      setVoucherDescription(selectedVoucher.voucherDescription);
+      setRedeemStatus(selectedVoucher.redeemStatus);
+      setVendorId(selectedVoucher.vendorId);
+      setVoucherId(selectedVoucher.voucherId);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,25 +54,42 @@ const CreateVoucherForm = () => {
       if (!endpoint) {
         throw new Error('API endpoint is not defined.');
       }
-      const response = await axios.post(`${endpoint}/vouchers/create_voucher`, {
+      const response = await axios.put(`${endpoint}/vouchers/${voucherId}`, {
         voucherName,
         voucherEndDate,
         voucherDescription,
         redeemStatus,
         vendorId,
       });
-      console.log('Voucher creation successful:', response.data);
-      alert('Voucher created successfully!');
+      console.log('Voucher details updated successfully:', response.data);
+      alert('Voucher updated successfully!');
       router.push(`/admin/vendors/${vendorId}`);
     } catch (error) {
-      console.error('Error creating voucher:', error);
-      alert('Failed to create voucher. Please try again.');
+      console.error('Error updating voucher:', error);
+      alert('Failed to update voucher. Please try again.');
     }
 
     setVoucherName('');
     setVoucherEndDate('');
     setVoucherDescription('');
     setVendorId('');
+    setRedeemStatus('');
+    setVoucherId('');
+  };
+
+  const handleDelete = async () => {
+    try {
+      const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+      if (!endpoint) {
+        throw new Error('API endpoint is not defined.');
+      }
+      await axios.delete(`${endpoint}/vouchers/${voucherId}`);
+      alert('Voucher deleted successfully!');
+      router.push(`/admin/vendors/${vendorId}`);
+    } catch (error) {
+      console.error('Error deleting voucher:', error);
+      alert('Failed to delete voucher. Please try again.');
+    }
   };
 
   const handleChange = (selectedDate: Date) => {
@@ -77,23 +116,32 @@ const CreateVoucherForm = () => {
     }
   });
 
+  const handleOpenModal = (voucherId: any) => {
+    setSelectedItem(voucherId);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8 '>
-        <div className='flex items-center justify-center'>
+      <div className='mx-auto mt-24 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 px-2 pb-3 pl-3 pt-3'>
+        {/* <Link href={`/admin/vendors/${vendorId}`}>
+          <button className='btn-square btn-secondary left-0 top-2 ml-2.5'>
+            <FaArrowLeft />
+          </button>
+        </Link> */}
+        <div className='mx-6 flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
-            <h1 className='mb-8 text-center text-3xl text-gray-200'>
-              Create A New Voucher
+            <h1 className='mb-8 text-center text-3xl text-gray-300'>
+              Edit Voucher
             </h1>
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
-
           <div className='w-1/2 pl-8'>
             <form onSubmit={handleSubmit}>
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='voucherName'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Voucher Name:
                 </label>
@@ -127,7 +175,7 @@ const CreateVoucherForm = () => {
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='voucherEndDate'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Expiry Date:
                 </label>
@@ -136,7 +184,7 @@ const CreateVoucherForm = () => {
               <div className='mb-4 flex flex-col'>
                 <label
                   htmlFor='voucherDescription'
-                  className='mb-2 block text-gray-200'
+                  className='mb-2 block text-gray-300'
                 >
                   Description:
                 </label>
@@ -171,14 +219,29 @@ const CreateVoucherForm = () => {
                 type='submit'
                 className='btn btn-secondary btn-solid mt-4 w-full py-2'
               >
-                Create Voucher
+                Save Changes
               </button>
             </form>
           </div>
         </div>
+        <button
+          type='button'
+          onClick={handleOpenModal}
+          className='btn-square btn-delete bottom-2 left-2 mr-2'
+        >
+          Delete
+        </button>
       </div>
+      <DeleteModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedId={voucherId}
+        confirmationText={`${voucherName}`}
+        itemType='voucher'
+        vendorId={vendorId}
+      />
     </div>
   );
 };
 
-export default CreateVoucherForm;
+export default EditVoucherForm;

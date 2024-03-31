@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import AdminMenu from '@/app/components/admin-menu';
 import Link from 'next/link';
 
 interface Vendor {
@@ -14,7 +13,8 @@ interface Vendor {
 }
 
 const VendorsPage = () => {
-  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [vendors, setVendors] = useState<Vendor[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
 
   useEffect(() => {
@@ -27,48 +27,53 @@ const VendorsPage = () => {
       setVendors(response.data);
     } catch (error) {
       console.error('Error fetching vendors:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  if (!vendors) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='rounded-lg border-gray-500 p-8 text-center'>
-      {/* <AdminMenu /> */}
-      <div className='mt-4'>
-        <h2 className='mb-8 text-xl font-semibold'>List of Vendors</h2>
-        <table className='w-full table-auto'>
-          <thead>
-            <tr>
-              <th className='px-4 py-2'>Vendor Name</th>
-              <th className='px-4 py-2'>Activity</th>
-              <th className='px-4 py-2'>Address</th>
-              <th className='px-4 py-2'>Phone Number</th>
-              <th className='px-4 py-2'>Website</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className='mx-auto w-full rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
+        <h2 className='mb-8 text-3xl text-gray-300'>List of Vendors</h2>
+        {isLoading ? (
+          <p className='text-gray-200'>Loading...</p>
+        ) : vendors.length === 0 ? (
+          <p className='text-gray-200'>No active vendors currently</p>
+        ) : (
+          <div className='-mx-2 flex flex-wrap'>
             {vendors.map((vendor) => (
-              <tr key={vendor.vendorId}>
-                <td className='border px-4 py-2'>{vendor.vendorName}</td>
-                <td className='border px-4 py-2'>{vendor.activityName}</td>
-                <td className='border px-4 py-2'>{vendor.address}</td>
-                <td className='border px-4 py-2'>{vendor.phoneNumber}</td>
-                <td className='border px-4 py-2'>{vendor.website}</td>
-                <Link href={`/admin/vendors/${vendor.vendorId}`}>
-                  <button className='btn btn-secondary btn-solid'>View</button>
-                </Link>
-              </tr>
+              <div key={vendor.vendorId} className='w-1/4 p-2'>
+                <div className='h-full rounded-lg border border-gray-700 bg-gray-600 p-4 shadow-md'>
+                  <h3 className='m-3 font-semibold text-gray-300'>
+                    {vendor.vendorName}
+                  </h3>
+                  <p className='m-3 font-thin text-gray-200'>
+                    {vendor.activityName}
+                  </p>
+                  <Link href={`/admin/vendors/${vendor.vendorId}`}>
+                    <button className='btn btn-secondary btn-solid mt-4'>
+                      View
+                    </button>
+                  </Link>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        )}
+        <Link href='/admin/vendors/register_vendor'>
+          <button
+            type='submit'
+            className='btn btn-secondary btn-solid mt-4 w-full py-2'
+          >
+            Add Vendor
+          </button>
+        </Link>
       </div>
-      <Link href='/admin/vendors/register_vendor'>
-        <button
-          type='submit'
-          className='btn btn-secondary btn-solid mt-4 w-full py-2'
-        >
-          Add Vendor
-        </button>
-      </Link>
     </div>
   );
 };
