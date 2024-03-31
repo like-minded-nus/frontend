@@ -3,9 +3,14 @@
 import { RiLogoutBoxLine } from 'react-icons/ri';
 
 import { signOut } from 'next-auth/react';
+import { useAppDispatch } from '@/redux/hooks';
+import { sessionProfileReset } from '@/redux/features/profileSlice';
 
 const MenuLogoutItem = () => {
+  const dispatch = useAppDispatch();
+
   const handleClick = () => {
+    dispatch(sessionProfileReset());
     signOut();
   };
 

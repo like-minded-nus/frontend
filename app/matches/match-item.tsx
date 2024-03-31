@@ -5,14 +5,23 @@ import Image from 'next/image';
 import { Match } from '@/models/match';
 import moment from 'moment';
 import { SlArrowRight } from 'react-icons/sl';
+import Link from 'next/link';
 
 interface MatchItemProps {
   match: Match;
 }
 
 const MatchItem: React.FC<MatchItemProps> = ({ match }: MatchItemProps) => {
+  // Identify receiver profile id, since the sequence of profileId_1 and profileId_2 is not guaranteed
+
   return (
-    <div className='match-list__item group'>
+    <Link
+      className='match-list__item group'
+      href={{
+        pathname: '/chatroom',
+        query: { receiverProfileId: match.profile.profileId },
+      }}
+    >
       <div className='match-list__item__image'>
         <div className='match-list__item__image__container'>
           {!match.profile?.image1 && (
@@ -51,7 +60,7 @@ const MatchItem: React.FC<MatchItemProps> = ({ match }: MatchItemProps) => {
           <SlArrowRight size={50} />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

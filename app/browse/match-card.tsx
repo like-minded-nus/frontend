@@ -41,23 +41,15 @@ const MatchCard = () => {
     (state) => state.profileReducer.profile
   );
 
-  // Step 1: Fetch the logged in user's profile
-  useEffect(() => {
-    if (session) {
-      dispatch(
-        getProfileByUserId({ controller, userId: Number(session.user.id) })
-      );
-    }
+  console.log(profile);
 
-    return () => {
-      controller.abort();
-      // dispatch(sessionProfileReset());
-    };
-  }, [session]);
+  // Step 1: Fetch the logged in user's profile
+  // ** NOW FETCHED FROM HOME PAGE
 
   // Step 2: Fetch the potential match list
   useEffect(() => {
     if (sessionProfile?.profileId) {
+      console.log('has session profile in redux store');
       dispatch(
         getProfilePassionMatchList({
           controller,

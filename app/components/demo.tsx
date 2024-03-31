@@ -1,4 +1,36 @@
+'use client';
+
+import { Profile } from '@/models/profile';
+import { getProfileByUserId } from '@/redux/features/profileSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+
 const Demo = () => {
+  const dispatch = useAppDispatch();
+  const sessionProfile: Profile = useAppSelector(
+    (state) => state.profileReducer.sessionProfile
+  );
+  const { data: session } = useSession();
+  const controller = new AbortController();
+
+  //  fetch user's profile and store in redux state
+  useEffect(() => {
+    if (session) {
+      // fetch profile only once upon logging in and reaching home page
+      if (Object.keys(sessionProfile).length === 0) {
+        console.log('fetching profile');
+        dispatch(
+          getProfileByUserId({ controller, userId: Number(session.user.id) })
+        );
+      }
+    }
+    return () => {
+      controller.abort();
+      // dispatch(sessionProfileReset());
+    };
+  }, [session]);
+
   return (
     <>
       <div className='demo-container'>
