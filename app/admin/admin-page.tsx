@@ -1,6 +1,18 @@
 import React from 'react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]/authOptions';
+import { redirect } from 'next/navigation';
 
-const AdminPage = () => {
+const AdminPage = async () => {
+  const session = await getServerSession(authOptions);
+  console.log(session);
+  if (!session) {
+    redirect('/login');
+  }
+  if (session?.user.userRole !== 1) {
+    redirect('/home');
+  }
+
   return (
     <>
       <div className='mt-4 flex justify-center'>

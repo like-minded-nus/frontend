@@ -1,11 +1,16 @@
 import { getServerSession } from 'next-auth';
-import LoginCard from '../components/login-card';
+import LoginCard from './login-card';
 import { redirect } from 'next/navigation';
 
 export default async function LoginPage() {
   const session = await getServerSession();
   if (session) {
-    redirect('/home');
+    console.log(session);
+    if (session?.user.userRole === 2) {
+      redirect('/home');
+    } else {
+      redirect('/admin');
+    }
   }
   return (
     <>

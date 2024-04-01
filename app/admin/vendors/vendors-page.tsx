@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 interface Vendor {
   vendorId: number;
@@ -16,6 +18,17 @@ const VendorsPage = () => {
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    console.log(session);
+    if (!session) {
+      redirect('/login');
+    }
+    if (session?.user.userRole !== 1) {
+      redirect('/home');
+    }
+  }, [session]);
 
   useEffect(() => {
     fetchVendors();

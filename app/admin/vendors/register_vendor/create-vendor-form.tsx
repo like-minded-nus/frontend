@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 const CreateVendorForm = () => {
   const router = useRouter();
@@ -17,6 +18,17 @@ const CreateVendorForm = () => {
   const [vendorNameError, setVendorNameError] = useState('');
   const [addressError, setAddressError] = useState('');
   const [websiteError, setWebsiteError] = useState('');
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    console.log(session);
+    if (!session) {
+      redirect('/login');
+    }
+    if (session?.user.userRole !== 1) {
+      redirect('/home');
+    }
+  }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

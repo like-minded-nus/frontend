@@ -1,5 +1,5 @@
 'use client';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ const LoginCard = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const { data: session } = useSession();
   // const LOGIN_API_URL = 'http://localhost:8080/api/v1/user/login';
 
   const handleLogin = async (e: React.FormEvent) => {

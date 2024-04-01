@@ -6,13 +6,13 @@ import { authOptions } from '../api/auth/[...nextauth]/authOptions';
 import { redirect } from 'next/navigation';
 
 const Home = async () => {
-  // const session = await getServerSession(authOptions);
-  // console.log(session);
-  // const userId = session?.user.id;
-  // console.log(userId);
   const session = await getServerSession(authOptions);
+  console.log(session);
   if (!session) {
     redirect('/login');
+  }
+  if (session?.user.userRole !== 2) {
+    redirect('/admin');
   }
 
   const component = <Demo />;

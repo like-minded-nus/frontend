@@ -1,11 +1,16 @@
-import { DefaultSession, NextAuthOptions } from 'next-auth';
+import { DefaultSession, DefaultUser, NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
+      userRole: number;
     } & DefaultSession['user'];
+  }
+
+  interface User extends DefaultUser {
+    userRole: number;
   }
 }
 const LOGIN_API_URL = 'http://localhost:8080/api/v1/user/login';
@@ -34,7 +39,6 @@ export const authOptions: NextAuthOptions = {
           }),
         });
         const user = await response.json();
-        // console.log(user);
         if (user.payload) {
           return user.payload;
         } else {
@@ -48,6 +52,7 @@ export const authOptions: NextAuthOptions = {
       console.log('jwt callback');
       if (user) {
         token.uid = user.id;
+        token.role = user.userRole;
       }
       return token;
     },
@@ -57,6 +62,7 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           id: token.uid,
+          userRole: token.role,
         },
       };
     },
