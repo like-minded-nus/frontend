@@ -13,7 +13,7 @@ interface Vendor {
 }
 
 const VendorsPage = () => {
-  const [vendors, setVendors] = useState<Vendor[] | null>(null);
+  const [vendors, setVendors] = useState<Vendor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
 
@@ -32,21 +32,19 @@ const VendorsPage = () => {
     }
   };
 
-  if (!vendors) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className='rounded-lg border-gray-500 p-8 text-center'>
       <div className='mx-auto w-full rounded-lg border-gray-500 bg-gray-500 p-8 text-center shadow-lg'>
         <h2 className='mb-8 text-3xl text-gray-300'>List of Vendors</h2>
-        {isLoading ? (
-          <p className='text-gray-200'>Loading...</p>
-        ) : vendors.length === 0 ? (
-          <p className='text-gray-200'>No active vendors currently</p>
-        ) : (
-          <div className='-mx-2 flex flex-wrap'>
-            {vendors.map((vendor) => (
+        <div className='-mx-2 flex flex-wrap'>
+          {isLoading ? (
+            <div className='w-full p-2 text-gray-200'>Loading...</div>
+          ) : vendors.length === 0 ? (
+            <p className='w-full p-2 text-gray-200'>
+              No active vendors currently
+            </p>
+          ) : (
+            vendors.map((vendor: any) => (
               <div key={vendor.vendorId} className='w-1/4 p-2'>
                 <div className='h-full rounded-lg border border-gray-700 bg-gray-600 p-4 shadow-md'>
                   <h3 className='m-3 font-semibold text-gray-300'>
@@ -62,9 +60,9 @@ const VendorsPage = () => {
                   </Link>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
         <Link href='/admin/vendors/register_vendor'>
           <button
             type='submit'
