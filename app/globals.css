@@ -350,7 +350,7 @@
   }
 
   .match-list__item__info {
-    @apply flex w-9/12 flex-col;
+    @apply flex w-10/12 flex-col;
   }
 
   .match-list__item__info__person {
@@ -370,12 +370,12 @@
   }
 
   .match-list__item__info__msg__preview {
-    @apply overflow-hidden overflow-ellipsis whitespace-nowrap text-nowrap
-            text-sm text-gray-500;
+    @apply w-10/12 overflow-hidden overflow-ellipsis whitespace-nowrap
+            text-nowrap text-sm text-gray-500;
   }
 
   .match-list__item__info__msg__timestamp {
-    @apply ml-4 text-sm text-gray-500;
+    @apply ml-4 w-2/12 text-end text-sm text-gray-500;
   }
 
   .match-list__item__control {

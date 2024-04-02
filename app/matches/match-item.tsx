@@ -1,18 +1,49 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { Match } from '@/models/match';
 import moment from 'moment';
 import { SlArrowRight } from 'react-icons/sl';
 import Link from 'next/link';
+import axios, { AxiosResponse } from 'axios';
 
 interface MatchItemProps {
   match: Match;
+  sessionProfile: number;
 }
 
-const MatchItem: React.FC<MatchItemProps> = ({ match }: MatchItemProps) => {
+const MatchItem: React.FC<MatchItemProps> = ({
+  match,
+  sessionProfile,
+}: MatchItemProps) => {
   // Identify receiver profile id, since the sequence of profileId_1 and profileId_2 is not guaranteed
+  const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+
+  const [messageSender, setMessageSender] = React.useState<String>('');
+  const [latestMessage, setLatestMessage] = React.useState<String>('');
+  const [messageTimestamp, setMessageTimestamp] = React.useState<String>('');
+
+  useEffect(() => {
+    axios
+      .get<any>(
+        `${endpoint}/message/latest/${match.profileId_1}/${match.profileId_2}`
+      )
+      .then((response: AxiosResponse) => {
+        if (
+          response?.data?.status === 200 &&
+          response.data.payload.length > 0
+        ) {
+          setMessageSender(
+            response.data.payload[0].senderProfileId === sessionProfile
+              ? 'You: '
+              : ''
+          );
+          setLatestMessage(response.data.payload[0].text);
+          setMessageTimestamp(response.data.payload[0].sentDateTime);
+        }
+      });
+  }, []);
 
   return (
     <Link
@@ -46,12 +77,15 @@ const MatchItem: React.FC<MatchItemProps> = ({ match }: MatchItemProps) => {
         </div>
         <div className='match-list__item__info__msg'>
           <div className='match-list__item__info__msg__preview'>
-            {
-              'You: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed ultrices enim. Vestibulum ipsum ante, feugiat quis volutpat sed, facilisis vitae ante. Duis nec placerat odio, ac dignissim ipsum. Phasellus et pharetra massa. Duis tellus diam, consequat id tristique at, elementum rutrum turpis. Morbi porta sed augue et elementum. Mauris in tortor risus. Fusce massa sapien, porta nec congue eget, suscipit sed eros. Sed tincidunt purus est, in aliquam tellus varius non. Nulla tempus vulputate ipsum ac sodales. Suspendisse at sollicitudin urna.'
-            }
+            {latestMessage && `${messageSender} ${latestMessage}`}
+            {!latestMessage && (
+              <i>It&apos;s a match! Be the first to say hi! 👋</i>
+            )}
           </div>
           <div className='match-list__item__info__msg__timestamp'>
-            {'5:25pm'}
+            {latestMessage
+              ? moment(messageTimestamp.toString()).format('DD/MM hh:mmA')
+              : ''}
           </div>
         </div>
       </div>

@@ -3,18 +3,11 @@
 import React, { useEffect } from 'react';
 import MatchItem from './match-item';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { useSession } from 'next-auth/react';
 import { Match } from '@/models/match';
 import { Profile } from '@/models/profile';
-import {
-  getProfileByUserId,
-  sessionProfileReset,
-} from '@/redux/features/profileSlice';
 import { getAllMatches, matchReset } from '@/redux/features/matchSlice';
 
 const MatchList = () => {
-  const { data: session } = useSession();
-
   const dispatch = useAppDispatch();
   const controller = new AbortController();
 
@@ -53,7 +46,11 @@ const MatchList = () => {
   return (
     <div className='match-list'>
       {matches.map((match: Match) => (
-        <MatchItem key={match.matchId} match={match} />
+        <MatchItem
+          key={match.matchId}
+          match={match}
+          sessionProfile={sessionProfile?.profileId}
+        />
       ))}
     </div>
   );
