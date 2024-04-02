@@ -1,5 +1,6 @@
 import RegisterCard from '@/app/components/register-card';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 global.fetch = jest.fn(
   () =>
@@ -19,15 +20,15 @@ describe('RegisterCard component', () => {
       { name: 'confirmPassword', value: 'password123' },
     ];
 
-    inputValues.forEach(({ name, value }) => {
-      const inputEl: any = container.querySelector(`input[name="${name}"]`);
+    await userEvent.setup();
 
-      fireEvent.change(inputEl, {
-        target: { value },
-      });
-    });
+    for (const { name, value } of inputValues) {
+      const inputEl = container.querySelector(`input[name="${name}"]`);
+      if (inputEl) await userEvent.type(inputEl, value);
+    }
 
-    fireEvent.click(getByText('Register'));
+    const registerButton = getByText('Register');
+    await userEvent.click(registerButton);
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith('/api/auth/register', {
