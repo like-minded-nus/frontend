@@ -85,6 +85,11 @@ const MatchCard = () => {
         controller.abort();
         // dispatch(profileReset());
       };
+    } else if (
+      profilePassionMatchList?.matchList?.length > 0 &&
+      profilePassionMatchList?.matchList?.length === counter
+    ) {
+      dispatch(profileReset());
     }
   }, [profilePassionMatchList, counter]);
 
