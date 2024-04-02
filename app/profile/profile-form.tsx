@@ -5,6 +5,7 @@ import DatePicker from '../components/date-picker';
 import { IoMdAdd } from 'react-icons/io';
 import PassionModal from './passion-modal';
 import ImageUploaderCard from '../components/image-uploader-card';
+import { useAppSelector } from '@/redux/hooks';
 
 const ProfileForm = () => {
   const router = useRouter();
@@ -23,6 +24,10 @@ const ProfileForm = () => {
   const [image4, setImage4] = useState<string | null>();
   const [image5, setImage5] = useState<string | null>();
   const [image6, setImage6] = useState<string | null>();
+
+  const sessionUserId: number = useAppSelector(
+    (state) => state.userReducer.userId
+  );
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -43,7 +48,7 @@ const ProfileForm = () => {
 
     const newProfile = {
       // to be replaced with real userId
-      userId: 3,
+      userId: sessionUserId,
       displayName,
       birthdate: birthday,
       gender,

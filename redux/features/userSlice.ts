@@ -17,8 +17,11 @@ export const userSlice: Slice<UserState> = createSlice({
     setActiveItem: (state, action: PayloadAction<number>) => {
       return { ...state, activeItem: action.payload };
     },
+    setUserId: (state, action: PayloadAction<number>) => {
+      state.userId = action.payload;
+    },
   },
 });
 
-export const { setActiveItem } = userSlice.actions;
+export const { setActiveItem, setUserId } = userSlice.actions;
 export default userSlice.reducer;

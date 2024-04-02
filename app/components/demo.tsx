@@ -2,6 +2,7 @@
 
 import { Profile } from '@/models/profile';
 import { getProfileByUserId } from '@/redux/features/profileSlice';
+import { setActiveItem, setUserId } from '@/redux/features/userSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
@@ -24,6 +25,8 @@ const Demo = () => {
           getProfileByUserId({ controller, userId: Number(session.user.id) })
         );
       }
+      console.log(session.user.id);
+      dispatch(setUserId(session.user.id));
     }
     return () => {
       controller.abort();

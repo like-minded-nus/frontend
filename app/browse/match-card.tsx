@@ -20,6 +20,7 @@ import {
 } from '@/redux/features/profileSlice';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
+import imageType from 'image-type';
 
 type ButtonType = 'like' | 'skip';
 
@@ -29,6 +30,8 @@ const MatchCard = () => {
   const dispatch = useAppDispatch();
   const controller = new AbortController();
   const [counter, setCounter] = useState<number>(0);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [mimeType, setMimeType] = useState<string | null>(null);
 
   // Redux store
   const profilePassionMatchList: ProfilePassionMatchList = useAppSelector(
@@ -66,6 +69,7 @@ const MatchCard = () => {
 
   // Step 3: Fetch the first match's profile
   useEffect(() => {
+    console.log(profile);
     if (
       profilePassionMatchList?.matchList?.length > 0 &&
       profilePassionMatchList?.matchList?.length > counter
@@ -184,15 +188,19 @@ const MatchCard = () => {
             } ${clickedLike ? 'animate-tilt__right' : ''}`}
           >
             <div className='match-card__container'>
-              {!profile?.image1 && (
-                <Image
-                  src='https://via.placeholder.com/1920x1920/f472b6/fff?text=Profile+Image'
-                  sizes='100vw'
-                  alt='Match'
-                  fill={true}
-                  className='match-card__container__image'
-                />
-              )}
+              <Image
+                // src={profile?.image1 ? URL.createObjectURL(profile?.image1) : 'https://via.placeholder.com/1920x1920/f472b6/fff?text=Profile+Image'}
+                src={
+                  profile?.image1
+                    ? `data:jpeg;base64, ${profile.image1}`
+                    : 'https://via.placeholder.com/1920x1920/f472b6/fff?text=Profile+Image'
+                }
+                sizes='100vw'
+                alt='Match'
+                fill={true}
+                className='match-card__container__image'
+              />
+
               <div className='match-card__container__backdrop'></div>
               <div className='match-card__container__info'>
                 <div className='match-card__container__info__particulars'>
