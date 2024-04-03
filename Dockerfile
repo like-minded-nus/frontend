@@ -6,6 +6,7 @@ COPY package*.json ./
 
 # Create .env.local
 ARG NEXT_PUBLIC_API_ENDPOINT
+ARG NEXT_PUBLIC_WS_ENDPOINT
 RUN touch .env.local
 RUN echo "NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT" >> .env.local
 RUN echo "NEXT_PUBLIC_WS_ENDPOINT=$NEXT_PUBLIC_WS_ENDPOINT" >> .env.local
