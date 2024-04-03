@@ -52,7 +52,7 @@ jobs:
           target: dev
           platforms: linux/amd64,linux/arm64/v8
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/like-minded-nus-nextjs-staging:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/like-minded-fe-staging:latest
           build-args: |
             NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
             NEXT_PUBLIC_WS_ENDPOINT=${{ secrets.NEXT_PUBLIC_WS_ENDPOINT }}

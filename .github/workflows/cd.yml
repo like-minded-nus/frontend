@@ -14,8 +14,8 @@ jobs:
 
     steps:
       - name: Pull Docker image
-        run: sudo docker pull ${{ secrets.DOCKER_USERNAME }}/like-minded-nus-nextjs-staging:latest
+        run: sudo docker pull ${{ secrets.DOCKER_USERNAME }}/like-minded-fe-staging:latest
       - name: Delete Old docker container
-        run: sudo docker rm -f like-minded-nus-nextjs-staging-container || true
+        run: sudo docker rm -f like-minded-fe-staging-container || true
       - name: Run Docker Container
-        run: sudo docker run -d -p 3000:3000 --name like-minded-nus-nextjs-staging-container ${{ secrets.DOCKER_USERNAME }}/like-minded-nus-nextjs-staging:latest
+        run: sudo docker run -d -p 3000:3000 --name like-minded-fe-staging-container ${{ secrets.DOCKER_USERNAME }}/like-minded-fe-staging:latest
