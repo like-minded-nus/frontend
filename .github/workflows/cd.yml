@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, ovh-vps]
+    runs-on: [self-hosted, oracle-vps]
 
     steps:
       - name: Pull Docker image
