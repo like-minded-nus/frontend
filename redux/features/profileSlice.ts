@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import { createAsyncThunk, createSlice, isPending } from '@reduxjs/toolkit';
 import { Profile } from '@/models/profile';
 
+const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+
 // Define the State Type
 interface ProfileState {
   loading: boolean;
@@ -34,7 +36,7 @@ export const getProfile = createAsyncThunk(
   'profile/getProfile',
   async ({ controller, profileId }: GetProfileArgs, thunkAPI: any) => {
     const response: AxiosResponse<any> = await axios.get<any>(
-      `http://localhost:8080/api/v1/profile/${profileId}`,
+      `${endpoint}/profile/${profileId}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +61,7 @@ export const getProfileByUserId = createAsyncThunk(
   'profile/getProfileByUserId',
   async ({ controller, userId }: GetProfileByUserIdArgs, thunkAPI: any) => {
     const response: AxiosResponse<any> = await axios.get<any>(
-      `http://localhost:8080/api/v1/profile/userId/${userId}`,
+      `${endpoint}/profile/userId/${userId}`,
       {
         headers: {
           'Content-Type': 'application/json',

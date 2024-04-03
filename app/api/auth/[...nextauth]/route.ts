@@ -2,7 +2,8 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authOptions } from './authOptions';
 
-const LOGIN_API_URL = 'http://localhost:8080/api/v1/user/login';
+const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+const LOGIN_API_URL = `${endpoint}/user/login`;
 const handler = NextAuth(authOptions);
 // const handler = NextAuth({
 //   session: {

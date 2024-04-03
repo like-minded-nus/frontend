@@ -3,6 +3,8 @@ import { createAsyncThunk, createSlice, isPending } from '@reduxjs/toolkit';
 import { ProfilePassionMatchList } from '@/models/profile-passion-match-list';
 import { Match, MatchRequestBody } from '@/models/match';
 
+const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+
 // Define the State Type
 interface MatchState {
   loading: boolean;
@@ -42,7 +44,7 @@ export const getProfilePassionMatchList = createAsyncThunk(
     thunkAPI: any
   ) => {
     const response: AxiosResponse<any> = await axios.get<any>(
-      `http://localhost:8080/api/v1/profile/passions/match/${profileId}`,
+      `${endpoint}/profile/passions/match/${profileId}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +74,7 @@ export const createMatchRecord = createAsyncThunk(
     thunkAPI: any
   ) => {
     const response: AxiosResponse<any> = await axios.post<any>(
-      `http://localhost:8080/api/v1/match`,
+      `${endpoint}/match`,
       matchRequestBody,
       {
         headers: {
@@ -100,7 +102,7 @@ export const getAllMatches = createAsyncThunk(
   'match/getAllMatches',
   async ({ controller, profileId }: GetAllMatchesArgs, thunkAPI: any) => {
     const response: AxiosResponse<any> = await axios.get<any>(
-      `http://localhost:8080/api/v1/match/${profileId}`,
+      `${endpoint}/match/${profileId}`,
       {
         headers: {
           'Content-Type': 'application/json',
