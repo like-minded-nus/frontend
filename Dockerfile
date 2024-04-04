@@ -4,9 +4,17 @@ RUN apk add --no-cache g++ make py3-pip libc6-compat
 WORKDIR /app
 COPY package*.json ./
 
-# Create .env.local
+# Create .env.local and .env
 ARG NEXT_PUBLIC_API_ENDPOINT
 ARG NEXT_PUBLIC_WS_ENDPOINT
+ARG NEXTAUTH_URL
+ARG NEXTAUTH_SECRET
+
+RUN touch .env
+RUN echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env
+RUN echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env
+RUN cat .env
+
 RUN touch .env.local
 RUN echo "NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT" >> .env.local
 RUN echo "NEXT_PUBLIC_WS_ENDPOINT=$NEXT_PUBLIC_WS_ENDPOINT" >> .env.local

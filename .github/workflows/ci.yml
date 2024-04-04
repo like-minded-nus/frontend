@@ -54,5 +54,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/like-minded-fe-staging:latest
           build-args: |
-            NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
-            NEXT_PUBLIC_WS_ENDPOINT=${{ secrets.NEXT_PUBLIC_WS_ENDPOINT }}
+            NEXT_PUBLIC_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_API_STAGING_ENDPOINT }}
+            NEXT_PUBLIC_WS_ENDPOINT=${{ secrets.NEXT_PUBLIC_WS_STAGING_ENDPOINT }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_STAGING_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
