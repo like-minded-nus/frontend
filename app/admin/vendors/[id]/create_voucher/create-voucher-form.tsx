@@ -16,6 +16,14 @@ const CreateVoucherForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (voucherName.trim() === '') {
+      alert('Voucher name cannot be empty.');
+      return;
+    }
+    if (voucherName.length > 50) {
+      alert('Voucher name cannot exceed 50 characters.');
+      return;
+    }
     if (voucherEndDate.trim() === '') {
       alert('Voucher end date cannot be empty.');
       return;
@@ -24,6 +32,11 @@ const CreateVoucherForm = () => {
     const today = new Date();
     if (selectedEndDate < today) {
       alert('Selected date cannot be earlier than today.');
+      return;
+    }
+
+    if (voucherDescription.trim() === '') {
+      alert('Voucher description cannot be empty.');
       return;
     }
 
