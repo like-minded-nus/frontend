@@ -102,6 +102,12 @@
                 ease-linear hover:bg-gray-200;
   }
 
+  .btn-square-small {
+    @apply mx-1 rounded-md border border-gray-700 bg-gray-400 px-2 py-1 text-sm font-semibold text-gray-700
+                transition-all duration-200
+                ease-linear hover:bg-gray-200;
+  }
+
   .btn-square.btn-secondary {
     @apply border border-secondary bg-white text-secondary
                 transition-all duration-200 ease-linear
