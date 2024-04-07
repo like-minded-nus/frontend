@@ -7,7 +7,7 @@ interface BaseProp {
   content: React.ReactNode;
 }
 
-const Base = (props: BaseProp) => {
+const Base = async (props: BaseProp) => {
   return (
     <>
       <div className='body-blur'></div>

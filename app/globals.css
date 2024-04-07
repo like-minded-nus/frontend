@@ -507,6 +507,57 @@
     @apply pb-7 text-center;
   }
   /** [end] login & register card **/
+
+  /* start premium page  */
+  .premium-main-div {
+    @apply flex h-[90vh] items-center justify-center overflow-hidden;
+  }
+
+  .premium-card {
+    @apply max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow dark:bg-white;
+  }
+
+  .premium-card-title {
+    @apply mb-2 text-2xl font-bold tracking-tight;
+  }
+
+  .premium-card-subtitle {
+    @apply mb-3 font-normal text-gray-700 dark:text-gray-800;
+  }
+
+  .premium-card-button {
+    @apply inline-flex items-center rounded-lg bg-pink-300 px-3 py-2 text-center text-sm font-medium text-white hover:bg-pink-800 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800;
+  }
+
+  .premium-success-top-section {
+    @apply flex h-52 justify-center bg-pink-500 px-6 py-4;
+  }
+
+  .premium-success-bottom-section {
+    @apply flex h-52 justify-center bg-white px-6 py-4;
+  }
+
+  .premium-success-top-inner {
+    @apply flex flex-col;
+  }
+
+  .premium-success-bot-inner {
+    @apply flex flex-col justify-center;
+  }
+
+  .premium-success-message {
+    @apply pb-7 text-center;
+  }
+
+  .premium-home-button {
+    @apply h-10 w-full rounded-md bg-black text-white hover:bg-gray-800;
+  }
+
+  .premium-success-main-div {
+    @apply flex h-full w-full items-center justify-center;
+  }
+
+  /* end premium page */
 }
 
 @layer utilities {

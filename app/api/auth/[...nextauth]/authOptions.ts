@@ -6,11 +6,13 @@ declare module 'next-auth' {
     user: {
       id: string;
       userRole: number;
+      isPremium: number;
     } & DefaultSession['user'];
   }
 
   interface User extends DefaultUser {
     userRole: number;
+    isPremium: number;
   }
 }
 const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
@@ -54,6 +56,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.uid = user.id;
         token.role = user.userRole;
+        token.isPremium = user.isPremium;
       }
       return token;
     },
@@ -64,6 +67,7 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.uid,
           userRole: token.role,
+          isPremium: token.isPremium,
         },
       };
     },

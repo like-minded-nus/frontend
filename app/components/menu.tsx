@@ -32,6 +32,7 @@ const Menu = () => {
       setHasProfile(true);
     }
   }, [sessionProfile]);
+
   return (
     <>
       <div className='flex align-middle'>
@@ -72,13 +73,14 @@ const Menu = () => {
             link={'/profile'}
             first={false}
           />
+
           <MenuItem
             iconType={FaCrown}
             iconSize={20}
             id={4}
             label={'Premium'}
             count={0}
-            link={'/'}
+            link={'/premium'}
             first={false}
           />
 
