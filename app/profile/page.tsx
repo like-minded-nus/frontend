@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
 import Base from '../components/base';
-import Profile from './profile-main-component';
+import ProfileComponent from './profile-main-component';
 import { authOptions } from '../api/auth/[...nextauth]/authOptions';
 import { redirect } from 'next/navigation';
 
@@ -9,7 +9,7 @@ const Browse = async () => {
   if (!session) {
     redirect('/login');
   }
-  const component = <Profile />;
+  const component = <ProfileComponent />;
 
   return <Base content={component} />;
 };

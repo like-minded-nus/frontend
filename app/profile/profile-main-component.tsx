@@ -4,7 +4,7 @@ import { Profile } from '@/models/profile';
 import ProfileForm from './profile-form';
 import { useAppSelector } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
-const Profile = () => {
+const ProfileComponent = () => {
   const sessionProfile: Profile = useAppSelector(
     (state) => state.profileReducer.sessionProfile
   );
@@ -29,4 +29,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileComponent;
