@@ -1,11 +1,15 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DatePicker from '../components/date-picker';
 import { IoMdAdd } from 'react-icons/io';
 import PassionModal from './passion-modal';
 import ImageUploaderCard from '../components/image-uploader-card';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { Profile } from '@/models/profile';
+import { Passion } from '@/models/passion';
+import { getProfileByUserId } from '@/redux/features/profileSlice';
+import { useSession } from 'next-auth/react';
 
 const ProfileForm = () => {
   const router = useRouter();
@@ -25,9 +29,70 @@ const ProfileForm = () => {
   const [image5, setImage5] = useState<string | null>();
   const [image6, setImage6] = useState<string | null>();
 
+  const dispatch = useAppDispatch();
+  const { data: session } = useSession();
+  const controller = new AbortController();
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [createUpdateId, setCreateUpdateId] = useState<number | null>();
+
+  const [callMethod, setCallMethod] = useState<string>('POST');
+  const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
   const sessionUserId: number = useAppSelector(
     (state) => state.userReducer.userId
   );
+
+  const sessionProfile: Profile = useAppSelector(
+    (state) => state.profileReducer.sessionProfile
+  );
+
+  useEffect(() => {
+    console.log(sessionProfile);
+    if (sessionProfile?.profileId) {
+      setCreateUpdateId(sessionProfile?.profileId);
+      setIsUpdate(true);
+      setCallMethod('PUT');
+      setDisplayName(sessionProfile?.displayName);
+      setBirthday(sessionProfile?.birthdate);
+      setGender(sessionProfile?.gender);
+      setBio(sessionProfile?.bio);
+      setImage1(sessionProfile?.image1);
+      setImage2(sessionProfile?.image2);
+      setImage3(sessionProfile?.image3);
+      setImage4(sessionProfile?.image4);
+      setImage5(sessionProfile?.image5);
+      setImage6(sessionProfile?.image6);
+    } else {
+      setCreateUpdateId(sessionUserId);
+    }
+  }, [sessionProfile]);
+
+  useEffect(() => {
+    if (isUpdate) {
+      getExistingPassions(sessionProfile?.profileId);
+    }
+  }, [isUpdate]);
+
+  const getExistingPassions = async (profileId: number) => {
+    const res = await fetch(
+      `${endpoint}/passion/getpassionsfromprofileid/${profileId}`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+
+    const resJson = await res.json();
+    if (resJson.status != 200) {
+      console.error(resJson.status + ' ' + resJson.message);
+    } else {
+      console.log(resJson.message);
+      const passionList: Passion[] = resJson.payload.passionList;
+      const passionNameList: string[] = passionList.map(
+        (passion) => passion.passionName
+      );
+      setPassionsName(passionNameList);
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -44,38 +109,55 @@ const ProfileForm = () => {
 
     if (!validateInput()) {
       setIsLoading(false);
-    }
-
-    const newProfile = {
-      // to be replaced with real userId
-      userId: sessionUserId,
-      displayName,
-      birthdate: birthday,
-      gender,
-      profilePassionList: passionsId,
-      bio,
-      image1: image1 ?? '',
-      image2: image2 ?? '',
-      image3: image3 ?? '',
-      image4: image4 ?? '',
-      image5: image5 ?? '',
-      image6: image6 ?? '',
-    };
-
-    const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
-    const res = await fetch(`${endpoint}/profile`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newProfile),
-    });
-
-    const resJson = await res.json();
-
-    if (resJson.status != 200) {
-      console.error(resJson.status + ' ' + resJson.message);
     } else {
-      console.log(resJson.message);
-      setIsLoading(false);
+      let createUpdateProfile;
+      if (isUpdate) {
+        createUpdateProfile = {
+          profileId: createUpdateId,
+          displayName,
+          birthdate: birthday,
+          gender,
+          profilePassionList: passionsId,
+          bio,
+          image1: image1 ?? '',
+          image2: image2 ?? '',
+          image3: image3 ?? '',
+          image4: image4 ?? '',
+          image5: image5 ?? '',
+          image6: image6 ?? '',
+        };
+      } else {
+        createUpdateProfile = {
+          userId: createUpdateId,
+          displayName,
+          birthdate: birthday,
+          gender,
+          profilePassionList: passionsId,
+          bio,
+          image1: image1 ?? '',
+          image2: image2 ?? '',
+          image3: image3 ?? '',
+          image4: image4 ?? '',
+          image5: image5 ?? '',
+          image6: image6 ?? '',
+        };
+      }
+      console.log(createUpdateProfile);
+
+      const res = await fetch(`${endpoint}/profile`, {
+        method: callMethod,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(createUpdateProfile),
+      });
+
+      const resJson = await res.json();
+
+      if (resJson.status != 200) {
+        console.error(resJson.status + ' ' + resJson.message);
+      } else {
+        console.log(resJson.message);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -96,7 +178,7 @@ const ProfileForm = () => {
     }
 
     if (!image1 && !image2 && !image3 && !image4 && !image5 && !image6) {
-      alert('Please upload at least one photo.');
+      alert('Please upload at least one photo in JPEG format.');
       return false;
     }
 
@@ -120,13 +202,10 @@ const ProfileForm = () => {
         togglePassion={togglePassion}
         passionNames={passionsName}
       />
-      <form
-        onSubmit={handleSubmit}
-        className='mt-10 flex h-full w-full flex-col'
-      >
+      <form onSubmit={handleSubmit} className='mt-10 flex h-full flex-col'>
         <div className='flex h-full flex-col md:flex-row'>
           {/* Basic Info Section */}
-          <div className='flex w-1/2 flex-col'>
+          <div className='flex flex-col'>
             <div className='input-group top-label w-2/3 min-w-[300px]'>
               <label htmlFor='displayName' className='min-w'>
                 Display Name
@@ -196,20 +275,44 @@ const ProfileForm = () => {
           </div>
 
           {/* Profile Photo Section */}
-          <div className='w-1/2'>
+          <div className=''>
             <div className='top-label h-full'>
               <label className='text-sm font-bold text-gray-700'>
                 Profile Photo
               </label>
               <div className='image-uploader-card'>
-                <ImageUploaderCard image={image1} setImage={setImage1} />
-                <ImageUploaderCard image={image2} setImage={setImage2} />
-                <ImageUploaderCard image={image3} setImage={setImage3} />
+                <ImageUploaderCard
+                  isUpdate={isUpdate}
+                  image={image1}
+                  setImage={setImage1}
+                />
+                <ImageUploaderCard
+                  isUpdate={isUpdate}
+                  image={image2}
+                  setImage={setImage2}
+                />
+                <ImageUploaderCard
+                  isUpdate={isUpdate}
+                  image={image3}
+                  setImage={setImage3}
+                />
               </div>
               <div className='image-uploader-card mt-3'>
-                <ImageUploaderCard image={image4} setImage={setImage4} />
-                <ImageUploaderCard image={image5} setImage={setImage5} />
-                <ImageUploaderCard image={image6} setImage={setImage6} />
+                <ImageUploaderCard
+                  isUpdate={isUpdate}
+                  image={image4}
+                  setImage={setImage4}
+                />
+                <ImageUploaderCard
+                  isUpdate={isUpdate}
+                  image={image5}
+                  setImage={setImage5}
+                />
+                <ImageUploaderCard
+                  isUpdate={isUpdate}
+                  image={image6}
+                  setImage={setImage6}
+                />
               </div>
             </div>
           </div>
@@ -220,7 +323,7 @@ const ProfileForm = () => {
           className='btn btn-primary btn-solid mt-4'
           disabled={false}
         >
-          Create Profile
+          {isUpdate ? 'Update Profile' : 'Create Profile'}
         </button>
       </form>
     </>

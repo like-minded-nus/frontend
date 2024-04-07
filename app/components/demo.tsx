@@ -30,7 +30,6 @@ const Demo = () => {
     }
     return () => {
       controller.abort();
-      // dispatch(sessionProfileReset());
     };
   }, [session]);
 

@@ -1,14 +1,17 @@
-import ProfileForm from './profile-form';
-const Profile = () => {
-  return (
-    <>
-      <div className='body-blur'></div>
-      <div className='mx-40 my-10 flex w-screen flex-col items-center justify-start '>
-        <h1 className='text-4xl font-semibold italic'>CREATE YOUR PROFILE</h1>
-        <ProfileForm />
-      </div>
-    </>
-  );
+import { getServerSession } from 'next-auth';
+import Base from '../components/base';
+import Profile from './profile-main-component';
+import { authOptions } from '../api/auth/[...nextauth]/authOptions';
+import { redirect } from 'next/navigation';
+
+const Browse = async () => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect('/login');
+  }
+  const component = <Profile />;
+
+  return <Base content={component} />;
 };
 
-export default Profile;
+export default Browse;

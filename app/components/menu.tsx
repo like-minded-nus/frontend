@@ -11,6 +11,8 @@ import { FaCog } from 'react-icons/fa';
 import MenuItem from './menu-item';
 import { useAppSelector } from '@/redux/hooks';
 import MenuLogoutItem from './menu-logout-item';
+import { Profile } from '@/models/profile';
+import { useEffect, useState } from 'react';
 
 const Menu = () => {
   // Redux store
@@ -18,6 +20,18 @@ const Menu = () => {
     (state) => state.menuReducer.menuExpanded
   );
 
+  // get profile
+  const sessionProfile: Profile = useAppSelector(
+    (state) => state.profileReducer.sessionProfile
+  );
+
+  const [hasProfile, setHasProfile] = useState(false);
+
+  useEffect(() => {
+    if (sessionProfile?.profileId) {
+      setHasProfile(true);
+    }
+  }, [sessionProfile]);
   return (
     <>
       <div className='flex align-middle'>
@@ -53,7 +67,7 @@ const Menu = () => {
             iconType={FaRegUser}
             iconSize={20}
             id={3}
-            label={'My Profile'}
+            label={hasProfile ? 'Update Profile' : 'Create Profile'}
             count={0}
             link={'/profile'}
             first={false}
