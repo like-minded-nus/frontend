@@ -393,6 +393,18 @@
   .match-list__item__control__button {
     @apply relative flex items-center justify-items-end;
   }
+
+  .match-list-empty {
+    @apply flex h-[92%] flex-col items-center justify-center;
+  }
+
+  .match-list-empty > h1 {
+    @apply text-3xl font-semibold uppercase text-gray-500;
+  }
+
+  .match-list-empty > .match-list-empty__link {
+    @apply mt-4 text-sm text-secondary hover:underline;
+  }
   /** [end] match card list **/
 
   /** [start] demo container **/
