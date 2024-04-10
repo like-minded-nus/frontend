@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { redirect, useRouter } from 'next/navigation';
-import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import VendorPassionModal from './vendor-passion-modal';
+import { IoMdAdd } from 'react-icons/io';
 
 const CreateVendorForm = () => {
   const router = useRouter();
@@ -18,6 +19,9 @@ const CreateVendorForm = () => {
   const [vendorNameError, setVendorNameError] = useState('');
   const [addressError, setAddressError] = useState('');
   const [websiteError, setWebsiteError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [passionsId, setPassionsId] = useState<number | null>(null);
+  const [passionsName, setPassionsName] = useState<string>('');
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -32,9 +36,12 @@ const CreateVendorForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const phoneNumberRegex = /^\d{8}$/;
-    if (!phoneNumberRegex.test(phoneNumber)) {
-      alert('Phone number must be an 8-digit number.');
+    if (vendorName.trim() === '') {
+      alert('Vendor name cannot be empty.');
+      return;
+    }
+    if (vendorName.length > 50) {
+      alert('Vendor name cannot exceed 50 characters.');
       return;
     }
     const activityRegex = /^[a-zA-Z\s]+$/;
@@ -42,12 +49,8 @@ const CreateVendorForm = () => {
       alert('Activity name must contain only alphabetic characters.');
       return;
     }
-    if (vendorName.trim() === '') {
-      alert('Vendor name cannot be empty.');
-      return;
-    }
-    if (vendorName.length > 50) {
-      alert('Vendor name cannot exceed 50 characters.');
+    if (!passionsId) {
+      alert('Please select a passion.');
       return;
     }
     if (address.trim() === '') {
@@ -58,6 +61,11 @@ const CreateVendorForm = () => {
       alert('Address cannot exceed 100 characters.');
       return;
     }
+    const phoneNumberRegex = /^\d{8}$/;
+    if (!phoneNumberRegex.test(phoneNumber)) {
+      alert('Phone number must be an 8-digit number.');
+      return;
+    }
     const websiteRegex = /^(ftp|http|https):\/\/(www\.)?[^ "]+$/;
     if (!websiteRegex.test(website)) {
       alert(
@@ -65,7 +73,6 @@ const CreateVendorForm = () => {
       );
       return;
     }
-
     try {
       const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
       if (!endpoint) {
@@ -74,6 +81,7 @@ const CreateVendorForm = () => {
       const response = await axios.post(`${endpoint}/vendors/create_vendor`, {
         vendorName,
         activityName: activity,
+        passionId: passionsId,
         address,
         phoneNumber,
         website,
@@ -88,19 +96,36 @@ const CreateVendorForm = () => {
 
     setVendorName('');
     setActivity('');
+    setPassionsId(null);
     setAddress('');
     setPhoneNumber('');
     setWebsite('');
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = (passionName: string) => {
+    setPassionsName(passionName);
+    setIsModalOpen(false);
+    console.log(`Selected Passion: ${passionName} (${passionsId})`);
+  };
+
+  const togglePassion = (passionId: number) => {
+    setPassionsId(passionId);
+  };
+
   return (
     <div className='flex items-center justify-center'>
-      <div className='mx-auto mt-10 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-8  shadow-lg'>
-        {/* <Link href={`/admin/vendors`}>
-          <button className='btn-square btn-secondary left-0 top-2 ml-2.5 mt-2'>
-            <FaArrowLeft />
-          </button>
-        </Link> */}
+      <VendorPassionModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        selectedPassion={passionsId}
+        togglePassion={togglePassion}
+        passionNames={passionsName}
+      />
+      <div className='mx-auto mt-5 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-6 shadow-lg'>
         <div className='flex items-center justify-center'>
           <div className='w-1/2 pr-8'>
             <h1 className='mb-8 text-center text-3xl text-gray-200'>
@@ -146,9 +171,10 @@ const CreateVendorForm = () => {
                   </div>
                 )}
               </div>
+
               <div className='mb-4 flex flex-col'>
-                <label htmlFor='activity' className='mb-2 block text-gray-200'>
-                  Activity:
+                <label htmlFor='activity' className='mb-2 flex text-gray-200'>
+                  Activity Name:
                 </label>
                 <input
                   type='text'
@@ -160,6 +186,28 @@ const CreateVendorForm = () => {
                 />
               </div>
               <div className='mb-4 flex flex-col'>
+                <label htmlFor='passion' className='mb-2 flex text-gray-200'>
+                  Passion Tag:
+                  <button
+                    className='btn-square-small ml-5 flex flex-row items-center justify-center'
+                    onClick={openModal}
+                    type='button'
+                  >
+                    <IoMdAdd />
+                  </button>
+                </label>
+
+                {passionsName ? (
+                  <div className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'>
+                    {passionsName}
+                  </div>
+                ) : (
+                  <div className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'>
+                    Please select a passion
+                  </div>
+                )}
+              </div>
+              <div className='mb-4 flex flex-col'>
                 <label htmlFor='address' className='mb-2 block text-gray-200'>
                   Address:
                 </label>
@@ -168,9 +216,24 @@ const CreateVendorForm = () => {
                   id='address'
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                  onBlur={() => {
+                    if (address.trim() === '') {
+                      setAddressError('Vendor name cannot be empty.');
+                    } else {
+                      setAddressError('');
+                    }
+                    console.log('Address error:', addressError);
+                  }}
+                  className={`w-full rounded-md border bg-gray-700 ${
+                    addressError ? 'border-red-500' : 'border-gray-200'
+                  } px-4 py-2 text-gray-200`}
                   required
                 />
+                {addressError && (
+                  <div className='mt-1 text-xs text-red-500'>
+                    {addressError}
+                  </div>
+                )}
               </div>
               <div className='mb-4 flex flex-col'>
                 <label

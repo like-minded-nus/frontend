@@ -1,17 +1,18 @@
 import { getServerSession } from 'next-auth';
-import Base from '../components/base';
-import ProfileComponent from './profile-main-component';
 import { authOptions } from '../api/auth/[...nextauth]/authOptions';
 import { redirect } from 'next/navigation';
+import PremiumPage from './premium-page';
+import Base from '../components/base';
 
-const Browse = async () => {
+const Premium = async () => {
   const session = await getServerSession(authOptions);
   if (!session) {
     redirect('/login');
   }
-  const component = <ProfileComponent />;
+
+  const component = <PremiumPage />;
 
   return <Base content={component} />;
 };
 
-export default Browse;
+export default Premium;

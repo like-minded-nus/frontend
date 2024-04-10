@@ -200,6 +200,7 @@ const Chatroom = () => {
       console.log(err);
     };
 
+    console.log('wsEndpoint is : ', wsEndpoint);
     const Sock = new SockJS(`${wsEndpoint}/ws`);
     client = over(Sock);
     client.connect({}, onConnected, onError);
@@ -219,8 +220,6 @@ const Chatroom = () => {
     const curMessages = messages.get(receiverProfileId);
     console.log('curMessages: ', curMessages);
     const messageIdIndex = curMessages?.findIndex((message) => {
-      console.log('final 1', message.messageId);
-      console.log('final 2', payloadData);
       return +message.messageId == +payloadData;
     });
 

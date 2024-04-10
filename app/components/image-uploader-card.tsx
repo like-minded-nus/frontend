@@ -1,18 +1,28 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { IoMdAdd } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
 
 interface UploadImageProps {
+  isUpdate: boolean;
   image: string | undefined | null;
   setImage: (base64Image: string | null) => void;
 }
 
-const ImageUploaderCard: React.FC<UploadImageProps> = ({ image, setImage }) => {
+const ImageUploaderCard: React.FC<UploadImageProps> = ({
+  isUpdate,
+  image,
+  setImage,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const handleImageClick = () => {
     inputRef.current?.click();
   };
 
+  useEffect(() => {
+    if (isUpdate && image) {
+      setImage(`data:image/jpeg;base64,${image}`);
+    }
+  }, [isUpdate]);
   const convertBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();

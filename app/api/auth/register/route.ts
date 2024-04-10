@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
-const REGISTER_API_URL = 'http://localhost:8080/api/v1/user/register';
+const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+const REGISTER_API_URL = `${endpoint}/user/register`;
 
 export async function POST(request: Request) {
   try {

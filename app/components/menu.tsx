@@ -9,14 +9,48 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { FaCog } from 'react-icons/fa';
 
 import MenuItem from './menu-item';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import MenuLogoutItem from './menu-logout-item';
+import { Profile } from '@/models/profile';
+import { useEffect, useState } from 'react';
+import { getAllMatches } from '@/redux/features/matchSlice';
+import { Match } from '@/models/match';
 
 const Menu = () => {
+  const dispatch = useAppDispatch();
+  const controller = new AbortController();
+
   // Redux store
   const menuExpanded: boolean = useAppSelector(
     (state) => state.menuReducer.menuExpanded
   );
+  const matches: Match[] = useAppSelector(
+    (state) => state.matchReducer.matches
+  );
+
+  // get profile
+  const sessionProfile: Profile = useAppSelector(
+    (state) => state.profileReducer.sessionProfile
+  );
+
+  const [hasProfile, setHasProfile] = useState(false);
+
+  useEffect(() => {
+    if (sessionProfile?.profileId) {
+      setHasProfile(true);
+
+      dispatch(
+        getAllMatches({
+          controller,
+          profileId: sessionProfile.profileId,
+        })
+      );
+    }
+
+    return () => {
+      controller.abort();
+    };
+  }, [sessionProfile]);
 
   return (
     <>
@@ -45,7 +79,7 @@ const Menu = () => {
             iconSize={20}
             id={2}
             label={'Matches'}
-            count={6969}
+            count={matches?.length || 0}
             link={'/matches'}
             first={false}
           />
@@ -53,18 +87,19 @@ const Menu = () => {
             iconType={FaRegUser}
             iconSize={20}
             id={3}
-            label={'My Profile'}
+            label={hasProfile ? 'Update Profile' : 'Create Profile'}
             count={0}
             link={'/profile'}
             first={false}
           />
+
           <MenuItem
             iconType={FaCrown}
             iconSize={20}
             id={4}
             label={'Premium'}
             count={0}
-            link={'/'}
+            link={'/premium'}
             first={false}
           />
 

@@ -1,39 +1,53 @@
-# Step 1: Build the Next.js application
-# Use an official Node.js runtime as a parent image
-FROM node:20-alpine as builder
+FROM node:20-alpine AS base
 
-# Set the working directory in the container
+RUN apk add --no-cache g++ make py3-pip libc6-compat
 WORKDIR /app
+COPY package*.json ./
 
-# Copy package.json and package-lock.json to workdir
-COPY package.json package-lock.json ./
+# Create .env.local and .env
+ARG NEXT_PUBLIC_API_ENDPOINT
+ARG NEXT_PUBLIC_WS_ENDPOINT
+ARG NEXTAUTH_URL
+ARG NEXTAUTH_SECRET
 
-# Install dependencies
-RUN npm ci
+RUN touch .env
+RUN echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env
+RUN echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env
+RUN cat .env
 
-# Copy the rest of your application's code
-COPY . .
+RUN touch .env.local
+RUN echo "NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT" >> .env.local
+RUN echo "NEXT_PUBLIC_WS_ENDPOINT=$NEXT_PUBLIC_WS_ENDPOINT" >> .env.local
+RUN cat .env.local
 
-# Build your Next.js app
-RUN npm run build
-
-# Step 2: Run the Next.js application
-# Use an official Node.js runtime as a parent image for the runner stage
-FROM node:20-alpine
-
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy the build output to the new workdir
-COPY --from=builder /app/.env ./.env
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-
-# Expose the port the app runs on
 EXPOSE 3000
 
-# Command to run the app
-CMD ["npm", "start"]
+FROM base as builder
+WORKDIR /app
+COPY . .
+RUN npm run build
+
+# If choose to build the image in production
+FROM base as production
+WORKDIR /app
+
+ENV NODE_ENV=production
+RUN npm ci
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+USER nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/public ./public
+
+CMD npm start
+
+# If choose to build the image in production
+FROM base as dev
+ENV NODE_ENV=development
+RUN npm install 
+COPY . .
+CMD npm run dev

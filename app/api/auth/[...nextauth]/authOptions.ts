@@ -6,14 +6,17 @@ declare module 'next-auth' {
     user: {
       id: string;
       userRole: number;
+      isPremium: number;
     } & DefaultSession['user'];
   }
 
   interface User extends DefaultUser {
     userRole: number;
+    isPremium: number;
   }
 }
-const LOGIN_API_URL = 'http://localhost:8080/api/v1/user/login';
+const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
+const LOGIN_API_URL = `${endpoint}/user/login`;
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
@@ -53,6 +56,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.uid = user.id;
         token.role = user.userRole;
+        token.isPremium = user.isPremium;
       }
       return token;
     },
@@ -63,6 +67,7 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.uid,
           userRole: token.role,
+          isPremium: token.isPremium,
         },
       };
     },

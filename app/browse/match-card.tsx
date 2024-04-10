@@ -20,7 +20,6 @@ import {
 } from '@/redux/features/profileSlice';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
-import imageType from 'image-type';
 
 type ButtonType = 'like' | 'skip';
 
