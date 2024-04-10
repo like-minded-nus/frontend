@@ -49,7 +49,7 @@ const MatchItem: React.FC<MatchItemProps> = ({
     <Link
       className='match-list__item group'
       href={{
-        pathname: '/chatroom',
+        pathname: '/matches/chatroom',
         query: { receiverProfileId: match.profile.profileId },
       }}
     >

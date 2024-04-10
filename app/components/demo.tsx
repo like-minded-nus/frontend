@@ -12,6 +12,7 @@ const Demo = () => {
   const sessionProfile: Profile = useAppSelector(
     (state) => state.profileReducer.sessionProfile
   );
+  console.log('session profile ', sessionProfile);
   const { data: session } = useSession();
   const controller = new AbortController();
 

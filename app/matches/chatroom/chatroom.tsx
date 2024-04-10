@@ -1,11 +1,11 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import { Message, Payload } from '../../models/message';
+import { Message, Payload } from '../../../models/message';
 import { Profile } from '@/models/profile';
 import { BiSend, BiCheckDouble } from 'react-icons/bi';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { useAppSelector } from '@/redux/hooks';
-import { RiEmojiStickerLine } from 'react-icons/ri';
+import { RiContactsBookLine, RiEmojiStickerLine } from 'react-icons/ri';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { over, Client } from 'stompjs';
 import SockJS from 'sockjs-client';
@@ -19,7 +19,7 @@ const Chatroom = () => {
   );
   const searchParams = useSearchParams();
 
-  const receiverProfileId = searchParams.get('receiverProfileId') ?? '0';
+  let receiverProfileId: string = searchParams.get('receiverProfileId') ?? '-1';
 
   const [stompClient, setStompClient] = useState<Client>();
   const [messages, setMessages] = useState<Map<string, Message[]>>(new Map());

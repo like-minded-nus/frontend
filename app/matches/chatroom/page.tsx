@@ -1,4 +1,4 @@
-import Base from '../components/base';
+import Base from '../../components/base';
 import Chatroom from './chatroom';
 
 const Browse = () => {
