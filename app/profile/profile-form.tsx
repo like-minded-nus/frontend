@@ -90,6 +90,10 @@ const ProfileForm = () => {
       const passionNameList: string[] = passionList.map(
         (passion) => passion.passionName
       );
+      const passionIdList: number[] = passionList.map(
+        (passion) => passion.passionId
+      );
+      setPassionsId(passionIdList);
       setPassionsName(passionNameList);
     }
   };
@@ -129,7 +133,7 @@ const ProfileForm = () => {
       } else {
         createUpdateProfile = {
           userId: createUpdateId,
-          displayName,
+          // displayName,
           birthdate: birthday,
           gender,
           profilePassionList: passionsId,
@@ -155,6 +159,11 @@ const ProfileForm = () => {
       if (resJson.status != 200) {
         console.error(resJson.status + ' ' + resJson.message);
       } else {
+        if (isUpdate) {
+          alert('Profile updated!');
+        } else {
+          alert('Profile created!');
+        }
         console.log(resJson.message);
         setIsLoading(false);
       }
