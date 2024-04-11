@@ -11,6 +11,7 @@ import { over, Client } from 'stompjs';
 import SockJS from 'sockjs-client';
 import { format } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 
 const Chatroom = () => {
   // Redux store
@@ -294,11 +295,42 @@ const Chatroom = () => {
     setInputValue('');
   };
 
+  const convertBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+
+      // Set onload event handler
+      fileReader.onload = () => {
+        resolve(fileReader.result as string);
+      };
+
+      // Set onerror event handler
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+
+      fileReader.readAsDataURL(file);
+    });
+  };
+
   return (
     <div className='my-4 flex h-[92%] w-[77.5dvw] flex-col items-center justify-start'>
       {/* User info section */}
       <div className='flex w-full items-center rounded-t-xl border-b bg-white p-4'>
-        <div className='h-10 w-10 rounded-full bg-gray-300'></div>
+        {receiverProfile?.image1 ? (
+          <Image
+            className='h-10 w-10 rounded-full'
+            src={`data:image/jpeg;base64,${receiverProfile?.image1}`}
+            alt=''
+          />
+        ) : (
+          <Image
+            className='h-10 w-10 rounded-full'
+            src='https://via.placeholder.com/64x64/f472b6/fff?text=DP'
+            alt=''
+          />
+        )}
+
         <span className='ml-2 font-bold'>{receiverProfile?.displayName}</span>
       </div>
 
