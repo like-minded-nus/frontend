@@ -19,7 +19,7 @@ const ProfileComponent = () => {
   return (
     <>
       <div className='body-blur'></div>
-      <div className='flex flex-col items-center justify-start '>
+      <div className='flex h-[90%] flex-col items-center justify-start'>
         <h1 className='text-4xl font-semibold'>
           {hasProfile ? 'Update Your Profile' : 'Create Your Profile'}
         </h1>
