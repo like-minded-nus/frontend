@@ -22,6 +22,9 @@ const CreateVendorForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [passionsId, setPassionsId] = useState<number | null>(null);
   const [passionsName, setPassionsName] = useState<string>('');
+  const [vendorType, setVendorType] = useState<string>('OUTDOOR');
+  const [intensityLevel, setIntensityLevel] = useState<string>('');
+  const [conversationFriendly, setConversationFriendly] = useState<string>('');
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -85,6 +88,10 @@ const CreateVendorForm = () => {
         address,
         phoneNumber,
         website,
+        vendorType: vendorType,
+        intensityLevel: vendorType === 'OUTDOOR' ? intensityLevel : '',
+        conversationFriendly:
+          vendorType === 'INDOOR' ? conversationFriendly : '',
       });
       console.log('Vendor registration successful:', response.data);
       alert('Vendor created successfully!');
@@ -100,6 +107,9 @@ const CreateVendorForm = () => {
     setAddress('');
     setPhoneNumber('');
     setWebsite('');
+    setVendorType('OUTDOOR');
+    setIntensityLevel('');
+    setConversationFriendly('');
   };
 
   const openModal = () => {
@@ -125,18 +135,36 @@ const CreateVendorForm = () => {
         togglePassion={togglePassion}
         passionNames={passionsName}
       />
-      <div className='mx-auto mt-5 w-full max-w-3xl rounded-lg border-gray-500 bg-gray-500 p-6 shadow-lg'>
+      <div className='mx-auto mt-5 w-full max-w-6xl rounded-lg border-gray-500 bg-gray-500 p-6 shadow-lg'>
         <div className='flex items-center justify-center'>
-          <div className='w-1/2 pr-8'>
+          {/* <div className='w-1/2 pr-8'> */}
+          <div className='w-1/3'>
             <h1 className='mb-8 text-center text-3xl text-gray-200'>
               Register Vendor
             </h1>
+            <div className='mt-14 flex justify-center'>
+              {/* <label className='mb-2 block text-gray-200'>Vendor Type</label> */}
+              <div className='flex flex-row'>
+                <label
+                  onClick={() => setVendorType('OUTDOOR')}
+                  className={`btn ${vendorType == 'OUTDOOR' ? 'btn-secondary' : 'btn-primary'}`}
+                >
+                  Outdoor
+                </label>
+                <label
+                  onClick={() => setVendorType('INDOOR')}
+                  className={`btn ${vendorType == 'INDOOR' ? 'btn-secondary' : 'btn-primary'}`}
+                >
+                  Indoor
+                </label>
+              </div>
+            </div>
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
 
           {/* <div className='w-1/2 pl-8'> */}
           <div className='ml-4 flex w-2/3 flex-col items-center pr-8'>
-            <form className='flex justify-evenly'>
+            <form onSubmit={handleSubmit} className='flex justify-evenly'>
               <div className='mx-4 w-1/2'>
                 <div className='mb-4 flex flex-col'>
                   <label
@@ -288,6 +316,7 @@ const CreateVendorForm = () => {
                     </select>
                   </div>
                 )}
+
                 {vendorType === 'INDOOR' && (
                   <div className='mb-4 flex flex-col'>
                     <label
@@ -308,14 +337,13 @@ const CreateVendorForm = () => {
                   </div>
                 )}
               </div>
+              <button
+                type='submit'
+                className='btn btn-secondary btn-solid mt-4 w-3/4 py-2 align-middle'
+              >
+                Add Vendor
+              </button>
             </form>
-            <button
-              type='submit'
-              onClick={handleSubmit}
-              className='btn btn-secondary btn-solid mt-4 w-3/4 py-2 align-middle'
-            >
-              Add Vendor
-            </button>
           </div>
         </div>
       </div>
