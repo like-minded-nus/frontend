@@ -3,18 +3,12 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { FaEdit } from 'react-icons/fa';
 import Link from 'next/link';
+import { Voucher } from '@/models/voucher';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedVoucher: Voucher | null;
-}
-
-interface Voucher {
-  voucherId: string;
-  voucherName: string;
-  voucherEndDate: string;
-  voucherDescription: string;
 }
 
 const VoucherModal: React.FC<ModalProps> = ({
