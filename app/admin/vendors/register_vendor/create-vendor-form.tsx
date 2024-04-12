@@ -134,143 +134,188 @@ const CreateVendorForm = () => {
           </div>
           <div className='mt-5 h-80 border-r-2 border-gray-400'></div>
 
-          <div className='w-1/2 pl-8'>
-            <form onSubmit={handleSubmit}>
-              <div className='mb-4 flex flex-col'>
-                <label
-                  htmlFor='vendorName'
-                  className='mb-2 block text-gray-200'
-                >
-                  Vendor Name:
-                </label>
-                <input
-                  type='text'
-                  id='vendorName'
-                  value={vendorName}
-                  onChange={(e) => setVendorName(e.target.value)}
-                  onBlur={() => {
-                    if (vendorName.trim() === '') {
-                      setVendorNameError('Vendor name cannot be empty.');
-                    } else if (vendorName.length > 50) {
-                      setVendorNameError(
-                        'Vendor name cannot exceed 50 characters.'
-                      );
-                    } else {
-                      setVendorNameError('');
-                    }
-                    console.log('Vendor name error:', vendorNameError);
-                  }}
-                  className={`w-full rounded-md border bg-gray-700 ${
-                    vendorNameError ? 'border-red-500' : 'border-gray-200'
-                  } px-4 py-2 text-gray-200`}
-                  required
-                />
-                {vendorNameError && (
-                  <div className='mt-1 text-xs text-red-500'>
-                    {vendorNameError}
-                  </div>
-                )}
-              </div>
-
-              <div className='mb-4 flex flex-col'>
-                <label htmlFor='activity' className='mb-2 flex text-gray-200'>
-                  Activity Name:
-                </label>
-                <input
-                  type='text'
-                  id='activity'
-                  value={activity}
-                  onChange={(e) => setActivity(e.target.value)}
-                  className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
-                  required
-                />
-              </div>
-              <div className='mb-4 flex flex-col'>
-                <label htmlFor='passion' className='mb-2 flex text-gray-200'>
-                  Passion Tag:
-                  <button
-                    className='btn-square-small ml-5 flex flex-row items-center justify-center'
-                    onClick={openModal}
-                    type='button'
+          {/* <div className='w-1/2 pl-8'> */}
+          <div className='ml-4 flex w-2/3 flex-col items-center pr-8'>
+            <form className='flex justify-evenly'>
+              <div className='mx-4 w-1/2'>
+                <div className='mb-4 flex flex-col'>
+                  <label
+                    htmlFor='vendorName'
+                    className='mb-2 block text-gray-200'
                   >
-                    <IoMdAdd />
-                  </button>
-                </label>
+                    Vendor Name:
+                  </label>
+                  <input
+                    type='text'
+                    id='vendorName'
+                    value={vendorName}
+                    onChange={(e) => setVendorName(e.target.value)}
+                    onBlur={() => {
+                      if (vendorName.trim() === '') {
+                        setVendorNameError('Vendor name cannot be empty.');
+                      } else if (vendorName.length > 50) {
+                        setVendorNameError(
+                          'Vendor name cannot exceed 50 characters.'
+                        );
+                      } else {
+                        setVendorNameError('');
+                      }
+                      console.log('Vendor name error:', vendorNameError);
+                    }}
+                    className={`w-full rounded-md border bg-gray-700 ${
+                      vendorNameError ? 'border-red-500' : 'border-gray-200'
+                    } px-4 py-2 text-gray-200`}
+                    required
+                  />
+                  {vendorNameError && (
+                    <div className='mt-1 text-xs text-red-500'>
+                      {vendorNameError}
+                    </div>
+                  )}
+                </div>
 
-                {passionsName ? (
-                  <div className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'>
-                    {passionsName}
+                <div className='mb-4 flex flex-col'>
+                  <label htmlFor='activity' className='mb-2 flex text-gray-200'>
+                    Activity Name:
+                  </label>
+                  <input
+                    type='text'
+                    id='activity'
+                    value={activity}
+                    onChange={(e) => setActivity(e.target.value)}
+                    className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                    required
+                  />
+                </div>
+                <div className='mb-4 flex flex-col'>
+                  <label htmlFor='passion' className='mb-2 flex text-gray-200'>
+                    Passion Tag:
+                    <button
+                      className='btn-square-small ml-5 flex flex-row items-center justify-center'
+                      onClick={openModal}
+                      type='button'
+                    >
+                      <IoMdAdd />
+                    </button>
+                  </label>
+
+                  {passionsName ? (
+                    <div className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'>
+                      {passionsName}
+                    </div>
+                  ) : (
+                    <div className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'>
+                      Please select a passion
+                    </div>
+                  )}
+                </div>
+                <div className='mb-4 flex flex-col'>
+                  <label htmlFor='address' className='mb-2 block text-gray-200'>
+                    Address:
+                  </label>
+                  <input
+                    type='text'
+                    id='address'
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    onBlur={() => {
+                      if (address.trim() === '') {
+                        setAddressError('Vendor name cannot be empty.');
+                      } else {
+                        setAddressError('');
+                      }
+                      console.log('Address error:', addressError);
+                    }}
+                    className={`w-full rounded-md border bg-gray-700 ${
+                      addressError ? 'border-red-500' : 'border-gray-200'
+                    } px-4 py-2 text-gray-200`}
+                    required
+                  />
+                  {addressError && (
+                    <div className='mt-1 text-xs text-red-500'>
+                      {addressError}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className='mx-4 w-1/2'>
+                <div className='mb-4 flex flex-col'>
+                  <label
+                    htmlFor='phoneNumber'
+                    className='mb-2 block text-gray-200'
+                  >
+                    Phone Number:
+                  </label>
+                  <input
+                    type='text'
+                    id='phoneNumber'
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                    required
+                  />
+                </div>
+                <div className='mb-4 flex flex-col'>
+                  <label htmlFor='website' className='mb-2 block text-gray-200'>
+                    Website:
+                  </label>
+                  <input
+                    type='text'
+                    id='website'
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                  />
+                </div>
+                {vendorType === 'OUTDOOR' && (
+                  <div className='mb-4 flex flex-col'>
+                    <label
+                      htmlFor='intensityLevel'
+                      className='mb-2 block text-gray-200'
+                    >
+                      Intensity Level:
+                    </label>
+                    <select
+                      id='intensityLevel'
+                      value={intensityLevel}
+                      onChange={(e) => setIntensityLevel(e.target.value)}
+                      className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                    >
+                      <option value=''>Select Intensity Level</option>
+                      <option value='LOW'>Low</option>
+                      <option value='MEDIUM'>Medium</option>
+                      <option value='HIGH'>High</option>
+                    </select>
                   </div>
-                ) : (
-                  <div className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'>
-                    Please select a passion
+                )}
+                {vendorType === 'INDOOR' && (
+                  <div className='mb-4 flex flex-col'>
+                    <label
+                      htmlFor='conversationFriendly'
+                      className='mb-2 block text-gray-200'
+                    >
+                      Conversation Friendly:
+                    </label>
+                    <select
+                      id='conversationFriendly'
+                      value={conversationFriendly}
+                      onChange={(e) => setConversationFriendly(e.target.value)}
+                      className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
+                    >
+                      <option value='YES'>Yes</option>
+                      <option value='NO'>No</option>
+                    </select>
                   </div>
                 )}
               </div>
-              <div className='mb-4 flex flex-col'>
-                <label htmlFor='address' className='mb-2 block text-gray-200'>
-                  Address:
-                </label>
-                <input
-                  type='text'
-                  id='address'
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  onBlur={() => {
-                    if (address.trim() === '') {
-                      setAddressError('Vendor name cannot be empty.');
-                    } else {
-                      setAddressError('');
-                    }
-                    console.log('Address error:', addressError);
-                  }}
-                  className={`w-full rounded-md border bg-gray-700 ${
-                    addressError ? 'border-red-500' : 'border-gray-200'
-                  } px-4 py-2 text-gray-200`}
-                  required
-                />
-                {addressError && (
-                  <div className='mt-1 text-xs text-red-500'>
-                    {addressError}
-                  </div>
-                )}
-              </div>
-              <div className='mb-4 flex flex-col'>
-                <label
-                  htmlFor='phoneNumber'
-                  className='mb-2 block text-gray-200'
-                >
-                  Phone Number:
-                </label>
-                <input
-                  type='text'
-                  id='phoneNumber'
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
-                  required
-                />
-              </div>
-              <div className='mb-4 flex flex-col'>
-                <label htmlFor='website' className='mb-2 block text-gray-200'>
-                  Website:
-                </label>
-                <input
-                  type='text'
-                  id='website'
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                  className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
-                  required
-                />
-              </div>
-              <button
-                type='submit'
-                className='btn btn-secondary btn-solid mt-4 w-full py-2'
-              >
-                Add Vendor
-              </button>
             </form>
+            <button
+              type='submit'
+              onClick={handleSubmit}
+              className='btn btn-secondary btn-solid mt-4 w-3/4 py-2 align-middle'
+            >
+              Add Vendor
+            </button>
           </div>
         </div>
       </div>
