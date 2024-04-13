@@ -50,7 +50,10 @@ const MatchItem: React.FC<MatchItemProps> = ({
       className='match-list__item group'
       href={{
         pathname: '/matches/chatroom',
-        query: { receiverProfileId: match.profile.profileId },
+        query: {
+          receiverProfileId: match.profile.profileId,
+          receiverUserId: match.profile.userId,
+        },
       }}
     >
       <div className='match-list__item__image'>

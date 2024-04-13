@@ -11,7 +11,8 @@ import { over, Client } from 'stompjs';
 import SockJS from 'sockjs-client';
 import { format } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
-import Image from 'next/image';
+import { GoReport } from 'react-icons/go';
+import ReportModal from './report-modal';
 
 const Chatroom = () => {
   // Redux store
@@ -21,12 +22,14 @@ const Chatroom = () => {
   const searchParams = useSearchParams();
 
   let receiverProfileId: string = searchParams.get('receiverProfileId') ?? '-1';
+  let receiverUserId: string = searchParams.get('receiverUserId') ?? '-1';
 
   const [stompClient, setStompClient] = useState<Client>();
   const [messages, setMessages] = useState<Map<string, Message[]>>(new Map());
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [receiverProfile, setReceiverProfile] = useState<Profile>();
+  const [reportModalIsOpen, setReportModalIsOpen] = useState<boolean>(false);
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
@@ -295,43 +298,38 @@ const Chatroom = () => {
     setInputValue('');
   };
 
-  const convertBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-
-      // Set onload event handler
-      fileReader.onload = () => {
-        resolve(fileReader.result as string);
-      };
-
-      // Set onerror event handler
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-
-      fileReader.readAsDataURL(file);
-    });
-  };
-
   return (
     <div className='my-4 flex h-[92%] w-[77.5dvw] flex-col items-center justify-start'>
+      <ReportModal
+        isOpen={reportModalIsOpen}
+        reportedUserId={receiverUserId}
+        reportedByUserId={sessionProfile.userId}
+        onClose={() => setReportModalIsOpen(false)}
+      />
       {/* User info section */}
-      <div className='flex w-full items-center rounded-t-xl border-b bg-white p-4'>
-        {receiverProfile?.image1 ? (
-          <Image
-            className='h-10 w-10 rounded-full'
-            src={`data:image/jpeg;base64,${receiverProfile?.image1}`}
-            alt=''
-          />
-        ) : (
-          <Image
-            className='h-10 w-10 rounded-full'
-            src='https://via.placeholder.com/64x64/f472b6/fff?text=DP'
-            alt=''
-          />
-        )}
+      <div className='flex w-full items-center justify-between rounded-t-xl border-b bg-white p-4'>
+        <div className='item-center flex h-full items-center justify-center'>
+          {receiverProfile?.image1 ? (
+            <img
+              className='h-10 w-10 rounded-full'
+              src={`data:image/jpeg;base64,${receiverProfile?.image1}`}
+              alt=''
+            />
+          ) : (
+            <img
+              className='h-10 w-10 rounded-full'
+              src='https://via.placeholder.com/64x64/f472b6/fff?text=DP'
+              alt=''
+            />
+          )}
 
-        <span className='ml-2 font-bold'>{receiverProfile?.displayName}</span>
+          <span className='ml-2 font-bold'>{receiverProfile?.displayName}</span>
+        </div>
+        <GoReport
+          onClick={() => setReportModalIsOpen(true)}
+          title='Report user'
+          className='h-[30px] w-[30px] cursor-pointer text-secondary'
+        />
       </div>
 
       {/* Chat messages section */}
