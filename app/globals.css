@@ -332,6 +332,20 @@
   }
   /** [end] loading match card **/
 
+  /** [start] empty match message **/
+  .match-card__empty {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .match-card__empty > h1 {
+    @apply mb-2 text-3xl font-semibold uppercase text-secondary;
+  }
+
+  .match-card__empty > span {
+    @apply mt-2 text-sm;
+  }
+  /** [start] empty match message **/
+
   /** [start] match list **/
   .match-list {
     @apply my-4 flex h-[92%] w-[77.5dvw] flex-col flex-wrap justify-start
