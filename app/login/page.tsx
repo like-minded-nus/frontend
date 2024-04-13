@@ -7,7 +7,7 @@ export default async function LoginPage() {
   if (session) {
     console.log(session);
     if (session?.user.userRole === 2) {
-      redirect('/home');
+      redirect('/browse');
     } else {
       redirect('/admin');
     }

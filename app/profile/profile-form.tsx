@@ -10,6 +10,7 @@ import { Profile } from '@/models/profile';
 import { Passion } from '@/models/passion';
 import { getProfileByUserId } from '@/redux/features/profileSlice';
 import { useSession } from 'next-auth/react';
+import { setUserId } from '@/redux/features/userSlice';
 
 const ProfileForm = () => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const ProfileForm = () => {
   );
 
   useEffect(() => {
-    console.log(sessionProfile);
+    console.log(sessionProfile?.profileId ? 'has profile id' : 'no profile id');
     if (sessionProfile?.profileId) {
       setCreateUpdateId(sessionProfile?.profileId);
       setIsUpdate(true);
@@ -62,9 +63,14 @@ const ProfileForm = () => {
       setImage5(sessionProfile?.image5);
       setImage6(sessionProfile?.image6);
     } else {
-      setCreateUpdateId(sessionUserId);
+      setCreateUpdateId(Number(session?.user.id));
     }
   }, [sessionProfile]);
+
+  // useEffect(() => {
+  //   console.log(session?.user.id);
+  //   dispatch(setUserId(Number(session?.user.id)));
+  // }, [session]);
 
   useEffect(() => {
     if (isUpdate) {
@@ -116,9 +122,10 @@ const ProfileForm = () => {
     } else {
       let createUpdateProfile;
       if (isUpdate) {
+        console.log('UPDATING PROFILE');
         createUpdateProfile = {
           profileId: createUpdateId,
-          displayName,
+          displayName: displayName,
           birthdate: birthday,
           gender,
           profilePassionList: passionsId,
@@ -131,9 +138,10 @@ const ProfileForm = () => {
           image6: image6 ?? '',
         };
       } else {
+        console.log('CREATING PROFILE');
         createUpdateProfile = {
           userId: createUpdateId,
-          // displayName,
+          displayName: displayName,
           birthdate: birthday,
           gender,
           profilePassionList: passionsId,
@@ -166,6 +174,7 @@ const ProfileForm = () => {
         }
         console.log(resJson.message);
         setIsLoading(false);
+        router.push('/browse');
       }
     }
   };

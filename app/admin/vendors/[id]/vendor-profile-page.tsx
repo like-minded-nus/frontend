@@ -33,6 +33,7 @@ const VendorProfilePage = () => {
 
   useEffect(() => {
     const vendorId = getVendorIdFromUrl();
+    console.log(vendorId);
     if (vendorId) {
       setId(vendorId);
       fetchVendorData(vendorId);

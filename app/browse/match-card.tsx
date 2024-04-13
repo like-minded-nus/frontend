@@ -50,6 +50,7 @@ const MatchCard = () => {
 
   // Step 2: Fetch the potential match list
   useEffect(() => {
+    console.log('hohoho');
     if (sessionProfile?.profileId) {
       console.log('has session profile in redux store');
       dispatch(
