@@ -48,14 +48,14 @@ const MenuItem: React.FC<MenuItemProps> = ({
         dispatch(setActiveItem(0));
         break;
       case '/browse':
-      case '/admin/vendors':
+      case '/admin/user_management':
+      case '/admin/user_management/reports':
         dispatch(setActiveItem(1));
         break;
       case '/matches':
       case '/chatroom':
       case '/matches/chatroom':
-      case '/admin/user_management':
-      case '/admin/user_management/reports':
+      case '/admin/vendors':
         dispatch(setActiveItem(2));
         break;
       case '/profile':

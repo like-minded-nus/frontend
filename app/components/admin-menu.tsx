@@ -31,22 +31,22 @@ const AdminMenu = () => {
           />
 
           <MenuItem
-            iconType={TbColumns3}
+            iconType={FaRegUser}
             iconSize={20}
             id={1}
-            label={'Vendors'}
+            label={'User Management'}
             count={0}
-            link={'/admin/vendors'}
+            link={'/admin/user_management/reports'}
             first={false}
           />
 
           <MenuItem
-            iconType={FaRegUser}
+            iconType={TbColumns3}
             iconSize={20}
             id={2}
-            label={'User Management'}
+            label={'Vendors'}
             count={0}
-            link={'/admin/user_management/reports'}
+            link={'/admin/vendors'}
             first={false}
           />
 
