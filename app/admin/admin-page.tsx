@@ -12,6 +12,9 @@ const AdminPage = async () => {
   if (session?.user.userRole !== 1) {
     redirect('/home');
   }
+  if (session?.user.userRole === 1) {
+    redirect('/admin/user_management');
+  }
 
   return (
     <>
