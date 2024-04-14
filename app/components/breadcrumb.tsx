@@ -30,7 +30,7 @@ const Breadcrumb = () => {
                     : 'breadcrumb__list'
                 }
               >
-                <Link href={href}>
+                <Link href={href} className='capitalize'>
                   {link.replaceAll('_', ' ').replaceAll('-', ' ')}
                 </Link>
               </li>
