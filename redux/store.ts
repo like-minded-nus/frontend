@@ -3,6 +3,8 @@ import menuReducer from './features/menuSlice';
 import userReducer from './features/userSlice';
 import matchReducer from './features/matchSlice';
 import profileReducer from './features/profileSlice';
+import reportReducer from './features/reportSlice';
+import banReducer from './features/banSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     userReducer,
     matchReducer,
     profileReducer,
+    reportReducer,
+    banReducer,
   },
 });
 
