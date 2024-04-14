@@ -31,7 +31,7 @@ const Breadcrumb = () => {
                 }
               >
                 <Link href={href}>
-                  {link[0].toUpperCase() + link.slice(1, link.length)}
+                  {link.replaceAll('_', ' ').replaceAll('-', ' ')}
                 </Link>
               </li>
               {pathNames.length !== index + 1 && separator}
