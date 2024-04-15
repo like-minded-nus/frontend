@@ -171,11 +171,13 @@ const Chatroom = () => {
 
     if (+receiverProfileId === +messagePayload.senderProfileId) {
       if (!messages.has(receiverProfileId)) {
+        console.log('set key 2');
         messages.set(receiverProfileId, [messagePayload]);
         setMessages(new Map(messages));
       } else {
         const existingMessages = messages.get(receiverProfileId);
         if (existingMessages) {
+          console.log('push value');
           existingMessages.push(messagePayload);
           messages.set(receiverProfileId, existingMessages);
           setMessages(new Map(messages));
@@ -273,7 +275,7 @@ const Chatroom = () => {
 
       client?.subscribe(
         '/user/' + sessionProfile.profileId + '/private/read',
-        handleMarkAsRead
+        onMessageRead
       );
 
       setStompClient(client);
@@ -297,7 +299,7 @@ const Chatroom = () => {
     };
   }, []);
 
-  const handleMarkAsRead = (payload: any) => {
+  const onMessageRead = (payload: any) => {
     console.log('Message with ID ', payload.body, ' is read yo');
     var payloadData = payload.body;
     const curMessages = messages.get(receiverProfileId);
@@ -315,31 +317,31 @@ const Chatroom = () => {
     }
   };
 
+  const fetchNextMessageId = async () => {
+    try {
+      const res = await fetch(`${endpoint}/message/sequence`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      // Process the response here
+      if (res.ok) {
+        const messageData = await res.json();
+        return messageData.payload;
+      } else {
+        throw new Error('Failed to fetch next message id');
+      }
+    } catch (error) {
+      console.error('Error fetching next message id:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('stompClient : ', stompClient);
     // Add the message to the messages array
+
     if (stompClient) {
-      const fetchNextMessageId = async () => {
-        try {
-          const res = await fetch(`${endpoint}/message/sequence`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          // Process the response here
-          if (res.ok) {
-            const messageData = await res.json();
-            return messageData.payload;
-          } else {
-            throw new Error('Failed to fetch next message id');
-          }
-        } catch (error) {
-          console.error('Error fetching next message id:', error);
-        }
-      };
-
       const nextMessageId = await fetchNextMessageId();
-
       const messagePayload: Message = {
         messageId: nextMessageId,
         senderProfileId: +sessionProfile.profileId,
@@ -349,12 +351,12 @@ const Chatroom = () => {
         isRead: 'N',
       };
 
-      console.log('aaa : ', messagePayload);
-
       if (!messages.has(receiverProfileId)) {
+        console.log('Set key');
         messages.set(receiverProfileId, [messagePayload]);
         setMessages(new Map(messages));
       } else {
+        console.log('Push value');
         const existingMessages = messages.get(receiverProfileId);
         if (existingMessages) {
           existingMessages.push(messagePayload);
