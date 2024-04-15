@@ -28,6 +28,7 @@ const Chatroom = () => {
   let profileId2 = receiverProfileId;
 
   const [stompClient, setStompClient] = useState<Client>();
+  const [stompClientForRead, setStompClientForRead] = useState<Client>();
   const [messages, setMessages] = useState<Map<string, Message[]>>(new Map());
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -51,8 +52,6 @@ const Chatroom = () => {
   };
 
   useEffect(() => {
-    console.log('profileId_1:', profileId1);
-    console.log('profileId_2:', profileId2);
     const fetchCommonPassionsId = async () => {
       try {
         const response = await fetch(
@@ -185,31 +184,37 @@ const Chatroom = () => {
     }
   };
 
-  useEffect(() => {
-    const sendMarkAsRead = (messageId: number, senderProfileId: number) => {
-      const Sock = new SockJS(`${wsEndpoint}/ws`);
-      let client = over(Sock);
-
-      const messagePayload = {
-        messageId,
-        senderProfileId,
-      };
-
-      const onConnected = () => {
-        console.log('Sending Yo!');
-        client.send('/app/message-read', {}, JSON.stringify(messagePayload));
-      };
-
-      const onError = (err: any) => {
-        console.log(err);
-      };
-
-      client.connect({}, onConnected, onError);
+  const sendMarkAsRead = (messageId: number, senderProfileId: number) => {
+    console.log('Sending mark as read');
+    const messagePayload = {
+      messageId,
+      senderProfileId,
     };
+
+    stompClientForRead?.send(
+      '/app/message-read',
+      {},
+      JSON.stringify(messagePayload)
+    );
+  };
+
+  useEffect(() => {
+    const Sock = new SockJS(`${wsEndpoint}/ws`);
+    let client = over(Sock);
+
+    const onConnected = () => {
+      console.log('WebSocket for read status is connected');
+      setStompClientForRead(client);
+    };
+
+    const onError = (err: any) => {
+      console.log(err);
+    };
+
+    client.connect({}, onConnected, onError);
 
     // Initialize IntersectionObserver when messages are loaded
     const initIntersectionObserver = () => {
-      console.log('reinit');
       const options = {
         root: null,
         rootMargin: '0px',
@@ -222,12 +227,13 @@ const Chatroom = () => {
             const messageId = entry.target.getAttribute('data-message-id');
             const senderProfileId =
               entry.target.getAttribute('sender-profile-id');
+            const isMessageRead = entry.target.getAttribute('is-message-read');
 
-            console.log('After reinit apa ');
-            console.log('message id ', messageId);
-            console.log('sewnderProfile id ', senderProfileId);
-
-            if (messageId && senderProfileId === receiverProfileId) {
+            if (
+              messageId &&
+              senderProfileId === receiverProfileId &&
+              isMessageRead === 'N'
+            ) {
               sendMarkAsRead(parseInt(messageId), parseInt(senderProfileId));
             }
           }
@@ -242,6 +248,10 @@ const Chatroom = () => {
       // Clean up function to disconnect the observer when component unmounts
       return () => {
         observer.disconnect();
+        client.disconnect(() => {
+          console.log('Stomp client disconnected.');
+          setStompClientForRead(new Client());
+        });
       };
     };
 
@@ -422,6 +432,7 @@ const Chatroom = () => {
               key={index}
               data-message-id={message.messageId}
               sender-profile-id={message.senderProfileId}
+              is-message-read={message.isRead}
             >
               <div
                 className={`text-gray text-xs ${
