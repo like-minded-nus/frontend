@@ -164,7 +164,7 @@ const CreateVendorForm = () => {
 
           {/* <div className='w-1/2 pl-8'> */}
           <div className='ml-4 flex w-2/3 flex-col items-center pr-8'>
-            <form onSubmit={handleSubmit} className='flex justify-evenly'>
+            <form className='flex justify-evenly'>
               <div className='mx-4 w-1/2'>
                 <div className='mb-4 flex flex-col'>
                   <label
@@ -331,19 +331,21 @@ const CreateVendorForm = () => {
                       onChange={(e) => setConversationFriendly(e.target.value)}
                       className='w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200'
                     >
+                      <option value=''>Is Conversation Friendly?</option>
                       <option value='YES'>Yes</option>
                       <option value='NO'>No</option>
                     </select>
                   </div>
                 )}
               </div>
-              <button
-                type='submit'
-                className='btn btn-secondary btn-solid mt-4 w-3/4 py-2 align-middle'
-              >
-                Add Vendor
-              </button>
             </form>
+            <button
+              type='submit'
+              onClick={handleSubmit}
+              className='btn btn-secondary btn-solid mt-4 w-3/4 py-2 align-middle'
+            >
+              Add Vendor
+            </button>
           </div>
         </div>
       </div>
