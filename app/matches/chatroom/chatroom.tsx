@@ -28,7 +28,7 @@ const Chatroom = () => {
   let profileId2 = receiverProfileId;
 
   const [stompClient, setStompClient] = useState<Client>();
-  const [stompClientForRead, setStompClientForRead] = useState<Client>();
+  const [stompClientForRead, setStompClientForRead] = useState<Client | null>();
   const [messages, setMessages] = useState<Map<string, Message[]>>(new Map());
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -191,11 +191,15 @@ const Chatroom = () => {
       senderProfileId,
     };
 
-    stompClientForRead?.send(
-      '/app/message-read',
-      {},
-      JSON.stringify(messagePayload)
-    );
+    if (stompClientForRead) {
+      stompClientForRead.send(
+        '/app/message-read',
+        {},
+        JSON.stringify(messagePayload)
+      );
+    } else {
+      console.log("Stomp client for read doesn't exist");
+    }
   };
 
   useEffect(() => {
@@ -250,7 +254,7 @@ const Chatroom = () => {
         observer.disconnect();
         client.disconnect(() => {
           console.log('Stomp client disconnected.');
-          setStompClientForRead(new Client());
+          setStompClientForRead(null);
         });
       };
     };
