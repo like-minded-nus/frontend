@@ -7,12 +7,14 @@ declare module 'next-auth' {
       id: string;
       userRole: number;
       isPremium: number;
+      banned: boolean;
     } & DefaultSession['user'];
   }
 
   interface User extends DefaultUser {
     userRole: number;
     isPremium: number;
+    banned: boolean;
   }
 }
 const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
@@ -42,6 +44,7 @@ export const authOptions: NextAuthOptions = {
           }),
         });
         const user = await response.json();
+        console.log(user);
         if (user.payload) {
           return user.payload;
         } else {
@@ -51,6 +54,12 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user }) {
+      if (user?.banned) {
+        throw new Error('Banned');
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       console.log('jwt callback');
       if (user) {
