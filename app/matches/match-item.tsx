@@ -53,6 +53,7 @@ const MatchItem: React.FC<MatchItemProps> = ({
         query: {
           receiverProfileId: match.profile.profileId,
           receiverUserId: match.profile.userId,
+          profileId1: match.profileId_1,
         },
       }}
     >
