@@ -7,11 +7,11 @@ jobs:
     runs-on: [self-hosted, oracle-vps]
 
     steps:
-      - name: Delete Old Docker image
-        run: sudo docker rmi -f ${{ secrets.DOCKER_USERNAME }}/like-minded-fe-prod:latest || true
       - name: Pull Docker image
         run: sudo docker pull ${{ secrets.DOCKER_USERNAME }}/like-minded-fe-prod:latest
       - name: Delete Old docker container
         run: sudo docker rm -f like-minded-fe-prod-container || true
       - name: Run Docker Container
         run: sudo docker run -d -p 3001:3000 --name like-minded-fe-prod-container ${{ secrets.DOCKER_USERNAME }}/like-minded-fe-prod:latest
+      - name: Remove Unused Docker Images
+        run: sudo docker image prune -f
