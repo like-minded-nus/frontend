@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 import { GoReport } from 'react-icons/go';
 import ReportModal from './report-modal';
+import ChatroomVouchertModal from './chatroom-voucher-modal';
 
 const Chatroom = () => {
   // Redux store
@@ -23,6 +24,8 @@ const Chatroom = () => {
 
   let receiverProfileId: string = searchParams.get('receiverProfileId') ?? '-1';
   let receiverUserId: string = searchParams.get('receiverUserId') ?? '-1';
+  let profileId1 = searchParams.get('profileId1') ?? '-1';
+  let profileId2 = receiverProfileId;
 
   const [stompClient, setStompClient] = useState<Client>();
   const [messages, setMessages] = useState<Map<string, Message[]>>(new Map());
@@ -30,6 +33,10 @@ const Chatroom = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [receiverProfile, setReceiverProfile] = useState<Profile>();
   const [reportModalIsOpen, setReportModalIsOpen] = useState<boolean>(false);
+  const [voucherModalIsOpen, setVoucherModalIsOpen] = useState<boolean>(false);
+  const [profiles, setProfiles] = useState([]);
+  const [commonPassionsList, setCommonPassionsList] = useState([]);
+  const [commonPassionIds, setCommonPassionIds] = useState<number[]>([]);
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
@@ -41,6 +48,64 @@ const Chatroom = () => {
       block: 'end',
       behavior: 'smooth',
     });
+  };
+
+  useEffect(() => {
+    console.log('profileId_1:', profileId1);
+    console.log('profileId_2:', profileId2);
+    const fetchCommonPassionsId = async () => {
+      try {
+        const response = await fetch(
+          `${endpoint}/profile/profileId/${profileId1}/${profileId2}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch profiles');
+        }
+        const data = await response.json();
+        const profiles = data.payload;
+
+        const passionsLists = profiles.map(
+          (profile: any) => profile.profilePassionList
+        );
+
+        const commonPassionsList = passionsLists.reduce(
+          (commonPassions: any, passions: any) => {
+            return commonPassions.filter((passion: any) =>
+              passions.includes(passion)
+            );
+          }
+        );
+
+        setCommonPassionsList(commonPassionsList);
+        console.log('Common Passions List:', commonPassionsList);
+
+        const passionIds = await fetchPassionIdsByName(commonPassionsList);
+        setCommonPassionIds(passionIds);
+        console.log('Passion IDs:', passionIds);
+      } catch (error) {
+        console.error('Error fetching Passion Ids', error);
+      }
+    };
+
+    fetchCommonPassionsId();
+  }, [profileId1, profileId2]);
+
+  const fetchPassionIdsByName = async (passionNames: string[]) => {
+    try {
+      const response = await fetch(`${endpoint}/passion/getpassionidsbyname`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(passionNames),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch passion IDs by names');
+      }
+      const data = await response.json();
+      return data.payload;
+    } catch (error) {
+      console.error('Error fetching passion IDs by names:', error);
+      return [];
+    }
   };
 
   useEffect(() => {
@@ -306,6 +371,11 @@ const Chatroom = () => {
         reportedByUserId={sessionProfile.userId}
         onClose={() => setReportModalIsOpen(false)}
       />
+      <ChatroomVouchertModal
+        isOpen={voucherModalIsOpen}
+        onClose={() => setVoucherModalIsOpen(false)}
+        passionIdList={commonPassionIds}
+      />
       {/* User info section */}
       <div className='flex w-full items-center justify-between rounded-t-xl border-b bg-white p-4'>
         <div className='item-center flex h-full items-center justify-center'>
@@ -325,6 +395,12 @@ const Chatroom = () => {
 
           <span className='ml-2 font-bold'>{receiverProfile?.displayName}</span>
         </div>
+        <button
+          onClick={() => setVoucherModalIsOpen(true)}
+          className='btn btn-secondary btn-solid mt-2 py-2 align-middle'
+        >
+          Vouchers
+        </button>
         <GoReport
           onClick={() => setReportModalIsOpen(true)}
           title='Report user'
