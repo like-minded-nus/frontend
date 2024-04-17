@@ -185,7 +185,10 @@ const Chatroom = () => {
     }
   };
 
-  const handleMessageRead = (messageId: number, senderProfileId: number) => {
+  const handleMessageRead = async (
+    messageId: number,
+    senderProfileId: number
+  ) => {
     console.log('Sending mark as read');
     const messagePayload = {
       messageId,
@@ -194,41 +197,97 @@ const Chatroom = () => {
 
     if (stompClient) {
       stompClient.send('/app/message-read', {}, JSON.stringify(messagePayload));
+      await markMessageAsRead(messageId);
     } else {
       console.log("Stomp client for read doesn't exist");
     }
   };
 
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver((entries) => {
+  //     console.log('entries : ', entries.length);
+  //     entries.forEach((entry) => {
+  //       if (entry.isIntersecting) {
+  //         // When any message inside the container enters the viewport
+  //         const messageId = entry.target.getAttribute('data-message-id');
+  //         const senderProfileId =
+  //           entry.target.getAttribute('sender-profile-id');
+  //         const isMessageRead = entry.target.getAttribute('is-message-read');
+  //         console.log('This is message id ', messageId);
+  //         if (
+  //           messageId &&
+  //           senderProfileId === receiverProfileId &&
+  //           isMessageRead === 'N'
+  //         ) {
+  //           handleMessageRead(parseInt(messageId), parseInt(senderProfileId));
+  //         }
+  //       }
+  //     });
+  //   });
+
+  //   let options = {
+  //     root: document.querySelector('#scrollArea'),
+  //     rootMargin: '0px',
+  //     threshold: 1.0,
+  //   };
+
+  //   if (messagesContainerRef.current) {
+  //     console.log('observing');
+
+  //     observer.observe(messagesContainerRef.current);
+  //   }
+
+  //   // Clean up function
+  //   return () => {
+  //     if (messagesContainerRef.current) {
+  //       observer.unobserve(messagesContainerRef.current);
+  //     }
+  //   };
+  // }, [messages]); // Now the effect depends on the messages array
+
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+    let options = {
+      root: document.querySelector('#scrollArea'),
+      rootMargin: '0px',
+      threshold: 1.0,
+    };
+
+    // Define a callback function to handle intersection changes
+    let intersectionCallback = (entries: any) => {
+      console.log('entries length : ', entries.length);
+      entries.forEach((entry: any) => {
         if (entry.isIntersecting) {
           // When any message inside the container enters the viewport
           const messageId = entry.target.getAttribute('data-message-id');
           const senderProfileId =
             entry.target.getAttribute('sender-profile-id');
           const isMessageRead = entry.target.getAttribute('is-message-read');
+          console.log('This is message id ', messageId);
           if (
             messageId &&
             senderProfileId === receiverProfileId &&
             isMessageRead === 'N'
           ) {
             handleMessageRead(parseInt(messageId), parseInt(senderProfileId));
+            entry.target.setAttribute('is-message-read', 'Y');
           }
         }
       });
+    };
+
+    let observer = new IntersectionObserver(intersectionCallback, options);
+
+    let elementsToObserve = document.querySelectorAll('.message');
+
+    elementsToObserve.forEach((element) => {
+      observer.observe(element);
     });
 
-    if (messagesContainerRef.current) {
-      console.log('observing');
-      observer.observe(messagesContainerRef.current);
-    }
-
-    // Clean up function
+    // Cleanup function to unobserve elements
     return () => {
-      if (messagesContainerRef.current) {
-        observer.unobserve(messagesContainerRef.current);
-      }
+      elementsToObserve.forEach((element) => {
+        observer.unobserve(element);
+      });
     };
   }, [messages]); // Now the effect depends on the messages array
 
@@ -282,6 +341,26 @@ const Chatroom = () => {
       curMessages[messageIdIndex].isRead = 'Y';
       messages.set(receiverProfileId, [...curMessages]);
       setMessages(new Map(messages));
+    }
+  };
+
+  const markMessageAsRead = async (messageId: number) => {
+    console.log('is this not triggered?');
+    try {
+      const res = await fetch(`${endpoint}/message/read`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageId: messageId }),
+      });
+      // Process the response here
+      if (res.ok) {
+        const messageData = await res.json();
+        return messageData.message;
+      } else {
+        throw new Error('Failed to mark message as read');
+      }
+    } catch (error) {
+      console.error('Error marking message as read:', error);
     }
   };
 
@@ -393,7 +472,11 @@ const Chatroom = () => {
       </div>
 
       {/* Chat messages section */}
-      <div className='w-full flex-1 overflow-y-auto bg-white p-4'>
+      <div
+        className='w-full flex-1 overflow-y-auto bg-white p-4'
+        ref={messagesContainerRef}
+        id='scrollArea'
+      >
         {messages.get(receiverProfileId)?.map((message: Message, index) => {
           const nextMessage = messages.get(receiverProfileId)?.[index + 1];
           const hasSameProfileId =
@@ -402,7 +485,6 @@ const Chatroom = () => {
 
           return (
             <div
-              ref={messagesContainerRef}
               className='message'
               key={index}
               data-message-id={message.messageId}
