@@ -4,6 +4,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { Passion } from '@/models/passion';
 import { Vendor } from '@/models/vendor';
 import { Voucher } from '@/models/voucher';
+import { useSession } from 'next-auth/react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,6 +20,8 @@ const ChatroomVouchertModal: React.FC<ModalProps> = ({
   const [reportedReason, setReportedReason] = useState<string>('');
   const [vendors, setVendors] = useState<any[]>([]);
   const [vouchers, setVouchers] = useState<any[]>([]);
+  const { data: session } = useSession();
+  console.log(session);
 
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
 
@@ -30,7 +33,7 @@ const ChatroomVouchertModal: React.FC<ModalProps> = ({
     const fetchVendorList = async () => {
       try {
         const response = await fetch(
-          `${endpoint}/vendors/byPassionIds?passionIds=${passionIdsQueryParam}`
+          `${endpoint}/vendors/byPassionIdsAndUserPremiumStatus?passionIds=${passionIdsQueryParam}&userPremiumStatus=${session?.user.isPremium}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch vendors');
@@ -38,8 +41,17 @@ const ChatroomVouchertModal: React.FC<ModalProps> = ({
 
         const vendorsData = await response.json();
         setVendors(vendorsData);
-        const vouchersData = vendorsData.map((vendor: any) => vendor.vouchers);
-        setVouchers(vouchersData.flat());
+        const vouchersData = vendorsData.flatMap((vendor: any) =>
+          vendor.vouchers.map((voucher: any) => ({
+            ...voucher,
+            vendorName: vendor.vendorName,
+            vendorAddress: vendor.vendorAddress,
+            vendorPhoneNumber: vendor.phoneNuber,
+            vendorWebsite: vendor.website,
+          }))
+        );
+        setVouchers(vouchersData);
+        console.log('vendors: ' + vendorsData);
         console.log('Vouchers:', vouchersData);
       } catch (error) {
         console.error('Error fetching vendors:', error);
@@ -69,16 +81,32 @@ const ChatroomVouchertModal: React.FC<ModalProps> = ({
                 key={index}
               >
                 <div className='flex w-[20rem] flex-col items-center'>
-                  <label className='font-semibold text-gray-200'>
+                  <label className='text-2xl font-semibold text-gray-200'>
                     {voucher.voucherName}
                   </label>
-                  <label className='font-extralight text-gray-200'>
+                  {/* replace with premium/normal strategy amount */}
+                  <label className='text-xl font-extralight text-gray-200'>
                     {voucher.voucherAmount}
                     {voucher.voucherType.voucherTypeDesc == 'Discount'
                       ? '%'
                       : ''}{' '}
                     {voucher.voucherType.voucherTypeDesc}
                   </label>
+                  {/*  end replace */}
+                  <label className='font-extralight text-gray-200'>
+                    Vendor: {voucher.vendorName}
+                  </label>
+                  {voucher.vendorWebsite && (
+                    <label className='font-extralight text-gray-200'>
+                      Website: {voucher.vendorWebsite}
+                    </label>
+                  )}
+
+                  {voucher.vendorPhoneNumber && (
+                    <label className='font-extralight text-gray-200'>
+                      Phone Number: {voucher.vendorPhoneNumber}
+                    </label>
+                  )}
                 </div>
                 <button
                   onClick={handleVoucherRedeem}
