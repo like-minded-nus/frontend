@@ -9,5 +9,7 @@ export const config = {
     '/premium',
     '/admin',
     '/admin/:path*',
+    '/matches',
+    '/maches/:path*',
   ],
 };
