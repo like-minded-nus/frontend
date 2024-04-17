@@ -247,7 +247,7 @@ const Chatroom = () => {
         observer.unobserve(element);
       });
     };
-  }, [messages]); // Now the effect depends on the messages array
+  }, [messages, stompClient]); // Now the effect depends on the messages array
 
   useEffect(() => {
     let client: Client;
