@@ -192,11 +192,11 @@ const Chatroom = () => {
       senderProfileId,
     };
 
-    // if (stompClient) {
-    //   stompClient.send('/app/message-read', {}, JSON.stringify(messagePayload));
-    // } else {
-    //   console.log("Stomp client for read doesn't exist");
-    // }
+    if (stompClient) {
+      stompClient.send('/app/message-read', {}, JSON.stringify(messagePayload));
+    } else {
+      console.log("Stomp client for read doesn't exist");
+    }
   };
 
   useEffect(() => {
