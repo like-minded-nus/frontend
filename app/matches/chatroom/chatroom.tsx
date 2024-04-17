@@ -14,6 +14,7 @@ import { useSearchParams } from 'next/navigation';
 import { GoReport } from 'react-icons/go';
 import ReportModal from './report-modal';
 import ChatroomVouchertModal from './chatroom-voucher-modal';
+import { FaCropSimple } from 'react-icons/fa6';
 
 const Chatroom = () => {
   // Redux store
@@ -198,9 +199,11 @@ const Chatroom = () => {
       console.log('Sending mark as read : ' + messageId);
       stompClient.send('/app/message-read', {}, JSON.stringify(messagePayload));
       await markMessageAsRead(messageId);
-    } else {
-      console.log("Stomp client for read doesn't exist");
+      return true;
     }
+
+    console.log("Stomp client for read doesn't exist");
+    return false;
   };
 
   useEffect(() => {
@@ -213,7 +216,7 @@ const Chatroom = () => {
     // Define a callback function to handle intersection changes
     let intersectionCallback = (entries: any) => {
       console.log('entries length : ', entries.length);
-      entries.forEach((entry: any) => {
+      entries.forEach(async (entry: any) => {
         if (entry.isIntersecting) {
           // When any message inside the container enters the viewport
           const messageId = entry.target.getAttribute('data-message-id');
@@ -226,8 +229,14 @@ const Chatroom = () => {
             senderProfileId === receiverProfileId &&
             isMessageRead === 'N'
           ) {
-            handleMessageRead(parseInt(messageId), parseInt(senderProfileId));
-            entry.target.setAttribute('is-message-read', 'Y');
+            const isMessageRead = await handleMessageRead(
+              parseInt(messageId),
+              parseInt(senderProfileId)
+            );
+            console.log('is message read : ' + isMessageRead);
+            if (isMessageRead) {
+              entry.target.setAttribute('is-message-read', 'Y');
+            }
           }
         }
       });
