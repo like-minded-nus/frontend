@@ -28,7 +28,6 @@ const Chatroom = () => {
   let profileId2 = receiverProfileId;
 
   const [stompClient, setStompClient] = useState<Client>();
-  const [stompClientForRead, setStompClientForRead] = useState<Client | null>();
   const [messages, setMessages] = useState<Map<string, Message[]>>(new Map());
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -40,7 +39,7 @@ const Chatroom = () => {
   const [commonPassionIds, setCommonPassionIds] = useState<number[]>([]);
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
-
+  const messagesContainerRef = useRef<null | HTMLDivElement>(null);
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
   const wsEndpoint = process.env.NEXT_PUBLIC_WS_ENDPOINT ?? '';
 
@@ -186,83 +185,52 @@ const Chatroom = () => {
     }
   };
 
-  const sendMarkAsRead = (messageId: number, senderProfileId: number) => {
+  const handleMessageRead = (messageId: number, senderProfileId: number) => {
     console.log('Sending mark as read');
     const messagePayload = {
       messageId,
       senderProfileId,
     };
 
-    if (stompClientForRead) {
-      stompClientForRead.send(
-        '/app/message-read',
-        {},
-        JSON.stringify(messagePayload)
-      );
-    } else {
-      console.log("Stomp client for read doesn't exist");
-    }
+    // if (stompClient) {
+    //   stompClient.send('/app/message-read', {}, JSON.stringify(messagePayload));
+    // } else {
+    //   console.log("Stomp client for read doesn't exist");
+    // }
   };
 
   useEffect(() => {
-    const Sock = new SockJS(`${wsEndpoint}/ws`);
-    let client = over(Sock);
-
-    const onConnected = () => {
-      console.log('WebSocket for read status is connected');
-      setStompClientForRead(client);
-    };
-
-    const onError = (err: any) => {
-      console.log(err);
-    };
-
-    client.connect({}, onConnected, onError);
-
-    // Initialize IntersectionObserver when messages are loaded
-    const initIntersectionObserver = () => {
-      const options = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5, // Change this threshold as needed
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const messageId = entry.target.getAttribute('data-message-id');
-            const senderProfileId =
-              entry.target.getAttribute('sender-profile-id');
-            const isMessageRead = entry.target.getAttribute('is-message-read');
-
-            if (
-              messageId &&
-              senderProfileId === receiverProfileId &&
-              isMessageRead === 'N'
-            ) {
-              sendMarkAsRead(parseInt(messageId), parseInt(senderProfileId));
-            }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // When any message inside the container enters the viewport
+          const messageId = entry.target.getAttribute('data-message-id');
+          const senderProfileId =
+            entry.target.getAttribute('sender-profile-id');
+          const isMessageRead = entry.target.getAttribute('is-message-read');
+          if (
+            messageId &&
+            senderProfileId === receiverProfileId &&
+            isMessageRead === 'N'
+          ) {
+            handleMessageRead(parseInt(messageId), parseInt(senderProfileId));
           }
-        });
-      }, options);
-
-      // Observe each message element
-      document.querySelectorAll('.message').forEach((message) => {
-        observer.observe(message);
+        }
       });
+    });
 
-      // Clean up function to disconnect the observer when component unmounts
-      return () => {
-        observer.disconnect();
-        client.disconnect(() => {
-          console.log('Stomp client disconnected.');
-          setStompClientForRead(null);
-        });
-      };
+    if (messagesContainerRef.current) {
+      console.log('observing');
+      observer.observe(messagesContainerRef.current);
+    }
+
+    // Clean up function
+    return () => {
+      if (messagesContainerRef.current) {
+        observer.unobserve(messagesContainerRef.current);
+      }
     };
-
-    initIntersectionObserver();
-  }, [messages]);
+  }, [messages]); // Now the effect depends on the messages array
 
   useEffect(() => {
     let client: Client;
@@ -434,6 +402,7 @@ const Chatroom = () => {
 
           return (
             <div
+              ref={messagesContainerRef}
               className='message'
               key={index}
               data-message-id={message.messageId}
@@ -517,8 +486,9 @@ const Chatroom = () => {
 
         <button
           type='submit'
-          className='ml-2 h-full rounded-full bg-primary px-4 py-2 text-white transition-all
-           duration-200 ease-linear hover:bg-secondary'
+          disabled={inputValue == ''}
+          className={` ml-2 h-full rounded-full bg-primary px-4 py-2 text-white transition-all duration-200
+           ease-linear hover:bg-secondary disabled:bg-slate-300`}
         >
           <BiSend className='h-full w-full' />
         </button>
