@@ -189,61 +189,19 @@ const Chatroom = () => {
     messageId: number,
     senderProfileId: number
   ) => {
-    console.log('Sending mark as read');
     const messagePayload = {
       messageId,
       senderProfileId,
     };
 
     if (stompClient) {
+      console.log('Sending mark as read : ' + messageId);
       stompClient.send('/app/message-read', {}, JSON.stringify(messagePayload));
       await markMessageAsRead(messageId);
     } else {
       console.log("Stomp client for read doesn't exist");
     }
   };
-
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver((entries) => {
-  //     console.log('entries : ', entries.length);
-  //     entries.forEach((entry) => {
-  //       if (entry.isIntersecting) {
-  //         // When any message inside the container enters the viewport
-  //         const messageId = entry.target.getAttribute('data-message-id');
-  //         const senderProfileId =
-  //           entry.target.getAttribute('sender-profile-id');
-  //         const isMessageRead = entry.target.getAttribute('is-message-read');
-  //         console.log('This is message id ', messageId);
-  //         if (
-  //           messageId &&
-  //           senderProfileId === receiverProfileId &&
-  //           isMessageRead === 'N'
-  //         ) {
-  //           handleMessageRead(parseInt(messageId), parseInt(senderProfileId));
-  //         }
-  //       }
-  //     });
-  //   });
-
-  //   let options = {
-  //     root: document.querySelector('#scrollArea'),
-  //     rootMargin: '0px',
-  //     threshold: 1.0,
-  //   };
-
-  //   if (messagesContainerRef.current) {
-  //     console.log('observing');
-
-  //     observer.observe(messagesContainerRef.current);
-  //   }
-
-  //   // Clean up function
-  //   return () => {
-  //     if (messagesContainerRef.current) {
-  //       observer.unobserve(messagesContainerRef.current);
-  //     }
-  //   };
-  // }, [messages]); // Now the effect depends on the messages array
 
   useEffect(() => {
     let options = {
