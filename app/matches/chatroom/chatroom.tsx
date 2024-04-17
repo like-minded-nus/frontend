@@ -39,7 +39,7 @@ const Chatroom = () => {
   const [commonPassionIds, setCommonPassionIds] = useState<number[]>([]);
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
-
+  const messagesContainerRef = useRef<null | HTMLDivElement>(null);
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
   const wsEndpoint = process.env.NEXT_PUBLIC_WS_ENDPOINT ?? '';
 
@@ -51,8 +51,6 @@ const Chatroom = () => {
   };
 
   useEffect(() => {
-    console.log('profileId_1:', profileId1);
-    console.log('profileId_2:', profileId2);
     const fetchCommonPassionsId = async () => {
       try {
         const response = await fetch(
@@ -172,11 +170,13 @@ const Chatroom = () => {
 
     if (+receiverProfileId === +messagePayload.senderProfileId) {
       if (!messages.has(receiverProfileId)) {
+        console.log('set key 2');
         messages.set(receiverProfileId, [messagePayload]);
         setMessages(new Map(messages));
       } else {
         const existingMessages = messages.get(receiverProfileId);
         if (existingMessages) {
+          console.log('push value');
           existingMessages.push(messagePayload);
           messages.set(receiverProfileId, existingMessages);
           setMessages(new Map(messages));
@@ -185,68 +185,111 @@ const Chatroom = () => {
     }
   };
 
+  const handleMessageRead = async (
+    messageId: number,
+    senderProfileId: number
+  ) => {
+    console.log('Sending mark as read');
+    const messagePayload = {
+      messageId,
+      senderProfileId,
+    };
+
+    if (stompClient) {
+      stompClient.send('/app/message-read', {}, JSON.stringify(messagePayload));
+      await markMessageAsRead(messageId);
+    } else {
+      console.log("Stomp client for read doesn't exist");
+    }
+  };
+
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver((entries) => {
+  //     console.log('entries : ', entries.length);
+  //     entries.forEach((entry) => {
+  //       if (entry.isIntersecting) {
+  //         // When any message inside the container enters the viewport
+  //         const messageId = entry.target.getAttribute('data-message-id');
+  //         const senderProfileId =
+  //           entry.target.getAttribute('sender-profile-id');
+  //         const isMessageRead = entry.target.getAttribute('is-message-read');
+  //         console.log('This is message id ', messageId);
+  //         if (
+  //           messageId &&
+  //           senderProfileId === receiverProfileId &&
+  //           isMessageRead === 'N'
+  //         ) {
+  //           handleMessageRead(parseInt(messageId), parseInt(senderProfileId));
+  //         }
+  //       }
+  //     });
+  //   });
+
+  //   let options = {
+  //     root: document.querySelector('#scrollArea'),
+  //     rootMargin: '0px',
+  //     threshold: 1.0,
+  //   };
+
+  //   if (messagesContainerRef.current) {
+  //     console.log('observing');
+
+  //     observer.observe(messagesContainerRef.current);
+  //   }
+
+  //   // Clean up function
+  //   return () => {
+  //     if (messagesContainerRef.current) {
+  //       observer.unobserve(messagesContainerRef.current);
+  //     }
+  //   };
+  // }, [messages]); // Now the effect depends on the messages array
+
   useEffect(() => {
-    const sendMarkAsRead = (messageId: number, senderProfileId: number) => {
-      const Sock = new SockJS(`${wsEndpoint}/ws`);
-      let client = over(Sock);
-
-      const messagePayload = {
-        messageId,
-        senderProfileId,
-      };
-
-      const onConnected = () => {
-        console.log('Sending Yo!');
-        client.send('/app/message-read', {}, JSON.stringify(messagePayload));
-      };
-
-      const onError = (err: any) => {
-        console.log(err);
-      };
-
-      client.connect({}, onConnected, onError);
+    let options = {
+      root: document.querySelector('#scrollArea'),
+      rootMargin: '0px',
+      threshold: 1.0,
     };
 
-    // Initialize IntersectionObserver when messages are loaded
-    const initIntersectionObserver = () => {
-      console.log('reinit');
-      const options = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5, // Change this threshold as needed
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const messageId = entry.target.getAttribute('data-message-id');
-            const senderProfileId =
-              entry.target.getAttribute('sender-profile-id');
-
-            console.log('After reinit apa ');
-            console.log('message id ', messageId);
-            console.log('sewnderProfile id ', senderProfileId);
-
-            if (messageId && senderProfileId === receiverProfileId) {
-              sendMarkAsRead(parseInt(messageId), parseInt(senderProfileId));
-            }
+    // Define a callback function to handle intersection changes
+    let intersectionCallback = (entries: any) => {
+      console.log('entries length : ', entries.length);
+      entries.forEach((entry: any) => {
+        if (entry.isIntersecting) {
+          // When any message inside the container enters the viewport
+          const messageId = entry.target.getAttribute('data-message-id');
+          const senderProfileId =
+            entry.target.getAttribute('sender-profile-id');
+          const isMessageRead = entry.target.getAttribute('is-message-read');
+          console.log('This is message id ', messageId);
+          if (
+            messageId &&
+            senderProfileId === receiverProfileId &&
+            isMessageRead === 'N'
+          ) {
+            handleMessageRead(parseInt(messageId), parseInt(senderProfileId));
+            entry.target.setAttribute('is-message-read', 'Y');
           }
-        });
-      }, options);
-
-      // Observe each message element
-      document.querySelectorAll('.message').forEach((message) => {
-        observer.observe(message);
+        }
       });
-
-      // Clean up function to disconnect the observer when component unmounts
-      return () => {
-        observer.disconnect();
-      };
     };
 
-    initIntersectionObserver();
-  }, [messages]);
+    let observer = new IntersectionObserver(intersectionCallback, options);
+
+    let elementsToObserve = document.querySelectorAll('.message');
+
+    elementsToObserve.forEach((element) => {
+      observer.observe(element);
+    });
+
+    // Cleanup function to unobserve elements
+    return () => {
+      elementsToObserve.forEach((element) => {
+        observer.unobserve(element);
+      });
+    };
+  }, [messages]); // Now the effect depends on the messages array
 
   useEffect(() => {
     let client: Client;
@@ -259,7 +302,7 @@ const Chatroom = () => {
 
       client?.subscribe(
         '/user/' + sessionProfile.profileId + '/private/read',
-        handleMarkAsRead
+        onMessageRead
       );
 
       setStompClient(client);
@@ -283,7 +326,7 @@ const Chatroom = () => {
     };
   }, []);
 
-  const handleMarkAsRead = (payload: any) => {
+  const onMessageRead = (payload: any) => {
     console.log('Message with ID ', payload.body, ' is read yo');
     var payloadData = payload.body;
     const curMessages = messages.get(receiverProfileId);
@@ -301,31 +344,51 @@ const Chatroom = () => {
     }
   };
 
+  const markMessageAsRead = async (messageId: number) => {
+    console.log('is this not triggered?');
+    try {
+      const res = await fetch(`${endpoint}/message/read`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageId: messageId }),
+      });
+      // Process the response here
+      if (res.ok) {
+        const messageData = await res.json();
+        return messageData.message;
+      } else {
+        throw new Error('Failed to mark message as read');
+      }
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+    }
+  };
+
+  const fetchNextMessageId = async () => {
+    try {
+      const res = await fetch(`${endpoint}/message/sequence`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      // Process the response here
+      if (res.ok) {
+        const messageData = await res.json();
+        return messageData.payload;
+      } else {
+        throw new Error('Failed to fetch next message id');
+      }
+    } catch (error) {
+      console.error('Error fetching next message id:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('stompClient : ', stompClient);
     // Add the message to the messages array
+
     if (stompClient) {
-      const fetchNextMessageId = async () => {
-        try {
-          const res = await fetch(`${endpoint}/message/sequence`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          // Process the response here
-          if (res.ok) {
-            const messageData = await res.json();
-            return messageData.payload;
-          } else {
-            throw new Error('Failed to fetch next message id');
-          }
-        } catch (error) {
-          console.error('Error fetching next message id:', error);
-        }
-      };
-
       const nextMessageId = await fetchNextMessageId();
-
       const messagePayload: Message = {
         messageId: nextMessageId,
         senderProfileId: +sessionProfile.profileId,
@@ -335,12 +398,12 @@ const Chatroom = () => {
         isRead: 'N',
       };
 
-      console.log('aaa : ', messagePayload);
-
       if (!messages.has(receiverProfileId)) {
+        console.log('Set key');
         messages.set(receiverProfileId, [messagePayload]);
         setMessages(new Map(messages));
       } else {
+        console.log('Push value');
         const existingMessages = messages.get(receiverProfileId);
         if (existingMessages) {
           existingMessages.push(messagePayload);
@@ -409,7 +472,11 @@ const Chatroom = () => {
       </div>
 
       {/* Chat messages section */}
-      <div className='w-full flex-1 overflow-y-auto bg-white p-4'>
+      <div
+        className='w-full flex-1 overflow-y-auto bg-white p-4'
+        ref={messagesContainerRef}
+        id='scrollArea'
+      >
         {messages.get(receiverProfileId)?.map((message: Message, index) => {
           const nextMessage = messages.get(receiverProfileId)?.[index + 1];
           const hasSameProfileId =
@@ -422,6 +489,7 @@ const Chatroom = () => {
               key={index}
               data-message-id={message.messageId}
               sender-profile-id={message.senderProfileId}
+              is-message-read={message.isRead}
             >
               <div
                 className={`text-gray text-xs ${
@@ -500,8 +568,9 @@ const Chatroom = () => {
 
         <button
           type='submit'
-          className='ml-2 h-full rounded-full bg-primary px-4 py-2 text-white transition-all
-           duration-200 ease-linear hover:bg-secondary'
+          disabled={inputValue == ''}
+          className={` ml-2 h-full rounded-full bg-primary px-4 py-2 text-white transition-all duration-200
+           ease-linear hover:bg-secondary disabled:bg-slate-300`}
         >
           <BiSend className='h-full w-full' />
         </button>
