@@ -11,6 +11,7 @@ import {
   profilePassionMatchListReset,
   getProfilePassionMatchList,
   createMatchRecord,
+  getAllMatches,
 } from '@/redux/features/matchSlice';
 import { Profile } from '@/models/profile';
 import {
@@ -124,6 +125,12 @@ const MatchCard = () => {
         toast.success('You got a match! 🎉', {
           duration: 2000,
         });
+        dispatch(
+          getAllMatches({
+            controller,
+            profileId: sessionProfile.profileId,
+          })
+        );
         dispatch(matchReset());
       }
     }
