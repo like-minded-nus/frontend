@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ProfilePassionMatchList } from '@/models/profile-passion-match-list';
 import {
   matchReset,
+  profilePassionMatchListReset,
   getProfilePassionMatchList,
   createMatchRecord,
 } from '@/redux/features/matchSlice';
@@ -20,6 +21,8 @@ import {
 } from '@/redux/features/profileSlice';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
+import { Match } from '@/models/match';
+import { toast, Toaster } from 'sonner';
 
 type ButtonType = 'like' | 'skip';
 
@@ -41,6 +44,17 @@ const MatchCard = () => {
   const profile: Profile = useAppSelector(
     (state) => state.profileReducer.profile
   );
+  const match: Match = useAppSelector((state) => state.matchReducer.match);
+
+  const isEmpty = (obj: any) => {
+    for (const prop in obj) {
+      if (Object.hasOwn(obj, prop)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   // Step 1: Fetch the logged in user's profile
   // ** NOW FETCHED FROM HOME PAGE
@@ -91,8 +105,10 @@ const MatchCard = () => {
     ) {
       setIsEmptyMatchList(true);
       dispatch(profileReset());
+      dispatch(profilePassionMatchListReset());
     } else {
       setIsEmptyMatchList(true);
+      dispatch(profileReset());
     }
   }, [profilePassionMatchList, counter]);
 
@@ -100,6 +116,18 @@ const MatchCard = () => {
   useEffect(() => {
     console.log(profile);
   }, [profile]);
+
+  // Step 5: Check if it's mutual like
+  useEffect(() => {
+    if (!isEmpty(match)) {
+      if (match.like_1 && match.like_2) {
+        toast.success('You got a match! 🎉', {
+          duration: 2000,
+        });
+        dispatch(matchReset());
+      }
+    }
+  }, [match]);
 
   const [clickedSkip, setClickedSkip] = useState<boolean>(false);
   const [clickedLike, setClickedLike] = useState<boolean>(false);
@@ -262,6 +290,8 @@ const MatchCard = () => {
           </div>
         )}
       </div>
+
+      <Toaster />
     </>
   );
 };
