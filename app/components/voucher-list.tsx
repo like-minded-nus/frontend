@@ -21,14 +21,18 @@ const VoucherList: React.FC<VoucherListProps> = ({
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
 
   useEffect(() => {
-    fetchVouchers();
-  }, []);
+    if (vendorId) {
+      fetchVouchers();
+    }
+  }, [vendorId]);
 
   const fetchVouchers = async () => {
+    console.log(vendorId);
     try {
       const response = await axios.get(
         `${endpoint}/vouchers/vendor/${vendorId}/vouchers`
       );
+      console.log(response.data);
       setVouchers(response.data);
     } catch (error) {
       console.error('Error fetching vouchers:', error);

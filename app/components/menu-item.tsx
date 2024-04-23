@@ -4,6 +4,7 @@ import { IconType } from 'react-icons';
 import { setActiveItem } from '@/redux/features/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface MenuItemProps {
   iconType: IconType;
@@ -38,6 +39,36 @@ const MenuItem: React.FC<MenuItemProps> = ({
     dispatch(setActiveItem(id));
     if (link) push(link);
   };
+
+  useEffect(() => {
+    switch (window.location.pathname) {
+      case '/':
+      case '/home':
+      case '/admin':
+        dispatch(setActiveItem(0));
+        break;
+      case '/browse':
+      case '/admin/user_management':
+      case '/admin/user_management/reports':
+        dispatch(setActiveItem(1));
+        break;
+      case '/matches':
+      case '/chatroom':
+      case '/matches/chatroom':
+      case '/admin/vendors':
+        dispatch(setActiveItem(2));
+        break;
+      case '/profile':
+        dispatch(setActiveItem(3));
+        break;
+      case '/premium':
+        dispatch(setActiveItem(4));
+        break;
+      default:
+        dispatch(setActiveItem(0));
+        break;
+    }
+  });
 
   return (
     <div

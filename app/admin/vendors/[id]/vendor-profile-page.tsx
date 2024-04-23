@@ -8,22 +8,17 @@ import VoucherModal from '@/app/components/voucher-modal';
 import { FaEdit, FaArrowLeft } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-
-interface Vendor {
-  vendorId: number;
-  vendorName: string;
-  activityName: string;
-  address: string;
-  phoneNumber: number;
-  website: string;
-}
+import { Vendor } from '@/models/vendor';
 
 const VendorProfilePage = () => {
-  const [vendorData, setVendorData] = useState<Vendor | null>(null);
+  const [vendorData, setVendorData] = useState<Vendor>({} as Vendor);
   const [id, setId] = useState<string | null>(null);
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState<any>(null);
+  const [vendorType, setVendorType] = useState<string>('');
+  const [passionsId, setPassionsId] = useState<number | null>(null);
+  const [passionsName, setPassionsName] = useState<string>('');
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -38,9 +33,11 @@ const VendorProfilePage = () => {
 
   useEffect(() => {
     const vendorId = getVendorIdFromUrl();
+    console.log(vendorId);
     if (vendorId) {
       setId(vendorId);
       fetchVendorData(vendorId);
+      console.log(vendorData);
     }
   }, []);
 
@@ -54,7 +51,14 @@ const VendorProfilePage = () => {
   const fetchVendorData = async (id: any) => {
     try {
       const response = await axios.get(`${endpoint}/vendors/${id}`);
-      setVendorData(response.data);
+      const viewVendorData = response.data;
+      setVendorData(viewVendorData);
+      setVendorType(viewVendorData.vendorType);
+      const passionResponse = await axios.get(
+        `${endpoint}/passion/${viewVendorData.passionId}`
+      );
+      const passionData = passionResponse.data.payload.passionList;
+      setPassionsName(passionData[0].passionName);
     } catch (error) {
       console.error('Error fetching vendor data:', error);
     }
@@ -64,6 +68,10 @@ const VendorProfilePage = () => {
     setSelectedVoucher(voucher);
     setIsModalOpen(true);
   };
+
+  function capitalizeFirstLetter(str: string) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
+  }
 
   if (!vendorData) {
     return <div>Loading...</div>;
@@ -81,7 +89,14 @@ const VendorProfilePage = () => {
           <FaArrowLeft />
         </button>
       </Link> */}
-      <h1 className='mb-8 text-3xl text-gray-300'>{vendorData.vendorName}</h1>
+      <div className='flex justify-center'>
+        <h1 className='mb-8 mr-4 text-3xl text-gray-300'>
+          {vendorData.vendorName}
+        </h1>
+        <h2 className='mt-3 text-sm text-secondary'>
+          {capitalizeFirstLetter(vendorType)} Vendor
+        </h2>
+      </div>
       <div className='vendor-info'>
         <div className='info-item'>
           <label htmlFor='activity' className='mb-2 mr-4 text-gray-300'>
@@ -90,6 +105,12 @@ const VendorProfilePage = () => {
           <span className='font-thin text-gray-200'>
             {vendorData.activityName}
           </span>
+        </div>
+        <div className='info-item'>
+          <label htmlFor='address' className='mb-2 mr-4 text-gray-300'>
+            Passion Tag:
+          </label>
+          <span className='font-thin text-gray-200'>{passionsName}</span>
         </div>
         <div className='info-item'>
           <label htmlFor='address' className='mb-2 mr-4 text-gray-300'>
@@ -111,6 +132,26 @@ const VendorProfilePage = () => {
           </label>
           <span className='font-thin text-gray-200'>{vendorData.website}</span>
         </div>
+        {vendorData.vendorType == 'OUTDOOR' ? (
+          <div className='info-item'>
+            <label htmlFor='website' className='mb-2 mr-4 text-gray-300'>
+              Intensity Level:
+            </label>
+            <span className='font-thin text-gray-200'>
+              {vendorData.intensityLevel}
+            </span>
+          </div>
+        ) : (
+          <div className='info-item'>
+            <label htmlFor='website' className='mb-2 mr-4 text-gray-300'>
+              Conversation Friendly:
+            </label>
+            <span className='font-thin text-gray-200'>
+              {capitalizeFirstLetter(vendorData.conversationFriendly)}
+            </span>
+          </div>
+        )}
+
         <VoucherList vendorId={id} handleOpenModal={handleOpenModal} />
         <Link href={`/admin/vendors/${id}/create_voucher`}>
           <button

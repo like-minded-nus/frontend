@@ -3,18 +3,12 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { FaEdit } from 'react-icons/fa';
 import Link from 'next/link';
+import { Voucher } from '@/models/voucher';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedVoucher: Voucher | null;
-}
-
-interface Voucher {
-  voucherId: string;
-  voucherName: string;
-  voucherEndDate: string;
-  voucherDescription: string;
 }
 
 const VoucherModal: React.FC<ModalProps> = ({
@@ -71,14 +65,22 @@ const VoucherModal: React.FC<ModalProps> = ({
                       {selectedVoucher.voucherName}
                     </h3>
                     <div className='mt-6'>
-                      <p className='my-2 text-sm text-gray-200'>
+                      {/* <p className='my-2 text-sm text-gray-200'>
                         Id: {selectedVoucher.voucherId}
-                      </p>
+                      </p> */}
                       <p className='my-2 text-sm text-gray-200'>
                         End Date: {selectedVoucher.voucherEndDate}
                       </p>
+                      <p className='my-2 text-sm text-gray-200'>
+                        Voucher Type:{' '}
+                        {selectedVoucher.voucherType === 1
+                          ? 'Free Trials'
+                          : 'Percentage Discount'}
+                      </p>
                       <p className='text-sm text-gray-200'>
-                        Description: {selectedVoucher.voucherDescription}
+                        {selectedVoucher.voucherType === 1
+                          ? `Number of Free Trials: ${selectedVoucher.voucherAmount}`
+                          : `Percentage Discount: ${selectedVoucher.voucherAmount}%`}
                       </p>
                     </div>
                   </div>

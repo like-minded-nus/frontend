@@ -30,8 +30,8 @@ const AdminBreadcrumb = () => {
                     : 'breadcrumb__list'
                 }
               >
-                <Link href={href}>
-                  {link[0].toUpperCase() + link.slice(1, link.length)}
+                <Link href={href} className='capitalize'>
+                  {link.replaceAll('_', ' ').replaceAll('-', ' ')}
                 </Link>
               </li>
               {pathNames.length !== index + 1 && separator}

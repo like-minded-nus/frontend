@@ -1,10 +1,8 @@
 'use client';
 
 import { GoHome } from 'react-icons/go';
-import { FaRegHeart } from 'react-icons/fa';
 import { TbColumns3 } from 'react-icons/tb';
 import { FaRegUser } from 'react-icons/fa6';
-import { FaCrown } from 'react-icons/fa';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { FaCog } from 'react-icons/fa';
 
@@ -33,22 +31,22 @@ const AdminMenu = () => {
           />
 
           <MenuItem
-            iconType={TbColumns3}
+            iconType={FaRegUser}
             iconSize={20}
             id={1}
-            label={'Vendors'}
+            label={'User Management'}
             count={0}
-            link={'/admin/vendors'}
+            link={'/admin/user_management/reports'}
             first={false}
           />
 
           <MenuItem
-            iconType={FaRegUser}
+            iconType={TbColumns3}
             iconSize={20}
             id={2}
-            label={'User Management'}
+            label={'Vendors'}
             count={0}
-            link={'/admin'}
+            link={'/admin/vendors'}
             first={false}
           />
 

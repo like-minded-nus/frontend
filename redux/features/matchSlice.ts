@@ -129,8 +129,11 @@ export const matchSlice = createSlice({
   name: 'match',
   initialState,
   reducers: {
-    matchReset() {
-      return initialState;
+    matchReset(state) {
+      state.match = {} as Match;
+    },
+    profilePassionMatchListReset(state) {
+      state.profilePassionMatchList = {} as ProfilePassionMatchList;
     },
   },
   extraReducers(builder) {
@@ -160,7 +163,7 @@ export const matchSlice = createSlice({
         state.errorMessage = 'Failed to get create/update match record.';
       })
       .addMatcher(
-        isPending(getProfilePassionMatchList, createMatchRecord),
+        isPending(getProfilePassionMatchList, createMatchRecord, getAllMatches),
         (state) => {
           state.loading = true;
         }
@@ -168,5 +171,5 @@ export const matchSlice = createSlice({
   },
 });
 
-export const { matchReset } = matchSlice.actions;
+export const { matchReset, profilePassionMatchListReset } = matchSlice.actions;
 export default matchSlice.reducer;

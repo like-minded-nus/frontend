@@ -332,6 +332,20 @@
   }
   /** [end] loading match card **/
 
+  /** [start] empty match message **/
+  .match-card__empty {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .match-card__empty > h1 {
+    @apply mb-2 text-3xl font-semibold uppercase text-secondary;
+  }
+
+  .match-card__empty > span {
+    @apply mt-2 text-sm;
+  }
+  /** [start] empty match message **/
+
   /** [start] match list **/
   .match-list {
     @apply my-4 flex h-[92%] w-[77.5dvw] flex-col flex-wrap justify-start
@@ -570,6 +584,32 @@
   }
 
   /* end premium page */
+
+  /**[start] admin table **/
+  .admin-table {
+    @apply w-full text-left text-sm text-gray-500 rtl:text-right;
+  }
+
+  .admin-table > thead {
+    @apply bg-gray-700 text-xs uppercase text-white;
+  }
+
+  .admin-table > thead > tr > th {
+    @apply px-6 py-3;
+  }
+
+  .admin-table > tbody > tr {
+    @apply border-b border-gray-700 bg-gray-500 text-white;
+  }
+
+  .admin-table > tbody > tr > th {
+    @apply whitespace-nowrap px-6 py-4 font-medium;
+  }
+
+  .admin-table > tbody > tr > td {
+    @apply px-6 py-4;
+  }
+  /**[end] admin table **/
 }
 
 @layer utilities {

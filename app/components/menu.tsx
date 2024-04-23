@@ -15,10 +15,16 @@ import { Profile } from '@/models/profile';
 import { useEffect, useState } from 'react';
 import { getAllMatches } from '@/redux/features/matchSlice';
 import { Match } from '@/models/match';
+import { useSession } from 'next-auth/react';
+import { setUserId } from '@/redux/features/userSlice';
+import { getProfileByUserId } from '@/redux/features/profileSlice';
+import { useRouter } from 'next/navigation';
 
 const Menu = () => {
+  const { data: session } = useSession();
   const dispatch = useAppDispatch();
   const controller = new AbortController();
+  const router = useRouter();
 
   // Redux store
   const menuExpanded: boolean = useAppSelector(
@@ -35,7 +41,25 @@ const Menu = () => {
 
   const [hasProfile, setHasProfile] = useState(false);
 
+  //  fetch user's profile and store in redux state
   useEffect(() => {
+    if (session) {
+      console.log('userid: ' + session.user.id);
+      // fetch and set redux profile on every page / page refresh
+      if (Object.keys(sessionProfile).length === 0) {
+        console.log('fetching profile');
+        dispatch(
+          getProfileByUserId({ controller, userId: Number(session.user.id) })
+        );
+      }
+    }
+    return () => {
+      controller.abort();
+    };
+  }, [session]);
+
+  useEffect(() => {
+    console.log(sessionProfile?.profileId);
     if (sessionProfile?.profileId) {
       setHasProfile(true);
 

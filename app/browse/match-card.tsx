@@ -8,8 +8,10 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ProfilePassionMatchList } from '@/models/profile-passion-match-list';
 import {
   matchReset,
+  profilePassionMatchListReset,
   getProfilePassionMatchList,
   createMatchRecord,
+  getAllMatches,
 } from '@/redux/features/matchSlice';
 import { Profile } from '@/models/profile';
 import {
@@ -20,6 +22,8 @@ import {
 } from '@/redux/features/profileSlice';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
+import { Match } from '@/models/match';
+import { toast, Toaster } from 'sonner';
 
 type ButtonType = 'like' | 'skip';
 
@@ -29,8 +33,7 @@ const MatchCard = () => {
   const dispatch = useAppDispatch();
   const controller = new AbortController();
   const [counter, setCounter] = useState<number>(0);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [mimeType, setMimeType] = useState<string | null>(null);
+  const [isEmptyMatchList, setIsEmptyMatchList] = useState<boolean>(false);
 
   // Redux store
   const profilePassionMatchList: ProfilePassionMatchList = useAppSelector(
@@ -42,14 +45,24 @@ const MatchCard = () => {
   const profile: Profile = useAppSelector(
     (state) => state.profileReducer.profile
   );
+  const match: Match = useAppSelector((state) => state.matchReducer.match);
 
-  console.log(profile);
+  const isEmpty = (obj: any) => {
+    for (const prop in obj) {
+      if (Object.hasOwn(obj, prop)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   // Step 1: Fetch the logged in user's profile
   // ** NOW FETCHED FROM HOME PAGE
 
   // Step 2: Fetch the potential match list
   useEffect(() => {
+    console.log('hohoho');
     if (sessionProfile?.profileId) {
       console.log('has session profile in redux store');
       dispatch(
@@ -69,10 +82,13 @@ const MatchCard = () => {
   // Step 3: Fetch the first match's profile
   useEffect(() => {
     console.log(profile);
+    console.log(profilePassionMatchList);
     if (
       profilePassionMatchList?.matchList?.length > 0 &&
       profilePassionMatchList?.matchList?.length > counter
     ) {
+      setIsEmptyMatchList(false);
+
       dispatch(
         getProfile({
           controller,
@@ -88,6 +104,11 @@ const MatchCard = () => {
       profilePassionMatchList?.matchList?.length > 0 &&
       profilePassionMatchList?.matchList?.length === counter
     ) {
+      setIsEmptyMatchList(true);
+      dispatch(profileReset());
+      dispatch(profilePassionMatchListReset());
+    } else {
+      setIsEmptyMatchList(true);
       dispatch(profileReset());
     }
   }, [profilePassionMatchList, counter]);
@@ -96,6 +117,24 @@ const MatchCard = () => {
   useEffect(() => {
     console.log(profile);
   }, [profile]);
+
+  // Step 5: Check if it's mutual like
+  useEffect(() => {
+    if (!isEmpty(match)) {
+      if (match.like_1 && match.like_2) {
+        toast.success('You got a match! 🎉', {
+          duration: 2000,
+        });
+        dispatch(
+          getAllMatches({
+            controller,
+            profileId: sessionProfile.profileId,
+          })
+        );
+        dispatch(matchReset());
+      }
+    }
+  }, [match]);
 
   const [clickedSkip, setClickedSkip] = useState<boolean>(false);
   const [clickedLike, setClickedLike] = useState<boolean>(false);
@@ -149,40 +188,52 @@ const MatchCard = () => {
   return (
     <>
       <div className='browse'>
+        {isEmptyMatchList && (
+          <div className='match-card__empty'>
+            <h1>YOU&apos;RE TOO AWESOME 😎</h1>
+            <span>
+              So please give us time to find you your perfect partner.
+            </span>
+          </div>
+        )}
+
         {/* [start] Match Card Loading Component */}
-        <div className='match-card__loading'>
-          <div className='match-card__container'>
-            <Image
-              src='https://via.placeholder.com/1920x1920/f472b6/fff?text=%20'
-              sizes='100vw'
-              alt='Match'
-              fill={true}
-              className='match-card__container__image'
-            />
-            <div className='match-card__container__backdrop'></div>
-            <div className='match-card__container__info'>
-              <div className='match-card__container__info__particulars'>
-                <div className='match-card__container__info__particulars__name'></div>
-                <div className='match-card__container__info__particulars__age'></div>
+        {!isEmptyMatchList && (
+          <div className='match-card__loading'>
+            <div className='match-card__container'>
+              <Image
+                src='https://via.placeholder.com/1920x1920/f472b6/fff?text=%20'
+                sizes='100vw'
+                alt='Match'
+                fill={true}
+                className='match-card__container__image'
+              />
+              <div className='match-card__container__backdrop'></div>
+              <div className='match-card__container__info'>
+                <div className='match-card__container__info__particulars'>
+                  <div className='match-card__container__info__particulars__name'></div>
+                  <div className='match-card__container__info__particulars__age'></div>
+                </div>
+                <div className='match-card__container__info__intro'></div>
               </div>
-              <div className='match-card__container__info__intro'></div>
-            </div>
-            <div className='match-card__container__controls'>
-              <div className={`match-card__container__controls__button skip`}>
-                <RxCross1
-                  size={22}
-                  className='match-card__container__controls__button__icon'
-                />
-              </div>
-              <div className={`match-card__container__controls__button like`}>
-                <FaHeart
-                  size={24}
-                  className='match-card__container__controls__button__icon'
-                />
+              <div className='match-card__container__controls'>
+                <div className={`match-card__container__controls__button skip`}>
+                  <RxCross1
+                    size={22}
+                    className='match-card__container__controls__button__icon'
+                  />
+                </div>
+                <div className={`match-card__container__controls__button like`}>
+                  <FaHeart
+                    size={24}
+                    className='match-card__container__controls__button__icon'
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
+
         {/* [end] Match Card Loading Component */}
 
         {profile?.profileId && (
@@ -246,6 +297,8 @@ const MatchCard = () => {
           </div>
         )}
       </div>
+
+      <Toaster />
     </>
   );
 };

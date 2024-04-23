@@ -49,15 +49,27 @@ const MatchItem: React.FC<MatchItemProps> = ({
     <Link
       className='match-list__item group'
       href={{
-        pathname: '/chatroom',
-        query: { receiverProfileId: match.profile.profileId },
+        pathname: '/matches/chatroom',
+        query: {
+          receiverProfileId: match.profile.profileId,
+          receiverUserId: match.profile.userId,
+          profileId1: match.profileId_1,
+        },
       }}
     >
       <div className='match-list__item__image'>
         <div className='match-list__item__image__container'>
-          {!match.profile?.image1 && (
+          {!match.profile?.image1 ? (
             <Image
               src='https://via.placeholder.com/64x64/f472b6/fff?text=DP'
+              sizes='100vw'
+              alt='DP'
+              fill={true}
+              className='match-list__item__image'
+            />
+          ) : (
+            <Image
+              src={`data:image/jpeg;base64,${match.profile?.image1}`}
               sizes='100vw'
               alt='DP'
               fill={true}

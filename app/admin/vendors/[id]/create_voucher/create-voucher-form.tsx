@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import axios from 'axios';
 import VoucherDatepicker from '@/app/components/voucher-datepicker';
 import { useRouter } from 'next/navigation';
@@ -9,10 +9,17 @@ const CreateVoucherForm = () => {
   const [voucherName, setVoucherName] = useState('');
   const [voucherEndDate, setVoucherEndDate] = useState('');
   const [voucherDescription, setVoucherDescription] = useState('');
+  const [voucherType, setVoucherType] = useState<number>(1);
   const [redeemStatus, setRedeemStatus] = useState(0);
   const [vendorId, setVendorId] = useState('');
   const [voucherNameError, setVoucherNameError] = useState('');
   const [voucherDescriptionError, setVoucherDescriptionError] = useState('');
+  const [voucherAmount, setVoucherAmount] = useState<number>(1);
+
+  interface VoucherTypes {
+    voucherType: number;
+    voucherDesc: string;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +42,6 @@ const CreateVoucherForm = () => {
       return;
     }
 
-    if (voucherDescription.trim() === '') {
-      alert('Voucher description cannot be empty.');
-      return;
-    }
-
     try {
       const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? '';
       if (!endpoint) {
@@ -48,7 +50,8 @@ const CreateVoucherForm = () => {
       const response = await axios.post(`${endpoint}/vouchers/create_voucher`, {
         voucherName,
         voucherEndDate,
-        voucherDescription,
+        voucherType,
+        voucherAmount,
         redeemStatus,
         vendorId,
       });
@@ -69,6 +72,11 @@ const CreateVoucherForm = () => {
   const handleChange = (selectedDate: Date) => {
     console.log('Selected Date:', selectedDate);
     setVoucherEndDate(selectedDate.toISOString());
+  };
+
+  const handleDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setVoucherType(Number(e.target.value));
+    console.log('dropdown change to: ' + e.target.value);
   };
 
   const getVendorIdFromUrl = () => {
@@ -148,30 +156,43 @@ const CreateVoucherForm = () => {
               </div>
               <div className='mb-4 flex flex-col'>
                 <label
-                  htmlFor='voucherDescription'
+                  htmlFor='voucherType'
                   className='mb-2 block text-gray-200'
                 >
-                  Description:
+                  Voucher Type:
+                </label>
+                <select
+                  value={voucherType}
+                  onChange={handleDropdownChange}
+                  name='voucherType'
+                  className={`w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200`}
+                >
+                  <option value='1' key={1}>
+                    Free Trials
+                  </option>
+                  <option value='2' key={2}>
+                    Percentage Discount
+                  </option>
+                </select>
+              </div>
+
+              <div className='mb-4 flex flex-col'>
+                <label
+                  htmlFor='voucherAmount'
+                  className='mb-2 block text-gray-200'
+                >
+                  {voucherType === 1
+                    ? 'Number of free trials'
+                    : 'Percentage Discount (%)'}
                 </label>
                 <input
-                  type='text'
-                  id='voucherDescription'
-                  value={voucherDescription}
-                  onChange={(e) => setVoucherDescription(e.target.value)}
-                  onBlur={() => {
-                    if (voucherDescription.trim() === '') {
-                      setVoucherDescriptionError(
-                        'Voucher description cannot be empty.'
-                      );
-                    } else {
-                      setVoucherDescriptionError('');
-                    }
-                  }}
-                  className={`w-full rounded-md border bg-gray-700 ${
-                    voucherDescriptionError
-                      ? 'border-red-500'
-                      : 'border-gray-200'
-                  } px-4 py-2 text-gray-200`}
+                  type='number'
+                  id='voucherType'
+                  value={voucherAmount}
+                  min={1}
+                  max={100}
+                  onChange={(e) => setVoucherAmount(Number(e.target.value))}
+                  className={`w-full rounded-md border bg-gray-700 px-4 py-2 text-gray-200`}
                   required
                 />
                 {voucherDescriptionError && (

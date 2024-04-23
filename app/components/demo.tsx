@@ -8,30 +8,31 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 
 const Demo = () => {
-  const dispatch = useAppDispatch();
-  const sessionProfile: Profile = useAppSelector(
-    (state) => state.profileReducer.sessionProfile
-  );
-  const { data: session } = useSession();
-  const controller = new AbortController();
+  // const dispatch = useAppDispatch();
+  // const sessionProfile: Profile = useAppSelector(
+  //   (state) => state.profileReducer.sessionProfile
+  // );
+  // console.log('session profile ', sessionProfile);
+  // const { data: session } = useSession();
+  // const controller = new AbortController();
 
-  //  fetch user's profile and store in redux state
-  useEffect(() => {
-    if (session) {
-      console.log('userid: ' + session.user.id);
-      dispatch(setUserId(session.user.id));
-      // fetch profile only once upon logging in and reaching home page
-      if (Object.keys(sessionProfile).length === 0) {
-        console.log('fetching profile');
-        dispatch(
-          getProfileByUserId({ controller, userId: Number(session.user.id) })
-        );
-      }
-    }
-    return () => {
-      controller.abort();
-    };
-  }, [session]);
+  // //  fetch user's profile and store in redux state
+  // useEffect(() => {
+  //   if (session) {
+  //     console.log('userid: ' + session.user.id);
+  //     dispatch(setUserId(session.user.id));
+  //     // fetch profile only once upon logging in and reaching home page
+  //     if (Object.keys(sessionProfile).length === 0) {
+  //       console.log('fetching profile');
+  //       dispatch(
+  //         getProfileByUserId({ controller, userId: Number(session.user.id) })
+  //       );
+  //     }
+  //   }
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, [session]);
 
   return (
     <>

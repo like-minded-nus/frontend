@@ -23,6 +23,7 @@ const ImageUploaderCard: React.FC<UploadImageProps> = ({
       setImage(`data:image/jpeg;base64,${image}`);
     }
   }, [isUpdate]);
+
   const convertBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -46,7 +47,7 @@ const ImageUploaderCard: React.FC<UploadImageProps> = ({
   ) => {
     const file = event?.target?.files?.[0] as File;
     const base64Image = await convertBase64(file);
-    console.log(base64Image);
+    // console.log(base64Image);
     setImage(base64Image);
   };
 

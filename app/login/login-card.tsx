@@ -29,7 +29,11 @@ const LoginCard = () => {
       // const response = await nextResponse?.json()
       console.log({ nextResponse });
       if (nextResponse?.error !== null) {
-        setError('Login unsuccessful. Please try again.');
+        if (nextResponse?.error === 'Banned') {
+          setError('User have been banned.');
+        } else {
+          setError('Login unsuccessful. Please try again.');
+        }
       } else {
         router.push('/home');
         router.refresh();
