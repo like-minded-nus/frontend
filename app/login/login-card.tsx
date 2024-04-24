@@ -47,7 +47,7 @@ const LoginCard = () => {
         <div className='login-register-image-logo-container'>
           <img
             className='login-register-image-logo'
-            src='https://1409791524.rsc.cdn77.org/data/images/full/654186/le-sserafim-chaewon.jpg?w=600?w=430'
+            src='https://cdn-icons-png.flaticon.com/512/3939/3939748.png'
           ></img>
         </div>
 

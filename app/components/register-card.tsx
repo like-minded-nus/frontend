@@ -43,7 +43,7 @@ const RegisterCard = () => {
             <div className='login-register-image-logo-container'>
               <img
                 className='login-register-image-logo'
-                src='https://i.pinimg.com/736x/df/3e/2f/df3e2ff88a1453362c743b01dd8fb2f8.jpg'
+                src='https://cdn-icons-png.flaticon.com/512/3939/3939748.png'
               ></img>
             </div>
 
