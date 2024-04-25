@@ -6,6 +6,7 @@ import { Passion } from '@/models/passion';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setIsUserReported: (a: boolean) => void;
   reportedUserId: string;
   reportedByUserId: number;
 }
@@ -13,6 +14,7 @@ interface ModalProps {
 const ReportModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
+  setIsUserReported,
   reportedUserId,
   reportedByUserId,
 }) => {
@@ -43,6 +45,7 @@ const ReportModal: React.FC<ModalProps> = ({
     if (resJson.status != 200) {
       console.error(resJson.status + ' ' + resJson.message);
     } else {
+      setIsUserReported(true);
       onClose();
       console.log('user reported!');
     }
