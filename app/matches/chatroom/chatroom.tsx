@@ -14,7 +14,7 @@ import { useSearchParams } from 'next/navigation';
 import { GoReport } from 'react-icons/go';
 import ReportModal from './report-modal';
 import ChatroomVouchertModal from './chatroom-voucher-modal';
-import { FaCropSimple } from 'react-icons/fa6';
+import { toast, Toaster } from 'sonner';
 
 const Chatroom = () => {
   // Redux store
@@ -38,6 +38,7 @@ const Chatroom = () => {
   const [profiles, setProfiles] = useState([]);
   const [commonPassionsList, setCommonPassionsList] = useState([]);
   const [commonPassionIds, setCommonPassionIds] = useState<number[]>([]);
+  const [isUserReported, setIsUserReported] = useState<boolean>(false);
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const messagesContainerRef = useRef<null | HTMLDivElement>(null);
@@ -393,10 +394,21 @@ const Chatroom = () => {
     setInputValue('');
   };
 
+  useEffect(() => {
+    if (isUserReported === true) {
+      toast.success('User is reported!', {
+        duration: 2000,
+      });
+      setIsUserReported(false);
+    }
+  }, [isUserReported]);
+
   return (
     <div className='my-4 flex h-[92%] w-[77.5dvw] flex-col items-center justify-start'>
+      <Toaster />
       <ReportModal
         isOpen={reportModalIsOpen}
+        setIsUserReported={setIsUserReported}
         reportedUserId={receiverUserId}
         reportedByUserId={sessionProfile.userId}
         onClose={() => setReportModalIsOpen(false)}
